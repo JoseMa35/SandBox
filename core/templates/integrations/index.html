@@ -1,0 +1,77 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Tables {% endblock title %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+      <div class="container-fluid">
+        
+      </div>
+    </div>
+
+    <div class="container-fluid mt--7">
+
+      <!-- Table -->
+      <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header border-0">
+              <h3 class="mb-0">Integrations</h3>
+            </div>
+        
+      
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <br/>
+        </div>
+      </div>  
+      <div class="row">
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header border-0">
+              <div class="row">
+                <div class="col-8">
+                  <h3 class="mb-0">Google Calendar</h3>
+                  <br/>
+                  <a href="#" class="btn btn btn-primary">Authorize</a>
+                </div>
+                <div class="col-4">
+                  <img alt="Image placeholder" src="/static/assets/img/theme/calendar.png"  width="100px">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <div class="col">
+          <div class="card shadow">
+            <div class="card-header border-0">
+              <div class="row">
+                <div class="col-8">
+                  <h3 class="mb-0">Culqi</h3>
+                  <br/>
+                  <a href="#" class="btn btn btn-primary">Authorize</a>
+                </div>
+                <div class="col-4">
+                  <img alt="Image placeholder" src="/static/assets/img/theme/culqi.png"   width="150px">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}{% endblock javascripts %}

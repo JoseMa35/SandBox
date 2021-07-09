@@ -31,3 +31,4 @@ class Profile(models.Model):
     is_active = models.BooleanField(default=True)
     is_deleted = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
+

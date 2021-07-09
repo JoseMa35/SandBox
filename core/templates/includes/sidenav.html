@@ -7,7 +7,7 @@
       </button>
       <!-- Brand -->
       <a class="navbar-brand pt-0" href="/">
-        <img src="/static/assets/img/brand/blue.png" class="navbar-brand-img" alt="...">
+        <h1>Logo</h1>
       </a>
       <!-- User -->
       <ul class="nav align-items-center d-md-none">
@@ -96,10 +96,30 @@
           </li>
           <li class="nav-item">
             <a class="nav-link {% if 'profile' in segment %} active {% endif %}" href="/profile">
-              <i class="ni ni-single-02 text-yellow"></i> Profile
+              <i class="ni ni-single-02 text-blue"></i> Profile
             </a>
           </li>
           <li class="nav-item">
+            <a class="nav-link {% if 'users' in segment %} active {% endif %}" href="/users">
+              <i class="fa fa-users text-blue"></i> Users
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if 'appointments' in segment %} active {% endif %}" href="/appointments">
+              <i class="fa fa-calendar text-blue"></i> Appointments
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if 'prescriptions' in segment %} active {% endif %}" href="/prescriptions">
+              <i class="fa fa-file text-blue"></i> Prescriptions
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if 'integrations' in segment %} active {% endif %}" href="/integrations">
+              <i class="fa fa-cube text-blue"></i> Integrations
+            </a>
+          </li>
+          <!-- <li class="nav-item">
             <a class="nav-link {% if 'icons' in segment %} active {% endif %}" href="/icons.html">
               <i class="ni ni-planet text-blue"></i> Icons
             </a>
@@ -118,7 +138,7 @@
             <a class="nav-link {% if 'tables' in segment %} active {% endif %}" href="/tables.html">
               <i class="ni ni-bullet-list-67 text-info"></i> Tables
             </a>
-          </li>
+          </li> -->
 
           <li class="nav-item">
             <a class="nav-link" href="{% url 'logout' %}">
@@ -129,11 +149,11 @@
         <!-- Divider -->
         <hr class="my-3">
         <!-- Heading -->
-        <h6 class="navbar-heading text-muted">Links</h6>
+        <h6 class="navbar-heading text-muted">Useful Links</h6>
         <!-- Navigation -->
         <ul class="navbar-nav mb-md-3">
 
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a class="nav-link" target="_blank" 
                href="https://github.com/creativetimofficial/argon-dashboard-django">
               <i class="ni ni-ui-04"></i> Source Code
@@ -145,7 +165,7 @@
                href="https://www.creative-tim.com/templates/django">
               <i class="ni ni-spaceship"></i> More Django Apps
             </a>
-          </li>
+          </li> -->
 
         </ul>
       </div>

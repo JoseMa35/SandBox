@@ -27,6 +27,38 @@ def profile(request):
     return HttpResponse(html_template.render(context, request))
 
 @login_required(login_url="/login/")
+def users(request):
+    context = {}
+    context['segment'] = 'users'
+
+    html_template = loader.get_template( 'users/index.html' )
+    return HttpResponse(html_template.render(context, request))
+
+@login_required(login_url="/login/")
+def appointments(request):
+    context = {}
+    context['segment'] = 'appointments'
+
+    html_template = loader.get_template( 'appointments/index.html' )
+    return HttpResponse(html_template.render(context, request))
+
+@login_required(login_url="/login/")
+def prescriptions(request):
+    context = {}
+    context['segment'] = 'prescriptions'
+
+    html_template = loader.get_template( 'prescriptions/index.html' )
+    return HttpResponse(html_template.render(context, request))
+
+@login_required(login_url="/login/")
+def integrations(request):
+    context = {}
+    context['segment'] = 'integrations'
+
+    html_template = loader.get_template( 'integrations/index.html' )
+    return HttpResponse(html_template.render(context, request))
+
+@login_required(login_url="/login/")
 def pages(request):
     context = {}
     # All resource paths end in .html.
