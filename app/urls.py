@@ -17,6 +17,5 @@ urlpatterns = [
     path('prescriptions', views.prescriptions, name='prescriptions'),
     path('integrations', views.integrations, name='integrations'),
     #Matches any html file
-    re_path(r'^.*\.*', views.pages, name='pages'),
-
+    # re_path(r'^.*\.*', views.pages, name='pages'),
 ]
