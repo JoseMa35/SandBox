@@ -1,11 +1,20 @@
 """xiabel URL Configuration"""
 from django.urls import path, include # new
+from django.conf.urls import url
 
-from .views import (SpecialtyList, SpecialtyDoctorList, SpecialtyDetail, SpecialtyDoctorDetail, )
+from .views import (SpecialtyList, SpecialtyDoctorList, SpecialtyDetail, SpecialtyDoctorDetail, SpecialtyListView,
+                    DoctorSpecialtyListView, DoctorSpecialtyDetailView, )
 
 urlpatterns = [
-    path('doctors/', SpecialtyDoctorList.as_view()),
-    path('doctor/<int:pk>/', SpecialtyDoctorDetail.as_view()),
-    path('specialties', SpecialtyList.as_view()),
-    path('specialty/<int:pk>/', SpecialtyDetail.as_view()),
+
+    path( 'specialties/', SpecialtyListView.as_view()),
+    path( 'specialty/<int:pk>/doctor', DoctorSpecialtyDetailView.as_view()),
+    path( 'doctors/', DoctorSpecialtyListView.as_view()),
+
+    path('v1/doctors/', SpecialtyDoctorList.as_view()),
+    path('v1/doctor/<int:pk>/', SpecialtyDoctorDetail.as_view()),
+    path('v1/specialties/', SpecialtyList.as_view()),
+    path('v1/specialty/<int:pk>/', SpecialtyDetail.as_view()),
+
+
 ]
