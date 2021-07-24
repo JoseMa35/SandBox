@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import post_save
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractUser
 
@@ -33,6 +34,9 @@ class User(AbstractUser):
     REQUIRED_FIELDS = ['name', 'father_lastname', 'mother_lastname']
 
     objects = UserManager()
+
+    # class Meta():
+
 
     def __str__(self):
         return self.email
@@ -77,7 +81,7 @@ class Profile(models.Model):
     about = models.TextField(max_length=1000)
     avatar = models.ImageField(
         upload_to="core/static/images/avatar/",
-        default='static/images/avatar/default.jpg',
+        default='core/static/images/avatar/default.jpg',
     )
     is_active = models.BooleanField(default=True)
     is_email_verified = models.BooleanField(default=False)
@@ -89,3 +93,9 @@ class Profile(models.Model):
     is_blocked = models.BooleanField(default=False)
     created_at = models.DateTimeField(_('Created at'), auto_now_add=True)
     updated_at = models.DateTimeField(_('Updated at'), auto_now=True)
+
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    post_save.connect(create_user_profile, sender=User)

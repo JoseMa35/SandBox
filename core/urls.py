@@ -4,11 +4,13 @@ Copyright (c) 2019 - present AppSeed.us
 """
 
 from django.contrib import admin
+from django.template.context_processors import static
 from django.urls import path, include  # add this
 from django.conf.urls import url
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from django.conf import settings
 
 # Create our schema's view w/ the get_schema_view() helper method. Pass in the proper Renderers for swagger
 schema_view = get_schema_view(
