@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class SpecialtyConfig(AppConfig):
+class CommonsConfig(AppConfig):
     default_auto_field = 'django.db.models.AutoField'
-    name = 'specialties'
+    name = 'commons'

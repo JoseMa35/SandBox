@@ -1,0 +1,16 @@
+[
+  {
+    "model": "commons.gender",
+    "fields": {
+      "long_name": "MASCULINO",
+      "short_name": "M"
+    }
+  },
+  {
+    "model": "commons.gender",
+    "fields": {
+      "long_name": "FEMENINO",
+      "short_name": "F"
+    }
+  }
+]

@@ -4,16 +4,17 @@ from django.contrib import admin
 from specialties.models import Specialty_Doctor
 from specialties.models import Specialty
 
+
 @admin.register(Specialty)
 class SpecialtyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'position', 'is_active' )
-    list_filter = ('is_active', 'created_at')
+    list_display = ('name', 'description', 'position', 'is_active',)
+    list_filter = ('is_active',)
     search_fields = ('name',)
     ordering = ('position',)
 
 
 @admin.register(Specialty_Doctor)
-class DoctorAdmin(admin.ModelAdmin):
+class SpecialtyDoctorAdmin(admin.ModelAdmin):
     list_display = ('_user', 'specialty', 'is_active')
     list_filter = ('is_active',)
     search_fields = ('specialty',)

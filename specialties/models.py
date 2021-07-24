@@ -1,9 +1,10 @@
-from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
 # Create your models here.
+from accounts.models import User
+
 
 class Specialty(models.Model):
     name = models.CharField(max_length=250, blank=False)
@@ -13,8 +14,8 @@ class Specialty(models.Model):
         _('active'),
         default=True,
         help_text=_('Specialty for default true, is necesary for use'))
-    created_at = models.DateTimeField(auto_now_add=True)
-    edited_at = models.DateTimeField(auto_now=True)
+    # created_at = models.DateTimeField(auto_now_add=True)
+    # edited_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name

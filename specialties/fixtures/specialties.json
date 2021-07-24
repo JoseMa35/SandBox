@@ -1,0 +1,56 @@
+[
+  {
+    "model": "specialties.Specialty",
+    "pk": 1,
+    "fields": {
+      "name": "Dermatología",
+      "description": "La Dermatología es la especialidad médica encargada de estudiar la estructura y funciones de la piel, así como los problemas y enfermedades que la afectan. ",
+      "position": 1
+    }
+  },
+  {
+    "model": "specialties.Specialty",
+    "pk": 2,
+    "fields": {
+      "name": "Neurología",
+      "description": "Neurología es la especialidad médica dedicada al diagnóstico y tratamiento de las enfermedades del sistema nervioso tales  como dolores de cabeza, lumbalgias, dolor ciático, neuralgias, infarto o hemorragia cerebral, parálisis facial, meningitis, parálisis de extremidades, neuropatías, alzheimer, epilepsia, parkinson, demencia vascular, vértigo, esclerosis múltiple, migraña y traumatismos craneoencefálicos. ",
+      "position": 2
+    }
+  },
+  {
+    "model": "specialties.specialty",
+    "pk": 3,
+    "fields": {
+      "name": "Pediatría",
+      "description": "La Pediatría es la especialidad médica que se encarga de la prevención, recuperación y rehabilitación del niño y adolescente, durante el periodo de crecimiento y desarrollo.",
+      "position": 3
+    }
+  },
+  {
+    "model": "specialties.specialty",
+    "pk": 4,
+    "fields": {
+      "name": "Urología",
+      "description": "La urología es la especialidad médica que estudia todo el aparato génito urinario tanto en hombres como en mujeres, así como el aparato reproductor masculino. Todas las patologías benignas y malignas (llamadas cáncer) de las vías urinarias.",
+      "position": 4
+    }
+  },
+  {
+    "model": "specialties.specialty",
+    "pk": 5,
+    "fields": {
+      "name": "Geriatría",
+      "description": "Geriatría es la especialidad médica que se ocupa de los aspectos preventivos, curativos y de rehabilitación de las enfermedades del adulto mayor, a partir de los 60 años.",
+      "position": 5
+    }
+  },
+  {
+    "model": "specialties.specialty",
+    "pk": 6,
+    "fields": {
+      "name": "Traumatologia y Ortopedia",
+      "description": "La traumatología es la especialidad médica que se dedica al tratamiento de las lesiones traumáticas de los huesos, los músculos, las articulaciones y los tendones. ",
+      "position": 6
+    }
+  }
+]
