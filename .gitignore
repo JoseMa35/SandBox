@@ -1,5 +1,6 @@
 v-env
 __pycache__
-citasenv
-.venv
+.venv/
 .python-version
+.idea/
+
