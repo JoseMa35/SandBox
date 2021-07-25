@@ -37,7 +37,6 @@ class User(AbstractUser):
 
     # class Meta():
 
-
     def __str__(self):
         return self.email
 
@@ -62,40 +61,39 @@ class User(AbstractUser):
 #     return "static/images/avatar/{0}_{1}".format(instance.id,filename)
 
 
-
 class Profile(models.Model):
     """
         Profile model
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    gender = models.ForeignKey(Gender, on_delete=models.CASCADE)
-    document_type = models.ForeignKey(Document_Type, on_delete=models.CASCADE)
-    document = models.CharField(max_length=15, unique=True)
-    date_of_birth = models.DateField()
-    cell_phone = models.CharField(max_length=20)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, )
+    gender = models.ForeignKey(Gender, on_delete=models.CASCADE, )
+    document_type = models.ForeignKey(Document_Type, on_delete=models.CASCADE, )
+    document = models.CharField(max_length=15, unique=True, )
+    date_of_birth = models.DateField(blank=True, null=True, )
+    cell_phone = models.CharField(max_length=20, )
     # address = models.CharField(max_length=200)
     # city = models.CharField(max_length=100)
     # state = models.CharField(max_length=100)
     # zip_code = models.CharField(max_length=10)
     # website = models.URLField(max_length=200)
-    about = models.TextField(max_length=1000)
+    about = models.TextField(max_length=1000, )
     avatar = models.ImageField(
         upload_to="core/static/images/avatar/",
         default='core/static/images/avatar/default.jpg',
     )
-    is_active = models.BooleanField(default=True)
-    is_email_verified = models.BooleanField(default=False)
-    is_phone_verified = models.BooleanField(default=False)
-    is_doctor = models.BooleanField(default=False)
-    is_patient = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
-    is_deleted = models.BooleanField(default=False)
-    is_blocked = models.BooleanField(default=False)
-    created_at = models.DateTimeField(_('Created at'), auto_now_add=True)
-    updated_at = models.DateTimeField(_('Updated at'), auto_now=True)
+    is_active = models.BooleanField(default=True, )
+    is_email_verified = models.BooleanField(default=False, )
+    is_phone_verified = models.BooleanField(default=False, )
+    is_doctor = models.BooleanField(default=False, )
+    is_patient = models.BooleanField(default=True, )
+    is_admin = models.BooleanField(default=False, )
+    is_deleted = models.BooleanField(default=False, )
+    is_blocked = models.BooleanField(default=False, )
+    created_at = models.DateTimeField(_('Created at'), auto_now_add=True, )
+    updated_at = models.DateTimeField(_('Updated at'), auto_now=True, )
 
-    def create_user_profile(sender, instance, created, **kwargs):
-        if created:
-            Profile.objects.create(user=instance)
+    # def create_user_profile(sender, instance, created, **kwargs):
+    #     if created:
+    #         Profile.objects.create(user=instance)
 
-    post_save.connect(create_user_profile, sender=User)
+    # post_save.connect(create_user_profile, sender=User)

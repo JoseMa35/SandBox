@@ -17,9 +17,11 @@ class SpecialtySerializer(serializers.ModelSerializer):
 class SpecialtyDoctorSerializer(serializers.ModelSerializer):
     specialty_id = serializers.IntegerField(source='specialty.id')
     user_id = serializers.IntegerField(source='user.id')
-    first_name = serializers.CharField(source='user.first_name')
-    last_name = serializers.CharField(source='user.last_name')
+    name = serializers.CharField(source='user.name')
+    father_lastname = serializers.CharField(source='user.father_lastname')
+    mother_lastname = serializers.CharField(source='user.mother_lastname')
     specialty = serializers.CharField(source='specialty.name')
+    full_name = serializers.CharField(source='user.get_full_name')
 
     class Meta:
         model = Specialty_Doctor
@@ -29,5 +31,5 @@ class SpecialtyDoctorSerializer(serializers.ModelSerializer):
             # Specialty
             'specialty', 'specialty_id',
             # User
-            'user_id', 'first_name', 'last_name',
+            'user_id', 'name', 'father_lastname', 'mother_lastname', 'full_name',
         )

@@ -3,6 +3,7 @@ from django.contrib import admin, messages
 from django.contrib.admin.options import IS_POPUP_VAR
 from django.contrib.admin.utils import unquote
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import (
     AdminPasswordChangeForm, UserChangeForm, UserCreationForm,
 )
@@ -26,12 +27,6 @@ from .models import User, Profile
 
 # Register your models here.
 
-class ProfileInline(admin.StackedInline):
-    model = Profile
-    extra = 1
-    can_delete = False
-
-
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = (
@@ -47,6 +42,12 @@ class UserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['email', 'name', 'father_lastname', 'mother_lastname']
+
+
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    extra = 1
+    can_delete = False
 
 
 @admin.register(User)
@@ -65,7 +66,7 @@ class UserAdmin(admin.ModelAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2',)}
+            'fields': ('name', 'father_lastname', 'mother_lastname', 'email', 'password1', 'password2',)}
          ),
     )
 
@@ -220,3 +221,5 @@ class UserAdmin(admin.ModelAdmin):
             request.POST = request.POST.copy()
             request.POST['_continue'] = 1
         return super().response_add(request, obj, post_url_continue)
+
+# admin.site.unregister(Group)
