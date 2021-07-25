@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+{% load static %}
 
 {% block title %} Tables {% endblock title %}
 
@@ -37,7 +38,7 @@
                     <th scope="row">
                       <div class="media align-items-center">
                         <a href="#" class="avatar rounded-circle mr-3">
-                          <img alt="Image placeholder" src="/static/assets/img/theme/team-4-800x800.jpg" class="rounded-circle">
+                          <img alt="Image placeholder" src="{% static 'assets/img/theme/team-4-800x800.jpg' %}" class="rounded-circle">
                         </a>
                         <div class="media-body">
                           <span class="mb-0 text-sm">Juan Perez</span>

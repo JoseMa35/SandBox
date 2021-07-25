@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+{% load static %}
 
 {% block title %} Tables {% endblock title %}
 
@@ -41,7 +42,7 @@
                   <a href="#" class="btn btn btn-primary">Authorize</a>
                 </div>
                 <div class="col-4">
-                  <img alt="Image placeholder" src="/static/assets/img/theme/calendar.png"  width="100px">
+                  <img alt="Image placeholder" src="{% static '/assets/img/theme/calendar.png' %}"  width="100px">
                 </div>
               </div>
             </div>
@@ -58,7 +59,7 @@
                   <a href="#" class="btn btn btn-primary">Authorize</a>
                 </div>
                 <div class="col-4">
-                  <img alt="Image placeholder" src="/static/assets/img/theme/culqi.png"   width="150px">
+                  <img alt="Image placeholder" src="{% static 'assets/img/theme/culqi.png' %}"   width="150px">
                 </div>
               </div>
             </div>

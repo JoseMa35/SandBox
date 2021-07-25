@@ -70,7 +70,8 @@ class UserAdmin(admin.ModelAdmin):
     )
 
     form = UserChangeForm
-    add_form = UserCreationForm
+    # add_form = UserCreationForm
+    add_form = UserForm
     change_password_form = AdminPasswordChangeForm
 
     list_display = ('email', 'name', 'father_lastname', 'mother_lastname',
