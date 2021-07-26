@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django import template
 
 from accounts.models import User, Profile
-from specialties.models import Specialty_Doctor
+from specialties.models import Specialty_Doctor, Specialty
 
 
 @login_required(login_url="/login/")
@@ -103,4 +103,16 @@ def doctors(request):
     context['specialties'] = specialty
 
     html_template = loader.get_template('doctors/index.html')
+    return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+def specialties(request):
+    context = {}
+    context['segment'] = 'specialties'
+
+    specialties = Specialty.objects.filter()
+    context['specialties'] = specialties
+
+    html_template = loader.get_template('specialties/index.html')
     return HttpResponse(html_template.render(context, request))

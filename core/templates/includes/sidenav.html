@@ -10,7 +10,7 @@
         <!-- Brand -->
         <a class="navbar-brand pt-0" href="/">
             <img src="{% static 'assets/img/brand/logo_white.jpg' %}" alt="logo"/>
-{#            <h1>tranvia.tech</h1>#}
+            {#            <h1>tranvia.tech</h1>#}
         </a>
         <!-- User -->
         <ul class="nav align-items-center d-md-none">
@@ -41,19 +41,19 @@
                     <div class=" dropdown-header noti-title">
                         <h6 class="text-overflow m-0">Welcome!</h6>
                     </div>
-                    <a href="/profile.html" class="dropdown-item">
+                    <a href="/profile" class="dropdown-item">
                         <i class="ni ni-single-02"></i>
                         <span>My profile</span>
                     </a>
-                    <a href="/profile.html" class="dropdown-item">
+                    <a href="/profile" class="dropdown-item">
                         <i class="ni ni-settings-gear-65"></i>
                         <span>Settings</span>
                     </a>
-                    <a href="/profile.html" class="dropdown-item">
+                    <a href="/profile" class="dropdown-item">
                         <i class="ni ni-calendar-grid-58"></i>
                         <span>Activity</span>
                     </a>
-                    <a href="/profile.html" class="dropdown-item">
+                    <a href="/profile" class="dropdown-item">
                         <i class="ni ni-support-16"></i>
                         <span>Support</span>
                     </a>
@@ -107,12 +107,12 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if 'profile' in segment %} active {% endif %}" href="/profile">
-                        <i class="ni ni-single-02 text-blue"></i> Profile
+                        <i class="ni ni-single-02 text-blue"></i> Perfil
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if 'users' in segment %} active {% endif %}" href="/users">
-                        <i class="fa fa-users text-blue"></i> Users
+                        <i class="fa fa-users text-blue"></i> Usuarios
                     </a>
                 </li>
                 {#          <li class="nav-item">#}
@@ -126,10 +126,15 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if 'prescriptions' in segment %} active {% endif %}" href="/prescriptions">
-                        <i class="fa fa-file text-blue"></i> Prescriptions
+                    <a class="nav-link {% if 'specialties' in segment %} active {% endif %}" href="/specialties">
+                        <i class="fa fa-file text-blue"></i> Especialidades
                     </a>
                 </li>
+                {#                <li class="nav-item">#}
+                {#                    <a class="nav-link {% if 'prescriptions' in segment %} active {% endif %}" href="/prescriptions">#}
+                {#                        <i class="fa fa-file text-blue"></i> Prescriptions#}
+                {#                    </a>#}
+                {#                </li>#}
                 <li class="nav-item">
                     <a class="nav-link {% if 'integrations' in segment %} active {% endif %}" href="/integrations">
                         <i class="fa fa-cube text-blue"></i> Integrations
