@@ -14,9 +14,8 @@
         <div class="container-fluid d-flex align-items-center">
             <div class="row">
                 <div class="col-lg-7 col-md-10">
-                    <h1 class="display-2 text-white">Hello {{ request.user.name }}</h1>
-                    <p class="text-white mt-0 mb-5">This is your profile page, you can see and edit your personal data
-                        or your company information</p>
+                    <h1 class="display-2 text-white">Hola {{ request.user.name | title }}</h1>
+                    <p class="text-white mt-0 mb-5"> {{ request.user.profile.about }}</p>
                     <!-- <a href="#!" class="btn btn-info">Edit profile</a> -->
                 </div>
             </div>
@@ -57,8 +56,9 @@
                                 <i class="ni business_briefcase-24 mr-2"></i> Pediatria / Medicina General
                             </div>
                             <hr class="my-4"/>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam congue quam lacus. Donec
-                                diam sem, iaculis et tincidunt ac, sollicitudin eget turpis.</p>
+                            <p>
+                                 {{ request.user.profile.about }}
+                            </p>
 
                         </div>
                     </div>

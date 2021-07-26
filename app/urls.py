@@ -14,6 +14,7 @@ urlpatterns = [
     path('profile', views.profile, name='profile'),
     path('users', views.users, name='users'),
     path('appointments', views.appointments, name='appointments'),
+    path('doctors', views.doctors, name='doctors'),
     path('prescriptions', views.prescriptions, name='prescriptions'),
     path('integrations', views.integrations, name='integrations'),
     #Matches any html file
