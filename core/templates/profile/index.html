@@ -79,12 +79,12 @@
                     </div>
                     <div class="card-body">
                         <form>
-                            <h6 class="heading-small text-muted mb-4">User information</h6>
+                            <h6 class="heading-small text-muted mb-4">Información Personal</h6>
                             <div class="pl-lg-4">
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-username">Name</label>
+                                            <label class="form-control-label" for="input-username">Nombres</label>
                                             <input type="text" id="input-username"
                                                    class="form-control form-control-alternative" placeholder="Username"
                                                    value="{{ request.user.name|title }}">
@@ -92,7 +92,7 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-email">Email address</label>
+                                            <label class="form-control-label" for="input-email">Correo</label>
                                             <input type="email" id="input-email"
                                                    class="form-control form-control-alternative"
                                                    placeholder="{{ request.user.email }}">
@@ -102,8 +102,7 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-father-lastname">Father
-                                                lastname</label>
+                                            <label class="form-control-label" for="input-father-lastname">Apellido Paterno</label>
                                             <input type="text" id="input-father-lastname"
                                                    class="form-control form-control-alternative"
                                                    placeholder="{{ request.user.father_lastname|title }}">
@@ -112,8 +111,7 @@
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-mother-lastname">Mother
-                                                lastname</label>
+                                            <label class="form-control-label" for="input-mother-lastname">Apellido Materno</label>
                                             <input type="text" id="input-mother-lastname"
                                                    class="form-control form-control-alternative"
                                                    placeholder="{{ request.user.mother_lastname|title }}">

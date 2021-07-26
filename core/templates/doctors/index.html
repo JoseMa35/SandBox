@@ -25,11 +25,9 @@
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">Doctor</th>
-                                <th scope="col">Date</th>
-                                <th scope="col">Time</th>
-                                <th scope="col">Patient</th>
+                                <th scope="col">Fecha y Hora</th>
+                                <th scope="col">Especialidades</th>
                                 <th scope="col">Status</th>
-                                <th scope="col">Link</th>
                                 <th scope="col">Acciones</th>
                             </tr>
                             </thead>
@@ -37,29 +35,37 @@
                             {% for profile in profiles %}
                                 <tr>
                                     <td>
-                                        <b> {{ profile.user.get_full_name }}</b>
+                                        <b> {{ profile.user.get_full_name |title }}</b>
                                     </td>
                                     <th scope="row">
                                         <div class="media align-items-center">
                                             <div class="media-body">
-                                                <span class="mb-0 text-sm">09 Jul 2021</span>
+                                                <span class="mb-0 text-sm">{{ profile.user.date_joined }}</span>
                                             </div>
                                         </div>
                                     </th>
                                     <td>
-                                        <b>10:30 - 11:00</b>
+                                        {% for specialty in specialties %}
+                                            {% if specialty.user.id == profile.user.id %}
+                                                {{ specialty.specialty.name }}
+                                            {% endif %}
+                                        {% endfor %}
                                     </td>
                                     <td>
-                                        <b>Diana Gutierrez</b>
+                                        <span class="badge badge-dot mr-4">
+                                          {% if user.is_active %}
+                                              <i class="bg-success"></i> Activo
+                                          {% else %}
+                                              <i class="bg-danger"></i> Desabilitado
+                                          {% endif %}
+                                      </span>
                                     </td>
-                                    <td>
-                      <span class="badge badge-dot mr-4">
-                        <i class="bg-success"></i> paid
-                      </span>
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-success">Entrar a Reunion</a>
-                                    </td>
+                                    {#                                    <td>#}
+                                    {##}
+                                    {#                                    </td>#}
+                                    {#                                    <td>#}
+                                    {#                                        <a href="#" class="btn btn-sm btn-success">Entrar a Reunion</a>#}
+                                    {#                                    </td>#}
                                     <td class="text-right">
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
@@ -72,80 +78,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <b>Carlos Perez</b>
-                                    </td>
-                                    <th scope="row">
-                                        <div class="media align-items-center">
-                                            <div class="media-body">
-                                                <span class="mb-0 text-sm">09 Jul 2021</span>
-                                            </div>
-                                        </div>
-                                    </th>
-                                    <td>
-                                        <b>12:30 - 13:00</b>
-                                    </td>
-                                    <td>
-                                        <b>Gustavo Gonzales</b>
-                                    </td>
-                                    <td>
-                      <span class="badge badge-dot mr-4">
-                        <i class="bg-success"></i> paid
-                      </span>
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-success">Entrar a Reunion</a>
-                                    </td>
-                                    <td class="text-right">
-                                        <div class="dropdown">
-                                            <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
-                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                <a class="dropdown-item" href="#">Editar</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <b>Carlos Perez</b>
-                                    </td>
-                                    <th scope="row">
-                                        <div class="media align-items-center">
-                                            <div class="media-body">
-                                                <span class="mb-0 text-sm">09 Jul 2021</span>
-                                            </div>
-                                        </div>
-                                    </th>
-                                    <td>
-                                        <b>13:30 - 14:00</b>
-                                    </td>
-                                    <td>
-                                        <b>Tomas Lynch</b>
-                                    </td>
-                                    <td>
-                      <span class="badge badge-dot mr-4">
-                        <i class="bg-success"></i> paid
-                      </span>
-                                    </td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-success">Entrar a Reunion</a>
-                                    </td>
-                                    <td class="text-right">
-                                        <div class="dropdown">
-                                            <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
-                                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v"></i>
-                                            </a>
-                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                <a class="dropdown-item" href="#">Editar</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+
                             {% endfor %}
                             </tbody>
                         </table>
