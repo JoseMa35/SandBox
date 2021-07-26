@@ -41,7 +41,8 @@ class SpecialtyListView(APIView):
 class DoctorSpecialtyListView(APIView):
     def get(self, request):
         specialty_doctor_list = Specialty_Doctor.objects.all() \
-            .filter(is_active=True, )
+            .filter(is_active=True,  )
+
         data = SpecialtyDoctorSerializer(specialty_doctor_list, many=True).data
         return JsonResponse(data, safe=False)
 

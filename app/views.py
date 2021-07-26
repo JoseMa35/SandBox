@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django import template
 
 from accounts.models import User, Profile
+from specialties.models import Specialty_Doctor
 
 
 @login_required(login_url="/login/")
@@ -33,6 +34,9 @@ def profile(request):
 def users(request):
     context = {}
     context['segment'] = 'users'
+    users = User.objects.all()
+    context['users'] = users
+    print(context)
 
     html_template = loader.get_template( 'users/index.html' )
     return HttpResponse(html_template.render(context, request))
@@ -83,3 +87,11 @@ def pages(request):
     
         html_template = loader.get_template( 'page-500.html' )
         return HttpResponse(html_template.render(context, request))
+
+@login_required(login_url="/login/")
+def doctors(request):
+    context = {}
+    context['segment'] = 'doctors'
+
+    html_template = loader.get_template( 'doctors/index.html' )
+    return HttpResponse(html_template.render(context, request))

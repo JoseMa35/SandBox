@@ -41,7 +41,7 @@ class ProfileAdmin(admin.ModelAdmin):
 class UserForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['email', 'name', 'father_lastname', 'mother_lastname']
+        fields = ['name', 'father_lastname', 'mother_lastname', 'email', ]
 
 
 class ProfileInline(admin.StackedInline):
@@ -71,7 +71,6 @@ class UserAdmin(admin.ModelAdmin):
     )
 
     form = UserChangeForm
-    # add_form = UserCreationForm
     add_form = UserForm
     change_password_form = AdminPasswordChangeForm
 
@@ -221,5 +220,3 @@ class UserAdmin(admin.ModelAdmin):
             request.POST = request.POST.copy()
             request.POST['_continue'] = 1
         return super().response_add(request, obj, post_url_continue)
-
-# admin.site.unregister(Group)
