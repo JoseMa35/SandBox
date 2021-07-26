@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 ('date_of_birth', models.DateField(blank=True, null=True)),
                 ('cell_phone', models.CharField(max_length=20)),
                 ('about', models.TextField(max_length=1000)),
-                ('avatar', models.ImageField(default='core/static/images/avatar/default.jpg', upload_to='core/static/images/avatar/')),
+                ('avatar', models.ImageField(default='core/static/images/avatar/default.jpeg', upload_to='core/static/images/avatar/')),
                 ('is_active', models.BooleanField(default=True)),
                 ('is_email_verified', models.BooleanField(default=False)),
                 ('is_phone_verified', models.BooleanField(default=False)),

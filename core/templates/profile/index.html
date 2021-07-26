@@ -14,7 +14,7 @@
         <div class="container-fluid d-flex align-items-center">
             <div class="row">
                 <div class="col-lg-7 col-md-10">
-                    <h1 class="display-2 text-white">Hola {{ request.user.name | title }}</h1>
+                    <h1 class="display-2 text-white" style="display: inline">Hola {{ request.user.name | title }}</h1>
                     <p class="text-white mt-0 mb-5"> {{ request.user.profile.about }}</p>
                     <!-- <a href="#!" class="btn btn-info">Edit profile</a> -->
                 </div>
@@ -31,7 +31,8 @@
                         <div class="col-lg-3 order-lg-2">
                             <div class="card-profile-image">
                                 <a href="#">
-                                    <img src="{{ request.user.profile.avatar.url }}" class="rounded-circle">
+                                    <img src="{{ request.user.profile.avatar.url }}" class="rounded-circle"
+                                         onerror="this.src='core/static/images/avatar/default.jpeg';">
                                 </a>
                             </div>
                         </div>
@@ -57,7 +58,7 @@
                             </div>
                             <hr class="my-4"/>
                             <p>
-                                 {{ request.user.profile.about }}
+                                {{ request.user.profile.about }}
                             </p>
 
                         </div>

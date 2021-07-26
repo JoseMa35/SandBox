@@ -79,7 +79,7 @@ class Profile(models.Model):
     about = models.TextField(max_length=1000, )
     avatar = models.ImageField(
         upload_to="core/static/images/avatar/",
-        default='core/static/images/avatar/default.jpg',
+        default='core/static/images/avatar/default.jpeg',
     )
     is_active = models.BooleanField(default=True, )
     is_email_verified = models.BooleanField(default=False, )
