@@ -21,4 +21,4 @@ class SpecialtyDoctorAdmin(admin.ModelAdmin):
     ordering = ('specialty',)
 
     def _user(self, obj):
-        return f"{obj.user.first_name} {obj.user.last_name}"
+        return f"{obj.user.email}"

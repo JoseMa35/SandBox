@@ -116,3 +116,15 @@ def specialties(request):
 
     html_template = loader.get_template('specialties/index.html')
     return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+def specialty_form(request):
+    context = {}
+    context['segment'] = 'specialties'
+
+    specialties = Specialty.objects.filter()
+    context['specialties'] = specialties
+
+    html_template = loader.get_template('specialties/index.html')
+    return HttpResponse(html_template.render(context, request))

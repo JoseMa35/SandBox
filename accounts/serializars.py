@@ -15,8 +15,7 @@ class UserSerializer(serializers.ModelSerializer):
             'username',
             'email',
             'first_name',
-            'father_last_name',
-            'mother_last_name',
+            'last_name',
         )
 
 
@@ -35,8 +34,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         validators=[validate_password]
     )
     first_name = serializers.CharField(source='user.first_name')
-    father_last_name = serializers.CharField(source='user.father_last_name')
-    mother_last_name = serializers.CharField(source='user.mother_last_name')
+    last_name = serializers.CharField(source='user.last_name')
     is_active = serializers.BooleanField(source='user.is_active')
 
     class Meta:
@@ -44,7 +42,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = (
             # User
             'email', 'password', 'first_name',
-            'father_last_name', 'mother_last_name', 'is_active',
+            'last_name', 'is_active',
             # Profile
             'user', '_gender',
             '_document_type', 'document', 'cell_phone', 'date_of_birth',)
