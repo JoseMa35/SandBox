@@ -8,6 +8,7 @@ from specialties.models import Specialty
 @admin.register(Specialty)
 class SpecialtyAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'position', 'is_active',)
+    filter_horizontal = ('doctors',)
     list_filter = ('is_active',)
     search_fields = ('name',)
     ordering = ('position',)

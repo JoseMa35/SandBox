@@ -12,8 +12,6 @@ class User(AbstractUser):
     email = models.EmailField(_('email'),
                               help_text=_('Correo electrónico'),
                               blank=False, unique=True)
-    first_name = models.CharField(_('first name'), max_length=150, blank=True)
-    last_name = models.CharField(_('last name'), max_length=150, blank=True)
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
@@ -39,11 +37,8 @@ class Profile(models.Model):
     document = models.CharField(max_length=15, unique=True, )
     date_of_birth = models.DateField(blank=True, null=True, )
     cell_phone = models.CharField(max_length=20, )
-    # address = models.CharField(max_length=200)
-    # city = models.CharField(max_length=100)
-    # state = models.CharField(max_length=100)
-    # zip_code = models.CharField(max_length=10)
-    # website = models.URLField(max_length=200)
+    address = models.CharField(max_length=200, null=True, ) 
+    website = models.URLField(max_length=200, null=True, )
     about = models.TextField(max_length=1000, )
     avatar = models.ImageField(
         upload_to="core/static/images/avatar/",
@@ -60,8 +55,5 @@ class Profile(models.Model):
     created_at = models.DateTimeField(_('Created at'), auto_now_add=True, )
     updated_at = models.DateTimeField(_('Updated at'), auto_now=True, )
 
-    # def create_user_profile(sender, instance, created, **kwargs):
-    #     if created:
-    #         Profile.objects.create(user=instance)
-
-    # post_save.connect(create_user_profile, sender=User)
+    def __str__(self):
+        return self.full_name

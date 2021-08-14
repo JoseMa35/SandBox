@@ -3,13 +3,14 @@ from django.utils.translation import ugettext_lazy as _
 
 
 # Create your models here.
-from accounts.models import User
+from accounts.models import User, Profile
 
 
 class Specialty(models.Model):
     name = models.CharField(max_length=250, blank=False)
     description = models.TextField(max_length=255, blank=True)
     position = models.SmallIntegerField(default=0)
+    doctors = models.ManyToManyField(Profile, related_name='specialties', blank=True)
     is_active = models.BooleanField(
         _('active'),
         default=True,
