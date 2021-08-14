@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django import template
 
 from accounts.models import User, Profile
-from specialties.models import Specialty_Doctor, Specialty
+from commons.models import Specialty
 
 
 @login_required(login_url="/login/")

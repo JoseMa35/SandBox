@@ -1,25 +1,18 @@
 from django.contrib import admin
 
-# Register your models here.
-from specialties.models import Specialty_Doctor
-from specialties.models import Specialty
+# Register your models here.  
+from tenants.utils import tenant_from_request
 
 
-@admin.register(Specialty)
-class SpecialtyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'position', 'is_active',)
-    filter_horizontal = ('doctors',)
-    list_filter = ('is_active',)
-    search_fields = ('name',)
-    ordering = ('position',)
 
+ 
+    # def get_queryset(self, request, *args, **kwargs):
+    #     queryset = super().get_queryset(request, *args, **kwargs) 
+    #     tenant = tenant_from_request(request)
+    #     queryset = queryset.filter(tenant=tenant)
+    #     return queryset
 
-@admin.register(Specialty_Doctor)
-class SpecialtyDoctorAdmin(admin.ModelAdmin):
-    list_display = ('_user', 'specialty', 'is_active')
-    list_filter = ('is_active',)
-    search_fields = ('specialty',)
-    ordering = ('specialty',)
-
-    def _user(self, obj):
-        return f"{obj.user.email}"
+    # def save_model(self, request, obj, form, change): 
+    #     tenant = tenant_from_request(request) 
+    #     obj.tenant = tenant 
+    #     super().save_model(request, obj, form, change)

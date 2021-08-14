@@ -1,6 +1,6 @@
 [
   {
-    "model": "specialties.Specialty",
+    "model": "commons.Specialty",
     "pk": 1,
     "fields": {
       "name": "Dermatología",
@@ -9,7 +9,7 @@
     }
   },
   {
-    "model": "specialties.Specialty",
+    "model": "commons.Specialty",
     "pk": 2,
     "fields": {
       "name": "Neurología",
@@ -18,7 +18,7 @@
     }
   },
   {
-    "model": "specialties.specialty",
+    "model": "commons.Specialty",
     "pk": 3,
     "fields": {
       "name": "Pediatría",
@@ -27,7 +27,7 @@
     }
   },
   {
-    "model": "specialties.specialty",
+    "model": "commons.Specialty",
     "pk": 4,
     "fields": {
       "name": "Urología",
@@ -36,7 +36,7 @@
     }
   },
   {
-    "model": "specialties.specialty",
+    "model": "commons.Specialty",
     "pk": 5,
     "fields": {
       "name": "Geriatría",
@@ -45,7 +45,7 @@
     }
   },
   {
-    "model": "specialties.specialty",
+    "model": "commons.Specialty",
     "pk": 6,
     "fields": {
       "name": "Traumatologia y Ortopedia",

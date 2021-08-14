@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'accounts',
     'app',  # Enable the inner app
     'specialties',  # Enable
+    'tenants'
 ]
 
 MIDDLEWARE = [
