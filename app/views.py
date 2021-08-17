@@ -97,7 +97,7 @@ def doctors(request):
     context['segment'] = 'doctors'
 
     profile = Profile.objects.filter(is_doctor=True)
-    specialty = Specialty_Doctor.objects.filter(is_active=True)
+    specialty = Specialty.objects.filter(is_active=True)
 
     context['profiles'] = profile
     context['specialties'] = specialty
