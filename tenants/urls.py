@@ -2,7 +2,7 @@
 from django.urls import path, include # new
 from django.conf.urls import url
 
-from tenants.views import TenantListView, TenantDetailView
+from tenants.views import TenantListView, TenantDetailView, TenantStaffView
 
 # from .views import (SpecialtyList, SpecialtyDetail, SpecialtyListView )
 
@@ -19,4 +19,5 @@ urlpatterns = [
 
     path('v1/tenants/', TenantListView.as_view()),
     path('v1/tenant/<pk>', TenantDetailView.as_view()),
+    path('v1/tenant/<pk>/staff', TenantStaffView.as_view()),
 ]

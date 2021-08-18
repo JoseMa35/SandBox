@@ -25,8 +25,8 @@ class Staff(models.Model):
         verbose_name_plural = "Staff"
 
     doctors = models.ManyToManyField(User, related_name='staff', blank=True, null=True)
-    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE) 
-    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
+    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE, related_name='staff') 
+    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, related_name='staff')
 
     
     def doctors_count(self):
