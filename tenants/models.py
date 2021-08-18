@@ -38,5 +38,5 @@ class Staff(models.Model):
     
 class TenantSettings(models.Model):
     color = models.CharField(max_length=100)
-    logo = models.ImageField(upload_to='tenant_logos', blank=True, null=True)
+    logo = models.ImageField(upload_to='core/static/images/tenants/', blank=True, null=True)
     tenant = models.OneToOneField(Tenant, on_delete=models.CASCADE, related_name='settings')
