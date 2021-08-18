@@ -33,6 +33,7 @@ urlpatterns = [
     path("", include("authentication.urls")),  # Auth routes - login / register
     # API V1
     # url(r'^api/login/', obtain_auth_token, name='api_token_auth'),
+    url(r'^api/', include("tenants.urls")),
     url(r'^api/', include("commons.urls")),
     url(r'^api/', include("specialties.urls")),
     url(r'^api/swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
