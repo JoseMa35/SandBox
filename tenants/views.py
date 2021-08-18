@@ -49,5 +49,5 @@ class TenantStaffDoctorsBySpecialityView(APIView):
           doctor_serializer = DoctorSerializer(s.doctors, many=True)
           docs =doctor_serializer.data
           doctors += docs
-      doctor_serializer = DoctorSerializer(doctors, many=True)
-      return Response(doctor_serializer.data)
+      print(doctors)
+      return Response(doctors)

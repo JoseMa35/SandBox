@@ -25,7 +25,14 @@ class TenantStaffSerializer(serializers.ModelSerializer):
         model = Tenant
         fields = ('id', 'subdomain_prefix', 'name', 'staff')
 
+class ProfileSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
 class DoctorSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer(read_only=True)  
     class Meta:
         model = User
-        fields = ('id', 'username', 'first_name', 'last_name', 'email')
+        fields = ('id', 'username', 'first_name', 'last_name', 'email', 'profile')
