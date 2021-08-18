@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 
 from tenants.models import Tenant, Staff
 from tenants.serializers import TenantSerializer, TenantStaffSerializer, StaffSerializer, DoctorSerializer
+from commons.serializers import SpecialtySerializer
 
 class TenantListView(APIView):
     # permission_classes = [IsAuthenticated]
@@ -29,3 +30,24 @@ class TenantStaffView(APIView):
             doctor_serializer = DoctorSerializer(s.doctors, many=True)
             specialties[s.specialty.name] = doctor_serializer.data
         return Response(specialties)
+
+class TenantStaffSpecialitiesView(APIView):
+    def get(self, request, pk):
+      staff = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
+      specialties = []
+      for s in staff:
+          specialties.append(s.specialty)
+      specialty_serializer = SpecialtySerializer(specialties, many=True)
+      return Response(specialty_serializer.data)
+
+
+class TenantStaffDoctorsBySpecialityView(APIView):
+    def get(self, request, pk, specialty_id):
+      staff = Staff.objects.filter(tenant__subdomain_prefix=pk).filter(specialty_id=specialty_id).all()
+      doctors = []
+      for s in staff:
+          doctor_serializer = DoctorSerializer(s.doctors, many=True)
+          docs =doctor_serializer.data
+          doctors += docs
+      doctor_serializer = DoctorSerializer(doctors, many=True)
+      return Response(doctor_serializer.data)

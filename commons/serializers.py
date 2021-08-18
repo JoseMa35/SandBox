@@ -4,7 +4,7 @@
 from rest_framework import serializers
 
 # Models
-from .models import (Gender, Document_Type)
+from .models import (Gender, Document_Type, Specialty)
 
 
 class GenderSerializer(serializers.ModelSerializer):
@@ -18,5 +18,9 @@ class DocumentTypeSerializer(serializers.ModelSerializer):
         model = Document_Type
         fields = '__all__'
 
+class SpecialtySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Specialty
+        fields = '__all__'
 
 
