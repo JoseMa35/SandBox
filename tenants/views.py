@@ -51,3 +51,16 @@ class TenantStaffDoctorsBySpecialityView(APIView):
           doctors += docs
       print(doctors)
       return Response(doctors)
+
+class TenantStaffDoctorsView(APIView):
+    def get(self, request, pk):
+      staff = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
+      doctors = []
+      for s in staff:
+          doctor_serializer = DoctorSerializer(s.doctors, many=True)
+          docs = doctor_serializer.data
+          for i in range(0, len(docs)):
+              docs[i]['specialty'] = s.specialty.name
+          doctors += docs
+      print(doctors)
+      return Response(doctors)
