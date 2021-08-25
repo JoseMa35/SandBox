@@ -66,13 +66,12 @@ class TenantStaffDoctorsView(APIView):
         for s in staff:
             print(s.specialty)
             doctor_serializer = DoctorSerializer(s.doctors, many=True)
-            # print(doctor_serializer)
             docs = doctor_serializer.data
 
             for i in range(0, len(docs)):
                 print(docs[i])
-                docs[i]['specialty.id']= s.specialty.id
-                docs[i]['specialty.name'] = s.specialty.name
+                docs[i]['specialty_id']= s.specialty.id
+                docs[i]['specialty_name'] = s.specialty.name
             doctors += docs
         print(doctors)
         return Response(doctors)
