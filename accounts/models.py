@@ -16,11 +16,8 @@ class User(AbstractUser):
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
-    # REQUIRED_FIELDS = ['name', 'father_lastname', 'mother_lastname']
 
     objects = UserManager()
-
-    # class Meta():
 
     def __str__(self):
         return self.email
@@ -31,13 +28,13 @@ class Profile(models.Model):
         Profile model
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE, )
-    full_name = models.CharField(max_length=255, null=False, )
+    # full_name = models.CharField(max_length=255, null=False, )
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, )
     document_type = models.ForeignKey(Document_Type, on_delete=models.CASCADE, )
     document = models.CharField(max_length=15, unique=True, )
     date_of_birth = models.DateField(blank=True, null=True, )
     cell_phone = models.CharField(max_length=20, )
-    address = models.CharField(max_length=200, null=True, ) 
+    address = models.CharField(max_length=200, null=True, )
     website = models.URLField(max_length=200, null=True, )
     about = models.TextField(max_length=1000, )
     avatar = models.ImageField(
@@ -56,4 +53,4 @@ class Profile(models.Model):
     updated_at = models.DateTimeField(_('Updated at'), auto_now=True, )
 
     def __str__(self):
-        return self.full_name
+        return self.user.email
