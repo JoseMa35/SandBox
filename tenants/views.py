@@ -75,3 +75,18 @@ class TenantStaffDoctorsView(APIView):
             doctors += docs
         print(doctors)
         return Response(doctors)
+
+class TenantStaffDoctorScheduleView(APIView):
+    def get(self, request, pk, doctor_id):
+        staff = Staff.objects.filter(tenant__subdomain_prefix=pk)
+        for s in staff:
+            for d in s.doctors:
+                if d.id == doctor_id:
+                    doctor_schedule = d.schedule
+        
+        doctor_serializer = DoctorSerializer(staff.doctors)
+        return Response(doctor_serializer.data)
+
+class TenantStaffDoctorBookingView(APIView):
+    def post(self, request, pk, doctor_id):
+        pass

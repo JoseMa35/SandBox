@@ -18,6 +18,15 @@ class TenantAwareModel(models.Model):
         abstract = True
 
 
+class Schedule(models.Model):
+    doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule')
+    time_frame = models.CharField(max_length=100)
+    date = models.DateField(auto_now=False, auto_now_add=False)
+
+class Booking(models.Model):
+    doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings')
+
+
 class Staff(models.Model):
 
     class Meta: 
