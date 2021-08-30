@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'commons',
     'accounts',
     'app',  # Enable the inner app
-    'tenants'
+    'tenants',
+    'nested_inline'
 ]
 
 MIDDLEWARE = [

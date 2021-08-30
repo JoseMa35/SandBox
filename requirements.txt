@@ -37,3 +37,4 @@ uritemplate==3.0.1
 urllib3==1.26.6
 whitenoise==5.2.0
 coreapi
+django-nested-inline
