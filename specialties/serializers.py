@@ -4,13 +4,13 @@
 from rest_framework import serializers
 
 # Models
-from .models import (Specialty, )
-
-
-class SpecialtySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Specialty
-        fields = ('id', 'name', 'description', 'is_active')
+# from .models import (Specialty, )
+#
+#
+# class SpecialtySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Specialty
+#         fields = ('id', 'name', 'description', 'is_active')
 
 
 # class SpecialtyDoctorSerializer(serializers.ModelSerializer):
