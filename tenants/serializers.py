@@ -1,4 +1,4 @@
-from tenants.models import Tenant, TenantSettings, Staff
+from tenants.models import Schedule, ScheduleTimeFrame, Staff, Tenant, TenantSettings
 from accounts.models import User, Profile, Appointment
 from commons.serializers import SpecialtySerializer
 
@@ -105,6 +105,7 @@ class PatientProfileSerializer(serializers.ModelSerializer):
         """
         return Profile.objects.create(**validated_data)
 
+
 class PatientAppointmentSerializer(serializers.ModelSerializer):
     description = serializers.CharField(style={'base_template': 'textarea.html'})
     specialty = serializers.IntegerField()
@@ -120,3 +121,17 @@ class PatientAppointmentSerializer(serializers.ModelSerializer):
         Create and return a new `Appointment` instance, given the validated data.
         """
         return Appointment.objects.create(**validated_data)
+
+
+class ScheduleTimeFrameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScheduleTimeFrame
+        fields = '__all__'
+
+
+class ScheduleSerializer(serializers.ModelSerializer):
+    schedule = ScheduleTimeFrameSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Schedule
+        fields = ('doctor', 'schedule')

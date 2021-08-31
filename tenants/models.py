@@ -23,16 +23,24 @@ class TenantAwareModel(models.Model):
 
 
 class Schedule(models.Model):
+    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True)
     doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='schedule')
-    time_frame = models.CharField(max_length=100)
+    
+
+class ScheduleTimeFrame(models.Model):
+    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE, related_name='time_frames')
     date = models.DateField(auto_now=False, auto_now_add=False)
+    start_time = models.TimeField(auto_now=False, auto_now_add=False)
+    end_time = models.TimeField(auto_now=False, auto_now_add=False)
+    available = models.BooleanField(default=True)
+
 
 class Booking(models.Model):
     doctor_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='appointments')
     client_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings')
     virtual_profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     status = models.CharField(max_length=100)
-    date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    datetime = models.DateTimeField(auto_now=False, auto_now_add=False)
     meeting_link = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

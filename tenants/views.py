@@ -1,15 +1,16 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from tenants.models import Tenant, Staff
-from tenants.serializers import TenantSerializer, TenantStaffSerializer, StaffSerializer, DoctorSerializer, \
-    PatientAppointmentSerializer, PatientProfileSerializer
-from commons.serializers import SpecialtySerializer
-from accounts.models import User, Profile
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-
 from rest_framework.authentication import TokenAuthentication
+
+from accounts.models import Profile, User
+from commons.serializers import SpecialtySerializer
+
+from tenants.models import Schedule, Staff, Tenant
+from tenants.serializers import DoctorSerializer, ScheduleSerializer, ScheduleTimeFrameSerializer, StaffSerializer, \
+    TenantSerializer, TenantStaffSerializer, PatientAppointmentSerializer, PatientProfileSerializer
 
 
 class TenantListView(APIView):
@@ -82,6 +83,7 @@ class TenantStaffDoctorsView(APIView):
             doctors += zip(docs, s.specialty)
         return Response(doctors)
 
+
 class PatientViews(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -96,8 +98,8 @@ class PatientViews(APIView):
             profile = None
 
         if serializer.is_valid():
-            _profile =  serializer.validated_data['profile']
-            fullname =  serializer.validated_data['profile']['full_name']
+            _profile = serializer.validated_data['profile']
+            fullname = serializer.validated_data['profile']['full_name']
             _profile.user = request.user
 
             if profile is None:
@@ -134,17 +136,23 @@ class PatientViews(APIView):
             return Response({"serializer.data, status=status.HTTP_201_CREATED"})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class TenantStaffDoctorScheduleView(APIView):
-    def get(self, request, pk, doctor_id):
-        staff = Staff.objects.filter(tenant__subdomain_prefix=pk)
-        for s in staff:
-            for d in s.doctors:
-                if d.id == doctor_id:
-                    doctor_schedule = d.schedule
-        
-        doctor_serializer = DoctorSerializer(staff.doctors)
-        return Response(doctor_serializer.data)
+    def get(self, request, pk):
+
+        schedule = Schedule.objects.filter(doctor_id=pk).first()
+
+        if 'date' in request.GET != None:
+            timeframes = schedule.time_frames.filter(date=request.GET['date']).all()
+        else:
+            timeframes = schedule.time_frames.all()
+
+        serializer = ScheduleTimeFrameSerializer(timeframes, many=True)
+        return Response(serializer.data)
+
 
 class TenantStaffDoctorBookingView(APIView):
-    def post(self, request, pk, doctor_id):
+
+    def post(self, request, pk):
+        # doctor = User.objects.filter(id=pk).first()
         pass
