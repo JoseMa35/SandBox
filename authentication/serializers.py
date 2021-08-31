@@ -9,7 +9,6 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 
 # Models
-from rest_framework.validators import UniqueValidator
 
 from accounts.models import User
 
@@ -59,9 +58,7 @@ class AuthCustomTokenSerializer(serializers.Serializer):
 
 class RegisterCustomSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
+        required=True, )
 
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
@@ -69,6 +66,13 @@ class RegisterCustomSerializer(serializers.ModelSerializer):
         label=_("Token"),
         read_only=True
     )
+
+    def validate_email(self, value):
+        lower_email = value.lower()
+        if User.objects.filter(email__iexact=lower_email).exists():
+            msg = _('Email exist!.')
+            raise serializers.ValidationError(msg)
+        return lower_email
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:

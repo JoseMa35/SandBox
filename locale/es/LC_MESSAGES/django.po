@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-08-24 22:43-0500\n"
+"POT-Creation-Date: 2021-08-25 15:16-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,11 +42,11 @@ msgstr "email"
 msgid "Correo electrónico"
 msgstr ""
 
-#: accounts/models.py:55
+#: accounts/models.py:52
 msgid "Created at"
 msgstr "Creado en"
 
-#: accounts/models.py:56
+#: accounts/models.py:53
 msgid "Updated at"
 msgstr "Actualizado en"
 
@@ -58,17 +58,21 @@ msgstr ""
 msgid "Password"
 msgstr "contraseña"
 
-#: authentication/serializers.py:29 authentication/serializers.py:69
+#: authentication/serializers.py:29 authentication/serializers.py:67
 msgid "Token"
 msgstr "Token"
 
-#: authentication/serializers.py:45 authentication/serializers.py:49
+#: authentication/serializers.py:42 authentication/serializers.py:46
 msgid "Unable to log in with provided credentials."
 msgstr "No se puede iniciar sesión con las credenciales proporcionadas."
 
-#: authentication/serializers.py:53
+#: authentication/serializers.py:50
 msgid "Must include \"username\" and \"password\"."
 msgstr "Debe incluir \"nombre de usuario \" y \"contraseña \"."
+
+#: authentication/serializers.py:74
+msgid "Email exist!."
+msgstr "El correo ingresado ya existe"
 
 #: commons/models.py:10 commons/models.py:27 commons/models.py:45
 msgid "active"
@@ -79,18 +83,18 @@ msgid ""
 "Designates whether this user should be treated as active. Unselect this "
 "instead of deleting ."
 msgstr ""
-"Designa si este usuario debe tratarse como activo. Anule la selección de esto"
-"en lugar de eliminar."
+"Designa si este usuario debe tratarse como activo. Anule la selección de "
+"estoen lugar de eliminar."
 
 #: commons/models.py:47
 msgid "Specialty for default true, is necesary for use"
 msgstr "Especialidad por defecto verdadero, es necesario para su uso"
 
-#: core/settings.py:62
+#: core/settings.py:61
 msgid "Español"
 msgstr "Español"
 
-#: core/settings.py:63
+#: core/settings.py:62
 msgid "English"
 msgstr "Inglés"
 
@@ -99,8 +103,8 @@ msgid ""
 "First, enter a username and password. Then, you’ll be able to edit more user "
 "options."
 msgstr ""
-"Primero, ingrese un nombre de usuario y contraseña. Luego, podrá editar más usuarios"
-"opciones."
+"Primero, ingrese un nombre de usuario y contraseña. Luego, podrá editar más "
+"usuariosopciones."
 
 #: core/templates/admin/auth/user/add_form.html:8
 msgid "Enter a username and password."

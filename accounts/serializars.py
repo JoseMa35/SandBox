@@ -2,47 +2,24 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from accounts.models import User, Profile
+from accounts.models import User, Profile, Appointment
+from commons.models import Gender
+from commons.serializers import GenderSerializer, DocumentTypeSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
-    # email = serializers.EmailField()
-    # password = serializers.CharField()
-
     class Meta:
         model = User
-        fields = (
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-        )
+        fields = ('username', 'email',)
+
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-        source='user.email',
-        required=True,
-        max_length=254,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
-    password = serializers.CharField(
-        source='user.password',
-        required=False,
-        max_length=128,
-        write_only=True,
-        validators=[validate_password]
-    )
-    first_name = serializers.CharField(source='user.first_name')
-    last_name = serializers.CharField(source='user.last_name')
-    is_active = serializers.BooleanField(source='user.is_active')
+    user = UserSerializer()
+    gender = GenderSerializer()
+    document_type = DocumentTypeSerializer()
 
     class Meta:
         model = Profile
-        fields = (
-            # User
-            'email', 'password', 'first_name',
-            'last_name', 'is_active',
-            # Profile
-            'user', '_gender',
-            '_document_type', 'document', 'cell_phone', 'date_of_birth',)
+        fields = ('gender', 'document_type', 'document', 'cell_phone', 'date_of_birth', 'user',)
+
