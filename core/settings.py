@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'drf_yasg',  # swagger
     'commons',
     'accounts',
-    'tenants',
     'app',  # Enable the inner app
+    'tenants',
+    'nested_inline'
 ]
 
 

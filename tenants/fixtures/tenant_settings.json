@@ -1,0 +1,26 @@
+[
+  {
+    "model": "tenants.TenantSettings",
+    "fields": {
+      "color": "#0432A0",
+      "logo": "core/static/images/tenants/local.png",
+      "tenant": 1
+    }
+  },
+  {
+    "model": "tenants.TenantSettings",
+    "fields": {
+      "color": "#80BD03",
+      "logo": "core/static/images/tenants/clinica-san-felipe.png",
+      "tenant": 2
+    }
+  },
+  {
+    "model": "tenants.TenantSettings",
+    "fields": {
+      "color": "#0432A0",
+      "logo": "core/static/images/tenants/clinica-internacional.png",
+      "tenant": 3
+    }
+  }
+]

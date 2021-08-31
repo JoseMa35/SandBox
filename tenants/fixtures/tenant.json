@@ -1,0 +1,30 @@
+[
+  {
+    "model": "tenants.tenant",
+    "pk": 1,
+    "fields": {
+      "name": "Local Host",
+      "subdomain_prefix": "local",
+      "description": "Esto es una descripcion de ejemplo para este proyecto."
+    }
+  },
+  {
+    "model": "tenants.tenant",
+    "pk": 2,
+    "fields": {
+      "name": "Clínica San Felipe",
+      "subdomain_prefix": "clinicasanfelipe",
+      "description": "En la Clínica San Felipe trabajamos con planes de seguros locales, internacionales, autoseguro y planes de descuentos."
+    }
+  },
+  {
+    "model": "tenants.tenant",
+    "pk": 3,
+    "fields": {
+      "name": "Clínica Internacional",
+      "subdomain_prefix": "clinicainternacional",
+      "description": "Somos una red de Clínica y Centros médicos a nivel nacional, con la tecnología más moderna y el Staff médico más comprometido con la salud de nuestros pacientes y la de su familia."
+    }
+  }
+]
+
