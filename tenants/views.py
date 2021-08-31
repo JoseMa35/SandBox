@@ -1,9 +1,10 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from tenants.models import Tenant, Staff
-from tenants.serializers import TenantSerializer, TenantStaffSerializer, StaffSerializer, DoctorSerializer
+from tenants.models import Schedule, Staff, Tenant
+from tenants.serializers import DoctorSerializer, ScheduleSerializer, ScheduleTimeFrameSerializer, StaffSerializer, TenantSerializer, TenantStaffSerializer
 from commons.serializers import SpecialtySerializer
+from accounts.models import User
 
 
 class TenantListView(APIView):
@@ -77,16 +78,20 @@ class TenantStaffDoctorsView(APIView):
         return Response(doctors)
 
 class TenantStaffDoctorScheduleView(APIView):
-    def get(self, request, pk, doctor_id):
-        staff = Staff.objects.filter(tenant__subdomain_prefix=pk)
-        for s in staff:
-            for d in s.doctors:
-                if d.id == doctor_id:
-                    doctor_schedule = d.schedule
-        
-        doctor_serializer = DoctorSerializer(staff.doctors)
-        return Response(doctor_serializer.data)
+    def get(self, request, pk):
+
+        schedule = Schedule.objects.filter(doctor_id=pk).first()
+
+        if 'date' in request.GET != None:
+            timeframes = schedule.time_frames.filter(date=request.GET['date']).all()
+        else:
+            timeframes = schedule.time_frames.all()
+
+        serializer = ScheduleTimeFrameSerializer(timeframes, many=True)
+        return Response(serializer.data)
+
 
 class TenantStaffDoctorBookingView(APIView):
-    def post(self, request, pk, doctor_id):
+    def post(self, request, pk):
+        #doctor = User.objects.filter(id=pk).first()
         pass

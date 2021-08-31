@@ -1,4 +1,4 @@
-from tenants.models import Tenant, TenantSettings, Staff
+from tenants.models import Schedule, ScheduleTimeFrame, Staff, Tenant, TenantSettings
 from accounts.models import User, Profile
 from commons.serializers import SpecialtySerializer
 
@@ -55,3 +55,13 @@ class DoctorSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'first_name', 'last_name', 'email', 'profile', 'specialty')
 
+class ScheduleTimeFrameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScheduleTimeFrame
+        fields = '__all__'
+
+class ScheduleSerializer(serializers.ModelSerializer):
+    schedule = ScheduleTimeFrameSerializer(read_only=True, many=True)
+    class Meta:
+        model = Schedule
+        fields = ('doctor', 'schedule')
