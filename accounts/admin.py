@@ -9,7 +9,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 csrf_protect_m = method_decorator(csrf_protect)
 sensitive_post_parameters_m = method_decorator(sensitive_post_parameters())
 
-from .models import User, Profile, Appointment
+from .models import User, Profile
 
 
 # Register your models here.
@@ -42,14 +42,9 @@ class UserAdmin(admin.ModelAdmin):
     inlines = (ProfileInline,)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        # (_('Personal info'), {'fields': ('first_name', 'last_name',)}),
         (_('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
 
-
-@admin.register(Appointment)
-class AppointmentAdmin(admin.ModelAdmin):
-    list_display =  ('description', ) 

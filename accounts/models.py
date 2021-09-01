@@ -32,8 +32,7 @@ class Profile(models.Model):
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, )
     document_type = models.ForeignKey(Document_Type, on_delete=models.CASCADE, )
     document = models.CharField(max_length=15, unique=True)
-    # date_of_birth = models.DateField(blank=True, null=True, )
-    age = models.CharField(max_length=50, blank=True, null=True)
+    date_of_birth = models.DateField(blank=True, null=True, )
     cell_phone = models.CharField(max_length=20, blank=True, null=True)
     address = models.CharField(max_length=200, null=True, blank=True)
     website = models.URLField(max_length=200, null=True, blank=True)
@@ -42,12 +41,6 @@ class Profile(models.Model):
         upload_to="core/static/images/avatar/",
         default='core/static/images/avatar/default.jpeg',
     )
-
-    is_disability = models.BooleanField(default=False, blank=True)
-    is_smoker = models.BooleanField(default=False, blank=True)
-    is_alcohol = models.BooleanField(default=False, blank=True)
-    is_allegiance = models.BooleanField(default=False, blank=True)
-    allegiance_detail = models.TextField(null=True, blank=True)
 
     is_active = models.BooleanField(default=True, )
     is_email_verified = models.BooleanField(default=False, )
@@ -75,19 +68,3 @@ class Profile(models.Model):
         except Profile.DoesNotExist:
             profile = None
         return profile
-
-
-class Appointment(models.Model):
-    class Meta:
-        verbose_name = "Appointment"
-        verbose_name_plural = "Appointment"
-
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='appointment')
-    description = models.TextField(blank=True, null=True)
-    # files = models.FileField() // Management files
-    tenant = models.ForeignKey(to='tenants.Tenant', on_delete=models.CASCADE, related_name='appointment')
-    specialty = models.ForeignKey(Specialty, on_delete=models.CASCADE, related_name='appointment')
-    doctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='appointment')
-    # status = models.CharField(max_length=100)
-    # created_at = models.DateTimeField(_('Created at'), auto_now_add=True, )
-    # updated_at = models.DateTimeField(_('Updated at'), auto_now=True, )

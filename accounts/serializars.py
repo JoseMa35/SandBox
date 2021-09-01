@@ -1,17 +1,13 @@
-from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
-from rest_framework.validators import UniqueValidator
 
-from accounts.models import User, Profile, Appointment
-from commons.models import Gender
+from accounts.models import User, Profile
 from commons.serializers import GenderSerializer, DocumentTypeSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email',)
-
+        fields = ('email', 'password',)
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -22,4 +18,3 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('gender', 'document_type', 'document', 'cell_phone', 'date_of_birth', 'user',)
-

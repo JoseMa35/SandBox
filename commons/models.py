@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-
 # Create your models here.
 class Gender(models.Model):
     short_name = models.CharField(max_length=5)
@@ -63,7 +62,8 @@ class Integration(models.Model):
 
 
 class IntegrationDetails(models.Model):
-    user = models.ForeignKey()
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
+
 
 
 
