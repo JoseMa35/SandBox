@@ -13,8 +13,9 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from typing import Pattern
 from django import urls
-from checkOut.views import ListadoItems
+from checkOut.views import FailPayView, ListadoItems, PendingPayView, SuccesfulPayView
 from django.contrib import admin
 from django.urls import path, include
 from .router import router
@@ -24,6 +25,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth',include('rest_framework.urls')),
     path('articulos/',ListadoItems.as_view(), name="listadoArticulos"),
+    path('success/',SuccesfulPayView.as_view(),name='pagoExitoso'),
+    path('pending/',PendingPayView.as_view(),name='pagoPendiente'),
+    path('failure/',FailPayView.as_view(),name='pagoDenegado'),
     path('api/',include(router.urls)),
     
 ]

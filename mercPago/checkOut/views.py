@@ -27,14 +27,21 @@ preference_data = {
         {
             "title": "Mi producto",
             "quantity": 1,
-            "unit_price": 75.76,
+            "unit_price": 750.76,
         }
-    ]
+    ],
+    "back_urls": {
+        "success": "http://127.0.0.1:8996/success/",
+        "failure": "http://127.0.0.1:8996/failure/",
+        "pending": "http://127.0.0.1:8996/pendings/"
+    },
+    "auto_return": "approved"
 }
+
 
 preference_response = sdk.preference().create(preference_data)
 preference = preference_response["response"]
-print(preference['id'])
+#print(preference['id'])
 
 class ListadoItems(APIView):
     #renderer_classes = [TemplateHTMLRenderer]
@@ -55,6 +62,20 @@ class ListadoItems(APIView):
         serializer.save()
         return redirect('articulos')    
 
+class SuccesfulPayView(APIView):
+
+    def get(self, request):
+        return render(request,'succesfulPay.html',{}) 
+
+class FailPayView(APIView):
+
+    def get(self, request):
+        return render(request,'failurePay.html',{}) 
+
+class PendingPayView(APIView):
+
+    def get(self, request):
+        return render(request,'pendingPay.html',{})         
 
 
 # class ListadoItems(APIView):

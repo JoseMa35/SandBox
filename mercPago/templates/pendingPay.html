@@ -17,32 +17,20 @@
 <!-- THIS ACTUAL CONTENT BEGINS HERE...this is called a comment. which can only be seen when viewing the source code. This text CANNOT be seen by the browser. Its helpful when you need to place notes, comments or reminders in your code -->
 	<header>
 		<div class="header">
-			<h1>Listado de articulos</h1>
+			<h1>Pago pendiente</h1>
 		</div>
 	</header>
 	<!-- END HEADER | the header element in new to HTML5 -->
 		<div class="main">
-			<h2>Detalle de articulos a pagar:</h2>
+			<h2>Detalle de pago:</h2>
 		</div>
 
 		<div class="feature">
 			<h3>Carrito de compras</h3>
 			<p>lorem ipsum dolor amet lorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum dolor ametlorem ipsum.</p>
 			<!-- LOREM IPSUM is universally used. Lorem ipsum is dummy text, it does't really mean anything. Its used to fill space or for mockups. -->
-            <ul>
-                <!--<li>Item1</li>
-                <li>Item2</li>
-                <li>Item3</li>-->
-                {% for Item in items %}
-                	<li>{{ Item.title }}</li>
-					<li>{{ Item.unit_price }}</li>
-				{% endfor %}
-            </ul>
+
 		</div>
-        <script
-            src="https://www.mercadopago.com.ar/integrations/v1/web-payment-checkout.js"
-            data-preference-id="{{preference_id}}">
-        </script>
 	<footer>
 		&copy; All Rigts Reserved.
 	</footer>
