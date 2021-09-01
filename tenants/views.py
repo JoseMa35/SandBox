@@ -66,7 +66,7 @@ class TenantStaffDoctorsView(APIView):
     def get(self, request, pk):
 
         #fix
-        staff = Staff.all()
+        staff = Staff.objects.all()
         doctors = []
 
         for s in staff:
