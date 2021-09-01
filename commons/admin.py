@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from commons.models import Gender, Document_Type, Specialty
+from commons.models import Gender, Document_Type, Specialty, Integration, IntegrationKey
 
 
 @admin.register(Gender)
@@ -16,8 +16,20 @@ class DocumentTypeAdmin(admin.ModelAdmin):
 
 @admin.register(Specialty)
 class SpecialtyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', 'position', 'is_active',)  
+    list_display = ('name', 'description', 'position', 'is_active',)
     list_filter = ('is_active',)
     search_fields = ('name',)
     ordering = ('position',)
 
+
+@admin.register(Integration)
+class IntegrationAdmin(admin.ModelAdmin):
+    list_display = ('name', 'key', 'is_active',)
+
+
+@admin.register(IntegrationKey)
+class IntegrationKeyAdmin(admin.ModelAdmin):
+    list_display = ('_user', 'integration', 'token',)
+
+    def _user(self):
+        return self.user.email
