@@ -19,6 +19,13 @@
       "email": "david@gmail.com",
       "password": "Lima123456"
     }
+  },
+  {
+    "model": "accounts.user",
+    "fields": {
+      "email": "demo@tranvia.tech",
+      "password": "Lima123456"
+    }
   }
 ]
 
