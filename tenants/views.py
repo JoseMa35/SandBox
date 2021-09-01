@@ -64,9 +64,7 @@ class TenantStaffDoctorsBySpecialityView(APIView):
 # Lista de todos los doctores por Tenant
 class TenantStaffDoctorsView(APIView):
     def get(self, request, pk):
-
-        #fix
-        staff = Staff.objects.all()
+        staff = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
         doctors = []
 
         for s in staff:
@@ -79,7 +77,7 @@ class TenantStaffDoctorsView(APIView):
                 docs[i]['specialty_name'] = s.specialty.name
                 # error
                 # docs[i]['specialty'] = s.specialty
-            #doctors += zip(docs, s.specialty)
+            doctors += docs
         return Response(doctors)
 
 class TenantStaffDoctorScheduleView(APIView):
