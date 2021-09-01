@@ -60,12 +60,13 @@ class Integration(models.Model):
         default=True,
         help_text=_('Integration for default true, is necesary for use'))
 
+    def __str__(self):
+        return self.name
 
-class IntegrationDetails(models.Model):
+class IntegrationKey(models.Model):
     user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
-
-
-
+    integration = models.ForeignKey(Integration, on_delete=models.CASCADE)
+    token = models.TextField(blank=False, null=False)
 
 
 
