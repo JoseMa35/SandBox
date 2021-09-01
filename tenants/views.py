@@ -77,7 +77,7 @@ class TenantStaffDoctorsView(APIView):
                 docs[i]['specialty_name'] = s.specialty.name
                 # error
                 # docs[i]['specialty'] = s.specialty
-            doctors += zip(docs, s.specialty)
+            #doctors += zip(docs, s.specialty)
         return Response(doctors)
 
 class TenantStaffDoctorScheduleView(APIView):
