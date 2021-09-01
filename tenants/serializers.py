@@ -1,8 +1,18 @@
-from tenants.models import Schedule, ScheduleTimeFrame, Staff, Tenant, TenantSettings
+from django.db.models.base import Model
+from tenants.models import (
+    Schedule,
+    ScheduleTimeFrame,
+    Staff,
+    Tenant,
+    TenantSettings,
+    Booking,
+    BookingDetail,
+    BookingDetailFile
+)
 from accounts.models import User, Profile
 from commons.serializers import SpecialtySerializer
 
-from rest_framework import serializers
+from rest_framework import fields, serializers
 
 
 class StaffSerializer(serializers.ModelSerializer):
@@ -70,3 +80,51 @@ class ScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Schedule
         fields = ('doctor', 'schedule')
+
+
+class BookingDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookingDetail
+        fields = [
+            # "booking_id"
+            "has_disability",
+            "smoke",
+            "drink",
+            "allergic",
+            "extra_info",
+            "brief_description",
+            "created_at",
+            "updated_at",
+        ]
+
+class  BookingDetailFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookingDetailFile
+        fields = [
+            "file",
+        ]
+
+class BookingSerializer(serializers.ModelSerializer):
+
+    # booking_detail = BookingDetailSerializer(many=True)
+
+    class Meta:
+        model = Booking
+        fields = [
+            "doctor_id",
+            "client_id",
+            "virtual_profile",
+            "status",
+            "datetime",
+            "meeting_link",
+            "created_at",
+            "updated_at",
+            # "booking_detail",
+        ]
+    
+    # def create(self, validated_data):
+    #     booking_detail_data = validated_data.pop('booking_detail')
+    #     album = Booking.objects.create(**validated_data)
+    #     for booking_data in booking_detail_data:
+    #         BookingDetail.objects.create(album=album, **booking_data)
+    #     return album
