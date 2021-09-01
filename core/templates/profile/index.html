@@ -13,10 +13,9 @@
         <!-- Header container -->
         <div class="container-fluid d-flex align-items-center">
             <div class="row">
-                <div class="col-lg-7 col-md-10">
-                    <h1 class="display-2 text-white" style="display: inline">Hola {{ request.user.name | title }}</h1>
+                <div class="col-lg-8 col-md-10">
+                    <h1 class="display-2 text-white"> Hola {{ request.user.profile.full_name | title }}</h1>
                     <p class="text-white mt-0 mb-5"> {{ request.user.profile.about }}</p>
-                    <!-- <a href="#!" class="btn btn-info">Edit profile</a> -->
                 </div>
             </div>
         </div>
@@ -48,7 +47,7 @@
 
                         <div class="text-center">
                             <h3>
-                                {{ request.user.name|title }} {{ request.user.father_lastname|title }} {{ request.user.mother_lastname|title }}
+                                {{ request.user.profile.full_name|title }}
                             </h3>
                             <div class="h5 font-weight-300">
                                 {{ request.user.email }}
@@ -84,10 +83,10 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-username">Nombres</label>
+                                            <label class="form-control-label" for="input-username">Nombre y Apellido</label>
                                             <input type="text" id="input-username"
                                                    class="form-control form-control-alternative" placeholder="Username"
-                                                   value="{{ request.user.name|title }}">
+                                                   value="{{ request.user.profile.full_name|title }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -99,7 +98,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row" hidden>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="input-father-lastname">Apellido Paterno</label>

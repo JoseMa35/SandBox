@@ -1,8 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 import os
 from django.utils.translation import ugettext_lazy as _
 from decouple import config
@@ -40,7 +35,8 @@ INSTALLED_APPS = [
     'accounts',
     'app',  # Enable the inner app
     'tenants',
-    'nested_inline'
+    'nested_inline',
+    'sslserver', # Only for dev  python manage.py runsslserver
 ]
 
 

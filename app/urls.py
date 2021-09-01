@@ -21,4 +21,9 @@ urlpatterns = [
     path('integrations', views.integrations, name='integrations'),
     #Matches any html file
     # re_path(r'^.*\.*', views.pages, name='pages'),
+
+    # OAUTH2 GOOGLE CALENDAR
+    path("integrations/calendar/oauth2/google/redirect", views.RedirectOauthView),
+    path("integrations/calendar/oauth2/google/callback", views.CallbackView),
+    path("list/", views.list),
 ]

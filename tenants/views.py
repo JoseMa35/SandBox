@@ -156,3 +156,4 @@ class TenantStaffDoctorBookingView(APIView):
     def post(self, request, pk):
         # doctor = User.objects.filter(id=pk).first()
         pass
+
