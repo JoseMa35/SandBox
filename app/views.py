@@ -134,7 +134,7 @@ from django.shortcuts import HttpResponseRedirect
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 REDIRECT_URI = 'https://app-citas-medicas.herokuapp.com/integrations/calendar/oauth2/google/callback'
-# REDIRECT_URI = 'http://localhost:8000/integrations/calendar/oauth2/google/callback'
+# REDIRECT_URI = 'https://localhost:8000/integrations/calendar/oauth2/google/callback'
 JSON_FILEPATH = os.path.join(os.getcwd(), 'client_secret_web.apps.googleusercontent.com.json')
 
 import google_apis_oauth
