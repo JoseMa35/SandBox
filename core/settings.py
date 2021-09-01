@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'app',  # Enable the inner app
     'tenants',
     'nested_inline',
-    # 'sslserver', # Only for dev  python manage.py runsslserver
+    # 'sslserver', # Only `for dev  python manage.py runsslserver
 ]
 
 

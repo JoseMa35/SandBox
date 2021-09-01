@@ -1,0 +1,9 @@
+[
+  {
+    "model": "commons.integration",
+    "fields": {
+      "name": "Google Calendar",
+      "key": "gcalendar"
+    }
+  }
+]

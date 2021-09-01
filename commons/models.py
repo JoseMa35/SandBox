@@ -34,13 +34,14 @@ class Document_Type(models.Model):
     def __str__(self):
         return self.short_name
 
+
 class Specialty(models.Model):
     verbose_name = "Specialty"
     verbose_name_plural = "Specialties"
 
     name = models.CharField(max_length=250, blank=False)
     description = models.TextField(max_length=255, blank=True)
-    position = models.SmallIntegerField(default=0) 
+    position = models.SmallIntegerField(default=0)
     is_active = models.BooleanField(
         _('active'),
         default=True,
@@ -50,3 +51,22 @@ class Specialty(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Integration(models.Model):
+    name = models.CharField(max_length=255, blank=True)
+    key = models.CharField(max_length=150, blank=True)
+    is_active = models.BooleanField(
+        _('active'),
+        default=True,
+        help_text=_('Integration for default true, is necesary for use'))
+
+
+class IntegrationDetails(models.Model):
+    user = models.ForeignKey()
+
+
+
+
+
+
