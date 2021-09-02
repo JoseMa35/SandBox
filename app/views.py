@@ -150,8 +150,6 @@ def RedirectOauthView(request):
     return HttpResponseRedirect(oauth_url)
 
 
-# {"token": "ya29.a0ARrdaM_yeT1JElVf8CK_Te1JPiFwkzZXJwWSktdWpEFY7gQPi_fyU1wc6HybKoBTwNbaAKvVMtdDecuSZnNAZcQ0Jdc9H8dgPt8Gzqh5FEoDO68dXNnRfEYoAykPNOTRfOgwika36kw9i-WmjbSUVqhW22iP", "refresh_token": "1//0hDMnOvdZkPK7CgYIARAAGBESNwF-L9IrakZstp5zkmIhwnHNahVZ4jTdcD-roFuYdUQlUb2j_qSO_6GKBi784WLjoypkXOeoucU", "id_token": null, "token_uri": "https://oauth2.googleapis.com/token", "client_id": "676526299765-be6rcvs458njtgvdeitu4easbm4fmvd1.apps.googleusercontent.com", "client_secret": "KJXrfwhY7cVAkSTadwqOziPN", "scopes": ["https://www.googleapis.com/auth/calendar"], "expiry": "2021-08-19 08:56:33"}
-
 def CallbackView(request):
     print(request)
     try:
@@ -170,6 +168,9 @@ def CallbackView(request):
             integration=integration,
             token=stringified_token
         )
+
+        # redirect()
+
         return HttpResponse(integration_key)
 
     except Exception as e:
