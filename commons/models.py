@@ -60,6 +60,7 @@ class Integration(models.Model):
         default=True,
         help_text=_('Integration for default true, is necesary for use'))
 
+
     def __str__(self):
         return self.name
 

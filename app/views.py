@@ -9,7 +9,8 @@ from django.http import HttpResponse
 from django import template
 
 from accounts.models import User, Profile
-from commons.models import Specialty
+from commons.models import Specialty, IntegrationKey, Integration
+
 
 @login_required(login_url="/login/")
 def index(request):
@@ -152,6 +153,7 @@ def RedirectOauthView(request):
 # {"token": "ya29.a0ARrdaM_yeT1JElVf8CK_Te1JPiFwkzZXJwWSktdWpEFY7gQPi_fyU1wc6HybKoBTwNbaAKvVMtdDecuSZnNAZcQ0Jdc9H8dgPt8Gzqh5FEoDO68dXNnRfEYoAykPNOTRfOgwika36kw9i-WmjbSUVqhW22iP", "refresh_token": "1//0hDMnOvdZkPK7CgYIARAAGBESNwF-L9IrakZstp5zkmIhwnHNahVZ4jTdcD-roFuYdUQlUb2j_qSO_6GKBi784WLjoypkXOeoucU", "id_token": null, "token_uri": "https://oauth2.googleapis.com/token", "client_id": "676526299765-be6rcvs458njtgvdeitu4easbm4fmvd1.apps.googleusercontent.com", "client_secret": "KJXrfwhY7cVAkSTadwqOziPN", "scopes": ["https://www.googleapis.com/auth/calendar"], "expiry": "2021-08-19 08:56:33"}
 
 def CallbackView(request):
+    print(request)
     try:
         credentials = google_apis_oauth.get_crendentials_from_callback(
             request,
@@ -159,14 +161,22 @@ def CallbackView(request):
             SCOPES,
             REDIRECT_URI
         )
-
         stringified_token = google_apis_oauth.stringify_credentials(
             credentials)
-        return HttpResponse(stringified_token)
+
+        integration = Integration.objects.get(pk=1)
+        integration_key = IntegrationKey.objects.create(
+            user=request.user,
+            integration=integration,
+            token=stringified_token
+        )
+        return HttpResponse(integration_key)
 
     except Exception as e:
-        print(e)
         return HttpResponse(e)
+
+
+# Create a calendar
 
 
 def list(request):

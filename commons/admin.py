@@ -29,7 +29,7 @@ class IntegrationAdmin(admin.ModelAdmin):
 
 @admin.register(IntegrationKey)
 class IntegrationKeyAdmin(admin.ModelAdmin):
-    list_display = ('_user', 'integration', 'token',)
+    list_display = ('user', 'integration', 'token',)
 
     def _user(self):
         return self.user.email

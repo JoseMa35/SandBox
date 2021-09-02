@@ -32,7 +32,7 @@ class TenantSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tenant
-        fields = ('id', 'subdomain_prefix', 'name', 'settings')
+        fields = ('id', 'subdomain_prefix', 'name', 'settings', 'description')
 
 
 class TenantStaffSerializer(serializers.ModelSerializer):
