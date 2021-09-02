@@ -4,7 +4,7 @@ from rest_framework import status
 
 from django.shortcuts import get_object_or_404
 from commons.serializers import SpecialtySerializer
-
+from rest_framework.permissions import  AllowAny
 from tenants.models import Schedule, Staff, Tenant, Booking
 from tenants.serializers import DoctorSerializer, ScheduleSerializer, ScheduleTimeFrameSerializer, StaffSerializer, \
     TenantSerializer, BookingSerializer, BookingDetailSerializer, TenantStaffSerializer
@@ -102,6 +102,9 @@ class TenantStaffDoctorBookingView(APIView):
 
 
 class BookingView(APIView):
+    
+    permission_classes=(AllowAny,)
+
     def get(self, request, pk=None, form=None):
         if pk:
             booking = get_object_or_404(BookingSerializer, id=pk)
