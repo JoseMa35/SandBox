@@ -22,7 +22,6 @@ class BookingDetailStackedInline(NestedStackedInline):
     inlines = [BookingDetailFileStackedInline]
 
 
-
 @admin.register(Tenant)
 class TenantAdmin(admin.ModelAdmin):
     model = Tenant
