@@ -21,3 +21,6 @@ urlpatterns = [
     # path('v1/doctor/<doctor_id>/booking'),
 
 ]
+
+ # Codigo de pago -> 647 pagar 16 soles
+
