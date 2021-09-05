@@ -22,5 +22,4 @@ urlpatterns = [
 
 ]
 
- # Codigo de pago -> 647 pagar 16 soles
 
