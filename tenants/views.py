@@ -119,39 +119,10 @@ class BookingView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, *args, **kwargs):
-        data_booking = {
-            'doctor_id': request.data.get('doctor_id'),
-            'client_id': request.data.get('client_id'),
-            'virtual_profile': request.data.get('virtual_profile'),
-            'status': request.data.get('status'),
-            'datetime': request.data.get('datetime'),
-            'meeting_link': request.data.get('meeting_link'),
-            'created_at': request.data.get('created_at'),
-            'updated_at': request.data.get('updated_at'),
-        }
-
-        data_detail = {
-            "has_disability": request.data.get("detail", {}).get("has_disability", None),
-            "smoke": request.data.get("detail", {}).get("smoke", None),
-            "drink": request.data.get("detail", {}).get("drink", None),
-            "allergic": request.data.get("detail", {}).get("allergic", None),
-            "extra_info": request.data.get("detail", {}).get("extra_info", None),
-            "brief_description": request.data.get("detail", {}).get("brief_description", None),
-            "created_at": request.data.get("detail", {}).get("created_at",None),
-            "updated_at": request.data.get("detail", {}).get("updated_at", None),
-        }
-
-        serializer = BookingSerializer(data=data_booking)
-
-        if serializer.is_valid():
-            booking = serializer.save()
-
-            data_detail["booking_id"] = booking.pk
-    
-            detail_seriliezer = BookingDetailSerializer(data=data_detail)
-
-            if detail_seriliezer.is_valid():
-                detail_seriliezer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        serializer = BookingSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        serializer = BookingSerializer(instance=instance)
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
