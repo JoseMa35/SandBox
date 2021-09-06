@@ -55,6 +55,8 @@ class BookingDetail(models.Model):
     brief_description = models.TextField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+  
     
 
 class BookingDetailFile(models.Model):

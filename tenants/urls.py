@@ -21,3 +21,5 @@ urlpatterns = [
     # path('v1/doctor/<doctor_id>/booking'),
 
 ]
+
+

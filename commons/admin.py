@@ -24,12 +24,12 @@ class SpecialtyAdmin(admin.ModelAdmin):
 
 @admin.register(Integration)
 class IntegrationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'key', 'is_active',)
+    list_display = ('name', 'key', 'is_active', 'logo', 'redirect',)
 
 
 @admin.register(IntegrationKey)
 class IntegrationKeyAdmin(admin.ModelAdmin):
-    list_display = ('_user', 'integration', 'token',)
+    list_display = ('user', 'integration', 'token', 'calendar', 'calendar_id')
 
     def _user(self):
         return self.user.email

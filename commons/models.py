@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+
 # Create your models here.
 class Gender(models.Model):
     short_name = models.CharField(max_length=5)
@@ -54,20 +55,28 @@ class Specialty(models.Model):
 
 class Integration(models.Model):
     name = models.CharField(max_length=255, blank=True)
-    key = models.CharField(max_length=150, blank=True)
+    key = models.CharField(max_length=150, blank=True, unique=True)
     is_active = models.BooleanField(
         _('active'),
         default=True,
         help_text=_('Integration for default true, is necesary for use'))
+    logo = models.ImageField(upload_to='core/static/images/integration/', blank=True, null=True)
+    redirect = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return self.name
 
+
 class IntegrationKey(models.Model):
     user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     integration = models.ForeignKey(Integration, on_delete=models.CASCADE)
-    token = models.TextField(blank=False, null=False)
-
-
-
-
+    token = models.TextField( blank=True, null=True)
+    # 'refresh_token': credentials.refresh_token,
+    # 'id_token': credentials.id_token,
+    # 'token_uri': credentials.token_uri,
+    # 'client_id': credentials.client_id,
+    # 'client_secret': credentials.client_secret,
+    # 'scopes': credentials.scopes,
+    # 'expiry': datetime.datetime.strftime(credentials.expiry, '%Y-%m-%d %H:%M:%S')
+    calendar = models.TextField( blank=True, null=True)
+    calendar_id = models.CharField(max_length=500, blank=True, null=True)

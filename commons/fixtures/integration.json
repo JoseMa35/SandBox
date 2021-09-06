@@ -3,7 +3,9 @@
     "model": "commons.integration",
     "fields": {
       "name": "Google Calendar",
-      "key": "gcalendar"
+      "key": "gcalendar",
+      "logo": "core/static/images/integration/calendar.png",
+      "redirect": "/integrations/calendar/oauth2/google/redirect"
     }
   }
 ]

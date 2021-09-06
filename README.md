@@ -8,3 +8,9 @@ Usuarios de prueba
 
 yahyr@gmail.com
 123456
+
+
+USUARIO
+Carlos Zavala
+carlos@gmail.com
+Lima123456

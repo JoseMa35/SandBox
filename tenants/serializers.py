@@ -32,7 +32,7 @@ class TenantSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tenant
-        fields = ('id', 'subdomain_prefix', 'name', 'settings')
+        fields = ('id', 'subdomain_prefix', 'name', 'settings', 'description')
 
 
 class TenantStaffSerializer(serializers.ModelSerializer):
@@ -106,7 +106,7 @@ class  BookingDetailFileSerializer(serializers.ModelSerializer):
 
 class BookingSerializer(serializers.ModelSerializer):
 
-    # booking_detail = BookingDetailSerializer(many=True)
+    booking_detail = BookingDetailSerializer(source="bookingdetail")
 
     class Meta:
         model = Booking
@@ -119,12 +119,17 @@ class BookingSerializer(serializers.ModelSerializer):
             "meeting_link",
             "created_at",
             "updated_at",
-            # "booking_detail",
+            "booking_detail",
         ]
     
-    # def create(self, validated_data):
-    #     booking_detail_data = validated_data.pop('booking_detail')
-    #     album = Booking.objects.create(**validated_data)
-    #     for booking_data in booking_detail_data:
-    #         BookingDetail.objects.create(album=album, **booking_data)
-    #     return album
+    def save(self):
+        print(self.validated_data)
+        booking_data = self.validated_data
+        booking_detail_data = booking_data.pop('bookingdetail')
+        
+        
+        
+        booking = Booking.objects.create(**booking_data)
+        BookingDetail.objects.create(booking_id=booking, **booking_detail_data)
+
+        return booking
