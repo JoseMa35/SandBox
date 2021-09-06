@@ -36,8 +36,8 @@ class TenantStaffView(APIView):
         for s in staff:
             doctor_serializer = DoctorSerializer(s.doctors, many=True)
             specialties.append({
-                title: s.specialty.name,
-                doctors: doctor_serializer.data
+                "title": s.specialty.name,
+                "doctors": doctor_serializer.data
             })
         return Response(specialties)
 
