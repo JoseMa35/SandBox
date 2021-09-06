@@ -32,10 +32,13 @@ class TenantStaffView(APIView):
 
     def get(self, request, pk):
         staff = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
-        specialties = {}
+        specialties = []
         for s in staff:
             doctor_serializer = DoctorSerializer(s.doctors, many=True)
-            specialties[s.specialty.name] = doctor_serializer.data
+            specialties.append({
+                title: s.specialty.name,
+                doctors: doctor_serializer.data
+            })
         return Response(specialties)
 
 
