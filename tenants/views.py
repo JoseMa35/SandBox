@@ -4,7 +4,7 @@ from rest_framework import status
 
 from django.shortcuts import get_object_or_404
 from commons.serializers import SpecialtySerializer
-from rest_framework.permissions import  AllowAny
+from rest_framework.permissions import AllowAny
 from tenants.models import Schedule, Staff, Tenant, Booking
 from tenants.serializers import DoctorSerializer, ScheduleSerializer, ScheduleTimeFrameSerializer, StaffSerializer, \
     TenantSerializer, BookingSerializer, BookingDetailSerializer, TenantStaffSerializer
@@ -83,6 +83,7 @@ class TenantStaffDoctorsView(APIView):
             doctors += docs
         return Response(doctors)
 
+
 class TenantStaffDoctorScheduleView(APIView):
     def get(self, request, pk):
 
@@ -105,8 +106,7 @@ class TenantStaffDoctorBookingView(APIView):
 
 
 class BookingView(APIView):
-    
-    permission_classes=(AllowAny,)
+    permission_classes = (AllowAny,)
 
     def get(self, request, pk=None, form=None):
         if pk:
@@ -114,18 +114,17 @@ class BookingView(APIView):
             serializer = BookingSerializer(booking, many=False)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        else: 
+
+        else:
             booking = Booking.objects.all()
             serializer = BookingSerializer(booking, many=True)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
-    
+
     def post(self, request, *args, **kwargs):
         serializer = BookingSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
         serializer = BookingSerializer(instance=instance)
-        
-        
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
