@@ -1,3 +1,6 @@
+from django.contrib.auth.models import User
+from django.db.models.query import QuerySet
+from django.http import request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -5,10 +8,12 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from commons.serializers import SpecialtySerializer
 from rest_framework.permissions import  AllowAny
+from tenants import serializers
 from tenants.models import Schedule, Staff, Tenant, Booking
 from tenants.serializers import DoctorSerializer, ScheduleSerializer, ScheduleTimeFrameSerializer, StaffSerializer, \
     TenantSerializer, BookingSerializer, BookingDetailSerializer, TenantStaffSerializer
-
+from rest_framework import filters
+from accounts.models import Profile, User
 
 class TenantListView(APIView):
     # permission_classes = [IsAuthenticated]
@@ -21,6 +26,8 @@ class TenantListView(APIView):
 
 class TenantDetailView(APIView):
     # permission_classes = [IsAuthenticated]
+    # search_fields = ['last_name']
+    # filter_backends = (filters.SearchFilter,)
 
     def get(self, request, pk):
         tenant = Tenant.objects.filter(subdomain_prefix=pk).first()
@@ -66,22 +73,35 @@ class TenantStaffDoctorsBySpecialityView(APIView):
 
 # Lista de todos los doctores por Tenant
 class TenantStaffDoctorsView(APIView):
+
     def get(self, request, pk):
-        staff = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
         doctors = []
 
-        for s in staff:
-            print(s.specialty)
-            doctor_serializer = DoctorSerializer(s.doctors, many=True)
-            docs = doctor_serializer.data
-            for i in range(0, len(docs)):
-                # esto funciona
-                docs[i]['specialty_id'] = s.specialty.id
-                docs[i]['specialty_name'] = s.specialty.name
-                # error
-                # docs[i]['specialty'] = s.specialty
-            doctors += docs
-        return Response(doctors)
+        if self.request.query_params.get("q") !=None:
+            query = self.request.query_params.get("q")
+            staff_doctors = Staff.objects.filter(tenant__subdomain_prefix=pk)
+            for s in staff_doctors:
+                doctor_serializer = DoctorSerializer(s.doctors, many=True)
+
+                docs = doctor_serializer.data
+
+                for d in docs:
+                    if query in d['profile']['full_name']:
+                        doctors.append(d)
+            return Response(doctors)
+        else:
+            staff = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
+            for s in staff:
+                print(s.specialty)
+                doctor_serializer = DoctorSerializer(s.doctors, many=True)
+                docs = doctor_serializer.data
+                for i in range(0, len(docs)):
+                    # esto funciona
+                    docs[i]['specialty_id'] = s.specialty.id
+                    docs[i]['specialty_name'] = s.specialty.name
+            
+                doctors += docs
+            return Response(doctors)
 
 class TenantStaffDoctorScheduleView(APIView):
     def get(self, request, pk):

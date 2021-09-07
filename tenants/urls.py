@@ -16,10 +16,10 @@ urlpatterns = [
     path('v1/tenant/<pk>/staff/specialty/<specialty_id>/doctors', TenantStaffDoctorsBySpecialityView.as_view()),
     path('v1/tenant/<pk>/staff/doctors', TenantStaffDoctorsView.as_view()),
     path('v1/doctor/<pk>/schedule', TenantStaffDoctorScheduleView.as_view()),
-    path('v1/booking/', BookingView.as_view())
+    path('v1/booking/', BookingView.as_view()),
     
     # path('v1/doctor/<doctor_id>/booking'),
-
+  
 ]
 
 
