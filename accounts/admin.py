@@ -38,7 +38,7 @@ class ProfileInline(admin.StackedInline):
 
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(admin.UserAdmin):
     inlines = (ProfileInline,)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
