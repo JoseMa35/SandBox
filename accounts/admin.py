@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.forms import (UserCreationForm, )
 
+from django.contrib.auth.admin import UserAdmin
+
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_protect
@@ -38,8 +40,7 @@ class ProfileInline(admin.StackedInline):
 
 
 @admin.register(User)
-# class UserAdmin(admin.UserAdmin):
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(UserAdmin):
     inlines = (ProfileInline,)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
