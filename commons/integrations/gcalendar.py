@@ -68,15 +68,6 @@ def create_calendar(request):
     service = build('calendar', 'v3', credentials=creds)
     created_calendar = service.calendars().insert(body=body).execute()
 
-    # calendar = []
-    # calendar.kind = created_calendar['kind']
-    # calendar.etag = created_calendar['etag']
-    # calendar.id = created_calendar['id']
-    # calendar.summary = created_calendar['summary']
-    # calendar.timeZone = created_calendar['timeZone']
-    # calendar.conferenceProperties = created_calendar['conferenceProperties']
-    # print(calendar)
-
     key.calendar = created_calendar
     key.calendar_id = created_calendar['id']
     key.save()
@@ -94,6 +85,7 @@ def get_calendar(request):
 def get_freebusy(request):
     key = IntegrationKey.objects.get(integration__key=KEY, user__email='yahyr@gmail.com')
     creds = google_apis_oauth.load_credentials(key.token)
+    print(creds)
     service = build('calendar', 'v3', credentials=creds)
 
     # This event should be returned by freebusy
@@ -125,7 +117,9 @@ def get_freebusy(request):
 
 def list_all_events(request):
     key = IntegrationKey.objects.get(integration__key=KEY, user__email='yahyr@gmail.com')
+    print(key.token)
     creds = google_apis_oauth.load_credentials(key.token)
+    print(creds)
     service = build('calendar', 'v3', credentials=creds)
 
     start = datetime.datetime(2021, 8, 6, 0).strftime("%Y-%m-%dT%H:%M:%SZ")
