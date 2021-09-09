@@ -169,7 +169,7 @@ def free_time(request, pk):
     end = datetime.datetime.strftime(endDate, "%Y-%m-%dT%H:%M:%SZ")
 
     # if key.calendar_id is None:
-    calendar_name = 'primary'# use for defaut
+    calendar_name = 'primary'  # use for defaut
     # else:
     #     calendar_name = key.calendar_id
 
@@ -207,6 +207,10 @@ def free_time(request, pk):
                         'end_time': more_current.time().strftime('%H:%M:%S'),
                         'status': 'buzy'
                     }
+                    # if 'status' in request.GET != None:
+                    #     request_date = request.GET['date']
+                    #     schedule.append(item)
+                    # else:
                     schedule.append(item)
                 else:
                     item = {
