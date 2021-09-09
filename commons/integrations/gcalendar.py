@@ -34,7 +34,7 @@ def AuthGoogle(request):
 
     if code == KEY:
         oauth_url = google_apis_oauth.get_authorization_url(
-            JSON_FILEPATH, SCOPES, REDIRECT_URI, True )
+            JSON_FILEPATH, SCOPES, REDIRECT_URI, consent_prompt=True )
 
         return HttpResponseRedirect(oauth_url)
 
@@ -58,7 +58,7 @@ def CallbackAuthGoogle(request):
 
 
 def create_calendar(request):
-    key = IntegrationKey.objects.get(integration__key=KEY, user=request.user)
+    key = IntegrationKey.objects.get(integration__key=KEY, user__pk=5)
     body = {
         'summary': 'TranviaTech',
         'timeZone': TIME_ZONE
@@ -116,6 +116,7 @@ def get_freebusy(request):
 
 
 def list_all_events(request):
+    print(request)
     key = IntegrationKey.objects.get(integration__key=KEY, user__email='yahyr@gmail.com')
     print(key.token)
     creds = google_apis_oauth.load_credentials(key.token)
