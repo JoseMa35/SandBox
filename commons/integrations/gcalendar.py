@@ -1,5 +1,7 @@
 # Setup Google Calendar
 from django.http import HttpResponse
+
+from accounts.models import User
 from commons.models import IntegrationKey, Integration
 
 import os
@@ -32,7 +34,7 @@ def AuthGoogle(request):
 
     if code == KEY:
         oauth_url = google_apis_oauth.get_authorization_url(
-            JSON_FILEPATH, SCOPES, REDIRECT_URI)
+            JSON_FILEPATH, SCOPES, REDIRECT_URI, True )
 
         return HttpResponseRedirect(oauth_url)
 
@@ -44,7 +46,6 @@ def CallbackAuthGoogle(request):
             request, JSON_FILEPATH, SCOPES, REDIRECT_URI)
         stringified_token = google_apis_oauth \
             .stringify_credentials(credentials)
-
         integration = Integration.objects.get(key=KEY)
         IntegrationKey.objects.create(
             user=request.user,
@@ -58,8 +59,6 @@ def CallbackAuthGoogle(request):
 
 def create_calendar(request):
     key = IntegrationKey.objects.get(integration__key=KEY, user=request.user)
-    # print(key.token)
-
     body = {
         'summary': 'TranviaTech',
         'timeZone': TIME_ZONE
@@ -160,7 +159,7 @@ def list_all_events(request):
 
 
 def free_time(request, pk):
-    key = IntegrationKey.objects.get(integration__key=KEY, user__email='yahyr@gmail.com')
+    key = IntegrationKey.objects.get(integration__key=KEY, user__pk=pk)
     creds = google_apis_oauth.load_credentials(key.token)
     service = build('calendar', 'v3', credentials=creds)
 
