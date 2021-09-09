@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from accounts.models import User, Profile
 from commons.models import Specialty
-
+from . import Weekdays
 
 # Create your models here.
 class Tenant(models.Model):
@@ -85,3 +85,12 @@ class TenantSettings(models.Model):
     color = models.CharField(max_length=100)
     logo = models.ImageField(upload_to='core/static/images/tenants/', blank=True, null=True)
     tenant = models.OneToOneField(Tenant, on_delete=models.CASCADE, related_name='settings')
+    weekend =  models.IntegerField(
+        choices=Weekdays.choices,
+        default=Weekdays.MONDAY,
+        blank=True,
+        null=True,
+    )
+    work_start = models.DateTimeField()
+    work_end = models.DateTimeField()
+
