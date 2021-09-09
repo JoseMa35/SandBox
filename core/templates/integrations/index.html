@@ -41,7 +41,7 @@
                                     <h3 class="mb-0">{{ item.name }} </h3>
                                     <br/>
                                     {% if item ==  key.integration %}
-                                        <a href="#" class="btn btn btn-success">Actualizar Llaves</a>
+                                        <button  disabled class="btn btn btn-success">Autorizacion Completa</button>
                                     {% else %}
                                         <a href="{{ item.redirect }}?code={{ item.key }}" class="btn btn btn-primary">Autorizar</a>
                                     {% endif %}

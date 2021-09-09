@@ -34,7 +34,7 @@ def AuthGoogle(request):
 
     if code == KEY:
         oauth_url = google_apis_oauth.get_authorization_url(
-            JSON_FILEPATH, SCOPES, REDIRECT_URI, consent_prompt=True )
+            JSON_FILEPATH, SCOPES, REDIRECT_URI, consent_prompt=True)
 
         return HttpResponseRedirect(oauth_url)
 
@@ -116,11 +116,8 @@ def get_freebusy(request):
 
 
 def list_all_events(request):
-    print(request)
     key = IntegrationKey.objects.get(integration__key=KEY, user__email='yahyr@gmail.com')
-    print(key.token)
     creds = google_apis_oauth.load_credentials(key.token)
-    print(creds)
     service = build('calendar', 'v3', credentials=creds)
 
     start = datetime.datetime(2021, 8, 6, 0).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -143,12 +140,6 @@ def list_all_events(request):
     if not events:
         print('No upcoming events found.')
         return HttpResponse('No upcoming events found.')
-
-    # start = []
-    # for event in events:
-    #     start.append(event['start'].get('dateTime', event['start'].get('date')))
-
-    print(events)
 
     return HttpResponse(events)
 
@@ -177,10 +168,10 @@ def free_time(request, pk):
     endDate = datetime.datetime(year, month, day, close_hour, close_mins, tzinfo=pytz.timezone(TIME_ZONE))
     end = datetime.datetime.strftime(endDate, "%Y-%m-%dT%H:%M:%SZ")
 
-    if key.calendar_id is None:
-        calendar_name = 'primary'
-    else:
-        calendar_name = key.calendar_id
+    # if key.calendar_id is None:
+    calendar_name = 'primary'# use for defaut
+    # else:
+    #     calendar_name = key.calendar_id
 
     events_result = service.events().list(
         timeMax=end, calendarId=calendar_name,
@@ -236,27 +227,3 @@ def free_time(request, pk):
         current = more_current
 
     return HttpResponse(json.dumps(schedule, sort_keys=True))
-
-
-def load_calendar(created_calendar):
-    calendar = []
-    calendar.kind = created_calendar.get('kind')
-    calendar.etag = created_calendar.get('etag')
-    calendar.id = created_calendar.get('id')
-    calendar.summary = created_calendar.get('summary')
-    calendar.timeZone = created_calendar.get('timeZone')
-    calendar.conferenceProperties = created_calendar.get('conferenceProperties')
-    return calendar
-
-
-def stringify_calendar(calendar):
-    calendar_dict = {
-        'kind': calendar.kind,
-        'etag': calendar.etag,
-        'id': calendar.id,
-        'summary': calendar.summary,
-        'timeZone': calendar.timeZone,
-        'conferenceProperties': calendar.conferenceProperties,
-    }
-    print(calendar_dict)
-    return json.dumps(calendar_dict)
