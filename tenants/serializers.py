@@ -24,7 +24,15 @@ class StaffSerializer(serializers.ModelSerializer):
 class TenantSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = TenantSettings
-        fields = ('color', 'logo')
+        fields =  [
+            'color', 
+            'logo',
+            'weekend',
+            'work_start',
+            'work_end',
+        ]
+        
+        
 
 
 class TenantSerializer(serializers.ModelSerializer):
