@@ -24,7 +24,15 @@ class StaffSerializer(serializers.ModelSerializer):
 class TenantSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = TenantSettings
-        fields = ('color', 'logo')
+        fields =  [
+            'color', 
+            'logo',
+            'weekend',
+            'work_start',
+            'work_end',
+        ]
+        
+        
 
 
 class TenantSerializer(serializers.ModelSerializer):
@@ -97,15 +105,16 @@ class BookingDetailSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
-class  BookingDetailFileSerializer(serializers.ModelSerializer):
+
+class BookingDetailFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookingDetailFile
         fields = [
             "file",
         ]
 
-class BookingSerializer(serializers.ModelSerializer):
 
+class BookingSerializer(serializers.ModelSerializer):
     booking_detail = BookingDetailSerializer(source="bookingdetail")
 
     class Meta:
@@ -121,14 +130,12 @@ class BookingSerializer(serializers.ModelSerializer):
             "updated_at",
             "booking_detail",
         ]
-    
+
     def save(self):
         print(self.validated_data)
         booking_data = self.validated_data
         booking_detail_data = booking_data.pop('bookingdetail')
-        
-        
-        
+
         booking = Booking.objects.create(**booking_data)
         BookingDetail.objects.create(booking_id=booking, **booking_detail_data)
 

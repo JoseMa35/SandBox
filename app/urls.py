@@ -30,4 +30,5 @@ urlpatterns = [
     path("integrations/calendar/detail", gcalendar.get_calendar),
     path("integrations/calendar/freebuzy", gcalendar.get_freebusy),
     path("integrations/calendar/event/list", gcalendar.list_all_events),
+    path("integrations/calendar/event/freetime", gcalendar.free_time),
 ]
