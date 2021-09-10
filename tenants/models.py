@@ -4,7 +4,7 @@ from django.db import models
 from accounts.models import User, Profile
 from commons.models import Specialty
 from . import Weekdays
-
+from multiselectfield import MultiSelectField
 # Create your models here.
 class Tenant(models.Model):
     name = models.CharField(max_length=100)
@@ -82,14 +82,36 @@ class Staff(models.Model):
 
 
 class TenantSettings(models.Model):
-    color = models.CharField(max_length=100)
-    logo = models.ImageField(upload_to='core/static/images/tenants/', blank=True, null=True)
-    tenant = models.OneToOneField(Tenant, on_delete=models.CASCADE, related_name='settings')
-    weekend =  models.IntegerField(
-        choices=Weekdays.choices,
-        default=Weekdays.MONDAY,
-        blank=True,
-        null=True,
+    WEELDAYS = (
+        ("Lunes", "Lunes"),
+        ("Martes", "Martes"),
+        ("Miercoles", "Miercoles"),
+        ("jueves", "jueves"),
+        ("Viernes", "Viernes"),
+        ("Sabado", "Sabado"),
+        ("Domingo", "Domingo"),
+    )
+    color = models.CharField(
+        max_length=100
+    )
+    logo = models.ImageField(
+        upload_to='core/static/images/tenants/', 
+        blank=True, 
+        null=True
+    )
+    tenant = models.OneToOneField(
+        Tenant, 
+        on_delete=models.CASCADE, 
+        related_name='settings'
+    )
+    labor_days =  MultiSelectField(
+        choices=WEELDAYS
+    )
+    quote_duration = models.IntegerField(
+        default=0,
+    )
+    wait_time = models.IntegerField(
+        default=0,
     )
     work_start = models.DateTimeField()
     work_end = models.DateTimeField()
