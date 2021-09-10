@@ -27,14 +27,13 @@ class TenantSettingsSerializer(serializers.ModelSerializer):
         fields =  [
             'color', 
             'logo',
-            'weekend',
+            'labor_days',
+            'quote_duration',
+            'wait_time',
             'work_start',
             'work_end',
         ]
         
-        
-
-
 class TenantSerializer(serializers.ModelSerializer):
     settings = TenantSettingsSerializer(read_only=True)
 
