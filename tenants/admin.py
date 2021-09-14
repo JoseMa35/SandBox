@@ -28,8 +28,8 @@ class TenantAdmin(admin.ModelAdmin):
     inlines = [TenantSettingsOfficerStackedInline]
     #inlines = [TenantSettingsTabularInline, ]
     
-
 @admin.register(Staff)
+
 class StaffAdmin(admin.ModelAdmin):
     list_display = ('tenant', 'specialty', 'doctors_count')
     filter_horizontal = ('doctors',)

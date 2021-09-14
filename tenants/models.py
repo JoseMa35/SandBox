@@ -1,10 +1,10 @@
 from django.db import models
-
+from multiselectfield import MultiSelectField
 # Create your models here.
 from accounts.models import User, Profile
 from commons.models import Specialty
-from . import Weekdays
-from multiselectfield import MultiSelectField
+
+
 # Create your models here.
 class Tenant(models.Model):
     name = models.CharField(
@@ -134,7 +134,7 @@ class BookingDetail(models.Model):
 class BookingDetailFile(models.Model):
     booking_detail = models.ForeignKey(
         BookingDetail, 
-        on_delete=models.CASCADE, 
+        on_delete=models.CASCADE,
         related_name='files'
     )
     file = models.FileField(

@@ -88,8 +88,17 @@ class ScheduleSerializer(serializers.ModelSerializer):
         model = Schedule
         fields = ('doctor', 'schedule')
 
+class BookingDetailFileSerializer(serializers.ModelSerializer):
+    # booking_detail_files = BookingDetailSerializer(source="files")
+
+    class Meta:
+        model = BookingDetailFile
+        fields = [
+            "file",
+        ]
 
 class BookingDetailSerializer(serializers.ModelSerializer):
+    booking_detail_files = BookingDetailFileSerializer(source="files", many=True)
     class Meta:
         model = BookingDetail
         fields = [
@@ -100,22 +109,20 @@ class BookingDetailSerializer(serializers.ModelSerializer):
             "allergic",
             "extra_info",
             "brief_description",
+            "booking_detail_files",
             "created_at",
             "updated_at",
         ]
+    def save(self):
+        field_data = self.validated_data
+        booking_detail_data = field_data.pop('files')
 
-
-class BookingDetailFileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BookingDetailFile
-        fields = [
-            "file",
-        ]
-
+        booking_file = BookingDetail.objects.create(**field_data)
+        BookingDetailFile.objects.create(booking_detail_id=booking_file, **booking_detail_data)
+        return booking_file
 
 class BookingSerializer(serializers.ModelSerializer):
     booking_detail = BookingDetailSerializer(source="bookingdetail")
-
     class Meta:
         model = Booking
         fields = [
@@ -125,17 +132,19 @@ class BookingSerializer(serializers.ModelSerializer):
             "status",
             "datetime",
             "meeting_link",
+            "booking_detail",
             "created_at",
             "updated_at",
-            "booking_detail",
         ]
 
-    def save(self):
+    def save(self,):
         print(self.validated_data)
         booking_data = self.validated_data
         booking_detail_data = booking_data.pop('bookingdetail')
 
         booking = Booking.objects.create(**booking_data)
-        BookingDetail.objects.create(booking_id=booking, **booking_detail_data)
-
+        # BookingDetail.objects.create(booking_id=booking, **booking_detail_data)
+        serializer = BookingDetailSerializer(data=booking_detail_data, many=True)
+        serializer.is_valid(raise_exception=True)
+        instances = serializer.save()
         return booking
