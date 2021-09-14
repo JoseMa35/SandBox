@@ -1,12 +1,15 @@
 ```shell
-python manage.py loaddata specialties.json gender.json document_type.json tenant.json tenant_settings.json user.json integration.json 
+python manage.py loaddata specialties.json gender.json document_type.json tenant.json tenant_settings.json user.json integration.json
+```
+
+```shell
 python manage.py createsuperuser --email yahyr@gmail.com 
 django-admin makemessages -l es
 ```
 
-# How to run 
+# How to run?
 
-```python
+```shell
 python3 manage.py runserver --settings core.settings.local
 ```
 
