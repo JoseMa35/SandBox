@@ -24,8 +24,8 @@ class StaffSerializer(serializers.ModelSerializer):
 class TenantSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = TenantSettings
-        fields =  [
-            'color', 
+        fields = [
+            'color',
             'logo',
             'labor_days',
             'quote_duration',
@@ -33,7 +33,8 @@ class TenantSettingsSerializer(serializers.ModelSerializer):
             'work_start',
             'work_end',
         ]
-        
+
+
 class TenantSerializer(serializers.ModelSerializer):
     settings = TenantSettingsSerializer(read_only=True)
 
@@ -96,6 +97,13 @@ class BookingDetailFileSerializer(serializers.ModelSerializer):
         fields = [
             "file",
         ]
+
+class BookingDetailFileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BookingDetailFile
+        fields = ["file"]
+
 
 class BookingDetailSerializer(serializers.ModelSerializer):
     booking_detail_files = BookingDetailFileSerializer(source="files", many=True)

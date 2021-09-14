@@ -35,6 +35,7 @@ urlpatterns = [
         TenantStaffDoctorsView.as_view()
     ),
     # path('v1/doctor/<pk>/schedule', TenantStaffDoctorScheduleView.as_view()),
+<<<<<<< HEAD
     path(
         'v1/doctor/<pk>/schedule', 
         gcalendar.free_time
@@ -43,6 +44,11 @@ urlpatterns = [
         'v1/booking/', 
         BookingView.as_view()
     ),
+=======
+    path('v1/doctor/<pk>/schedule', gcalendar.free_time),
+    path('v1/booking/', BookingView.as_view()),
+    path('v1/booking/<pk>/', BookingView.as_view()),
+>>>>>>> a36557b1e8aa336477cf448b4766b23ce2c2eea1
 
     # path('v1/doctor/<doctor_id>/booking'),
 
