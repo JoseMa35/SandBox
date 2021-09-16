@@ -1,7 +1,8 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
+import requests
+
+from django.conf import settings
+from django.utils import timezone
+from django.http import HttpResponseRedirect
 
 from django.contrib.auth.decorators import login_required
 from django.template import loader
@@ -71,6 +72,29 @@ def integrations(request):
     html_template = loader.get_template('integrations/index.html')
     return HttpResponse(html_template.render(context, request))
 
+
+@login_required(login_url="/login/")
+def mercado_pago(request):
+    integration = Integration.objects.get(name="mercado pago")
+    code = request.GET.get("code", None)
+    data = {
+        "client_secret" : integration.key_secret,
+        "grant_type":  "authorization_code",
+        "code": code,
+        "redirect_uri": integration.redirect,
+    }
+    resp = requests.post("https://api.mercadopago.com/oauth/token",  data=data)
+    if resp.status_code == 200:
+        resp_json = resp.json()
+        integration_key = IntegrationKey()
+        integration_key.user = request.user
+        integration_key.integration = integration
+        integration_key.acceses_token = resp_json["access_token"]
+        integration_key.token_refresh = resp_json["refresh_token"]
+        integration_key.public_key = resp_json["public_key"]
+        integration_key.last_token_update = timezone.now()
+        integration_key.save()
+    return HttpResponseRedirect('/integrations')
 
 @login_required(login_url="/login/")
 def pages(request):

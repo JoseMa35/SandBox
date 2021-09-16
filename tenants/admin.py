@@ -4,16 +4,8 @@ from tenants.models import Booking, BookingDetail, BookingDetailFile, Schedule, 
     TenantSettings
 from commons.models import Specialty
 
-
-# # Register your models here.
-# @admin.register(Specialty)
-# class SpecialtyAdmin(admin.ModelAdmin):
-#   pass
-
-
 class TenantSettingsOfficerStackedInline(admin.StackedInline):
     model = TenantSettings
-
 
 @admin.register(Tenant)
 class TenantAdmin(admin.ModelAdmin):
@@ -28,35 +20,29 @@ class StaffAdmin(admin.ModelAdmin):
     filter_horizontal = ('doctors',)
     list_filter = ('tenant',)
 
-
 class ScheduleTimeFrameStackedInline(admin.StackedInline):
     model = ScheduleTimeFrame
-
 
 @admin.register(Schedule)
 class ScheduleAdmin(admin.ModelAdmin):
     model = Schedule
     inlines = [ScheduleTimeFrameStackedInline]
 
-
 class BookingDetailFileStackedInline(NestedStackedInline):  # one
     model = BookingDetailFile
     extra = 1
     fk_name = 'booking_detail'
-
-
+    
 class BookingDetailStackedInline(NestedStackedInline):  # TOP
     model = BookingDetail
     extra = 1
     fk_name = 'booking_id'
     inlines = [BookingDetailFileStackedInline]
 
-
 @admin.register(Booking)
 class BookingAdmin(NestedModelAdmin):
     model = Booking
     inlines = [BookingDetailStackedInline]
-
 
 @admin.register(BookingDetailFile)
 class BookingDetailFileAdmin(admin.ModelAdmin):  # TOP

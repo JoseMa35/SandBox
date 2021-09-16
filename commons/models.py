@@ -1,11 +1,16 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 
 # Create your models here.
 class Gender(models.Model):
-    short_name = models.CharField(max_length=5)
-    long_name = models.CharField(max_length=50)
+    short_name = models.CharField(
+        max_length=5
+    )
+    long_name = models.CharField(
+        max_length=50
+    )
     is_active = models.BooleanField(
         _('active'),
         default=True,
@@ -19,8 +24,12 @@ class Gender(models.Model):
 
 
 class Document_Type(models.Model):
-    long_name = models.CharField(max_length=255)
-    short_name = models.CharField(max_length=55)
+    long_name = models.CharField(
+        max_length=255
+    )
+    short_name = models.CharField(
+        max_length=55
+    )
     character_length = models.SmallIntegerField()
     type_character = models.CharField(max_length=100)
     is_active = models.BooleanField(
@@ -54,29 +63,88 @@ class Specialty(models.Model):
 
 
 class Integration(models.Model):
-    name = models.CharField(max_length=255, blank=True)
-    key = models.CharField(max_length=150, blank=True, unique=True)
+    name = models.CharField(
+        max_length=255, 
+        blank=True
+    )
+    key = models.CharField(
+        max_length=150, 
+        blank=True, 
+        unique=True
+    )
+    key_secret = models.CharField(
+        max_length=150, 
+        blank=True, 
+    )
     is_active = models.BooleanField(
         _('active'),
         default=True,
         help_text=_('Integration for default true, is necesary for use'))
-    logo = models.ImageField(upload_to='core/static/images/integration/', blank=True, null=True)
-    redirect = models.CharField(max_length=500, blank=True, null=True)
+    logo = models.ImageField(
+        upload_to='core/static/images/integration/', 
+        blank=True, null=True
+    )
+    redirect = models.CharField(
+        max_length=500, 
+        blank=True, 
+        null=True
+    )
+    authorization_url = models.CharField(
+        max_length=500,
+        blank=True, 
+        null=True
+    )
+    
+    @property
+    def parsed_authorization_url(self):
+        if self.authorization_url == None:
+            return self.authorization_url, self.redirect
+        else:
+            return self.authorization_url.replace('REDIRECT', self.redirect ).replace('KEY',self.key)
 
     def __str__(self):
         return self.name
 
-
 class IntegrationKey(models.Model):
-    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
-    integration = models.ForeignKey(Integration, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        'accounts.User', 
+        on_delete=models.CASCADE,
+        null=True
+    )
+    integration = models.ForeignKey(
+        Integration, 
+        on_delete=models.CASCADE
+    )
+    # Todo: delete columm
     token = models.TextField( blank=True, null=True)
-    # 'refresh_token': credentials.refresh_token,
-    # 'id_token': credentials.id_token,
-    # 'token_uri': credentials.token_uri,
-    # 'client_id': credentials.client_id,
-    # 'client_secret': credentials.client_secret,
-    # 'scopes': credentials.scopes,
-    # 'expiry': datetime.datetime.strftime(credentials.expiry, '%Y-%m-%d %H:%M:%S')
-    calendar = models.TextField( blank=True, null=True)
-    calendar_id = models.CharField(max_length=500, blank=True, null=True)
+    meta_data = models.TextField(
+        null=True,
+        blank=True
+    )
+    acceses_token = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True
+    )
+    token_refresh = models.CharField(
+        max_length= 255,
+        null=True
+    )
+    public_key = models.CharField(
+        max_length= 255,
+        null=True
+    )
+    last_token_update = models.DateTimeField(
+        default=timezone.now,
+        null=True,
+        blank=True
+    )
+    calendar = models.TextField( 
+        blank=True, 
+        null=True
+    )
+    calendar_id = models.CharField(
+        max_length=500, 
+        blank=True, 
+        null=True
+    )
