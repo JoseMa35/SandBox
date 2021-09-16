@@ -9,7 +9,7 @@ DEBUG = True
 
 # load production server from .env
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*', ]
-
+# CORS_ALLOWED_ORIGINS = ['localhost', '127.0.0.1', '0.0.0.0', ]
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 

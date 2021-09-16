@@ -5,6 +5,7 @@ from unipath import Path
 import dj_database_url
 
 import pymysql
+
 pymysql.install_as_MySQLdb()
 
 print(f"FILE: {os.path.dirname(os.path.abspath(__file__))}")
@@ -36,18 +37,17 @@ INSTALLED_APPS = [
     # 'sslserver', # Only `for dev  python manage.py runsslserver
 ]
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 LANGUAGE_CODE = 'es'
@@ -85,8 +85,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
