@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'tenants',
     'nested_inline',
     'multiselectfield',
-    'sslserver', # Only `for dev  python manage.py runsslserver
+    # 'sslserver', # Only `for dev  python manage.py runsslserver
 ]
 
 
