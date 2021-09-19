@@ -1,4 +1,3 @@
-from django.db.models.base import Model
 from tenants.models import (
     Schedule,
     ScheduleTimeFrame,
@@ -12,7 +11,7 @@ from tenants.models import (
 from accounts.models import User, Profile
 from commons.serializers import SpecialtySerializer
 
-from rest_framework import fields, serializers
+from rest_framework import serializers
 
 
 class StaffSerializer(serializers.ModelSerializer):
@@ -69,11 +68,19 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
 
 class DoctorSerializer(serializers.ModelSerializer):
     profile = DoctorProfileSerializer(read_only=True)
-    specialty = SpecialtySerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'profile', 'specialty')
+        fields = ('id', 'email', 'profile')
+
+
+class TenantStaffSpecialityDoctor(serializers.ModelSerializer):
+    doctors = DoctorSerializer(read_only=True, many=True)
+    specialty = SpecialtySerializer(read_only=True)
+
+    class Meta:
+        model = Tenant
+        fields = ('doctors', 'specialty')
 
 
 class ScheduleTimeFrameSerializer(serializers.ModelSerializer):
@@ -89,24 +96,16 @@ class ScheduleSerializer(serializers.ModelSerializer):
         model = Schedule
         fields = ('doctor', 'schedule')
 
-class BookingDetailFileSerializer(serializers.ModelSerializer):
-    # booking_detail_files = BookingDetailSerializer(source="files")
-
-    class Meta:
-        model = BookingDetailFile
-        fields = [
-            "file",
-        ]
 
 class BookingDetailFileSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = BookingDetailFile
         fields = ["file"]
 
 
 class BookingDetailSerializer(serializers.ModelSerializer):
-    booking_detail_files = BookingDetailFileSerializer(source="files", many=True)
+    files = BookingDetailFileSerializer(required=False, many=True, allow_null=True)
+
     class Meta:
         model = BookingDetail
         fields = [
@@ -117,10 +116,11 @@ class BookingDetailSerializer(serializers.ModelSerializer):
             "allergic",
             "extra_info",
             "brief_description",
-            "booking_detail_files",
+            "files",
             "created_at",
             "updated_at",
         ]
+
     def save(self):
         field_data = self.validated_data
         booking_detail_data = field_data.pop('files')
@@ -129,8 +129,10 @@ class BookingDetailSerializer(serializers.ModelSerializer):
         BookingDetailFile.objects.create(booking_detail_id=booking_file, **booking_detail_data)
         return booking_file
 
+
 class BookingSerializer(serializers.ModelSerializer):
     booking_detail = BookingDetailSerializer(source="bookingdetail")
+
     class Meta:
         model = Booking
         fields = [
@@ -145,14 +147,14 @@ class BookingSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
-    def save(self,):
+    def save(self, ):
         print(self.validated_data)
         booking_data = self.validated_data
         booking_detail_data = booking_data.pop('bookingdetail')
 
         booking = Booking.objects.create(**booking_data)
         # BookingDetail.objects.create(booking_id=booking, **booking_detail_data)
-        serializer = BookingDetailSerializer(data=booking_detail_data, many=True)
+        serializer = BookingDetailSerializer(data=booking_detail_data)
         serializer.is_valid(raise_exception=True)
         instances = serializer.save()
         return booking

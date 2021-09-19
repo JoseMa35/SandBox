@@ -2,13 +2,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from django.http import Http404
-
-from django.shortcuts import get_object_or_404
 from commons.serializers import SpecialtySerializer
 from rest_framework.permissions import AllowAny
-from tenants.models import Schedule, Staff, Tenant, Booking, BookingDetail
-from tenants.serializers import DoctorSerializer, ScheduleTimeFrameSerializer, \
-    TenantSerializer, BookingSerializer
+from tenants.models import Schedule, Staff, Tenant, Booking
+from tenants.serializers import DoctorSerializer, TenantSerializer, BookingSerializer, TenantStaffSpecialityDoctor
 
 
 class TenantListView(APIView):
@@ -34,15 +31,17 @@ class TenantDetailView(APIView):
 class TenantStaffView(APIView):
 
     def get(self, request, pk):
-        staff = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
-        specialties = []
-        for s in staff:
-            doctor_serializer = DoctorSerializer(s.doctors, many=True)
-            specialties.append({
-                "title": s.specialty.name,
-                "doctors": doctor_serializer.data
-            })
-        return Response(specialties)
+        staff_query = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
+        _staff = []
+        for s in staff_query:
+            staff = {
+                'doctors': s.doctors,
+                'specialty': s.specialty
+            }
+            doctor_serializer = TenantStaffSpecialityDoctor(staff)
+            staff_data = doctor_serializer.data
+            _staff.append(staff_data)
+        return Response(_staff)
 
 
 class TenantStaffSpecialitiesView(APIView):
@@ -57,61 +56,57 @@ class TenantStaffSpecialitiesView(APIView):
 
 class TenantStaffDoctorsBySpecialityView(APIView):
     def get(self, request, pk, specialty_id):
-        staff = Staff.objects.filter(tenant__subdomain_prefix=pk).filter(specialty_id=specialty_id).all()
+        query_staff = Staff.objects.filter(tenant__subdomain_prefix=pk) \
+            .filter(specialty_id=specialty_id).all()
+
         doctors = []
-        for s in staff:
-            doctor_serializer = DoctorSerializer(s.doctors, many=True)
+        for s in query_staff:
+            # query_doctor = s.doctors.all()
+            query_doctor = s.doctors
+            doctor_serializer = DoctorSerializer(query_doctor, many=True)
             docs = doctor_serializer.data
+            for i in range(0, len(docs)):
+                docs[i]['specialty'] = {
+                    'id': s.specialty.id,
+                    'name': s.specialty.name
+                }
             doctors += docs
-        print(doctors)
         return Response(doctors)
 
 
-# Lista de todos los doctores por Tenant
 class TenantStaffDoctorsView(APIView):
 
     def get(self, request, pk):
         doctors = []
-
-        if self.request.query_params.get("q") != None:
-            query = self.request.query_params.get("q")
-            staff_doctors = Staff.objects.filter(tenant__subdomain_prefix=pk)
-            for s in staff_doctors:
-                doctor_serializer = DoctorSerializer(s.doctors, many=True)
-
-                docs = doctor_serializer.data
-
-                for d in docs:
-                    if query in d['profile']['full_name']:
-                        doctors.append(d)
-            return Response(doctors)
-        else:
-            staff = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
-            for s in staff:
-                print(s.specialty)
-                doctor_serializer = DoctorSerializer(s.doctors, many=True)
-                docs = doctor_serializer.data
-                for i in range(0, len(docs)):
-                    # esto funciona
-                    docs[i]['specialty_id'] = s.specialty.id
-                    docs[i]['specialty_name'] = s.specialty.name
-
-                doctors += docs
-            return Response(doctors)
+        query_staff = Staff.objects.filter(tenant__subdomain_prefix=pk)
+        for s in query_staff:
+            if self.request.query_params.get("q") != None:
+                filter_key = self.request.query_params.get("q")
+                query_doctor = s.doctors.filter(profile__full_name__icontains=filter_key)
+            else:
+                query_doctor = s.doctors
+            doctor_serializer = DoctorSerializer(query_doctor, many=True)
+            docs = doctor_serializer.data
+            for i in range(0, len(docs)):
+                docs[i]['specialty'] = {
+                    'id': s.specialty.id,
+                    'name': s.specialty.name
+                }
+            doctors += docs
+        return Response(doctors)
 
 
-# class TenantStaffDoctorScheduleView(APIView):
-#     def get(self, request, pk):
-#
-#         schedule = Schedule.objects.filter(doctor_id=pk).first()
-#
-#         if 'date' in request.GET != None:
-#             timeframes = schedule.time_frames.filter(date=request.GET['date']).all()
-#         else:
-#             timeframes = schedule.time_frames.all()
-#
-#         serializer = ScheduleTimeFrameSerializer(timeframes, many=True)
-#         return Response(serializer.data)
+class TenantStaffDoctorDetailBySpecialityView(APIView):
+    def get(self, request, pk, specialty_id, doctor_id):
+        query_staff = Staff.objects.get(tenant__subdomain_prefix=pk, specialty_id=specialty_id)
+        query_doctor = query_staff.doctors.get(profile__user=doctor_id)
+        doctor_serializer = DoctorSerializer(query_doctor)
+        doctor = doctor_serializer.data
+        doctor['specialty'] = {
+            'id': query_staff.specialty.id,
+            'name': query_staff.specialty.name
+        }
+        return Response(doctor)
 
 
 class TenantStaffDoctorBookingView(APIView):
@@ -124,7 +119,7 @@ class TenantStaffDoctorBookingView(APIView):
 class BookingView(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self, request, pk=None, form=None):
+    def get(self, request, pk=None):
         if pk:
             try:
                 booking = Booking.objects.get(bookingdetail__files=True, id=pk)

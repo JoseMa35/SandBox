@@ -18,7 +18,7 @@ class DocumentTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document_Type
         # fields = '__all__'
-        fields = ('long_name', 'short_name', 'character_length', 'type_character')
+        fields = ('id', 'long_name', 'short_name', 'character_length', 'type_character')
 
 
 class SpecialtySerializer(serializers.ModelSerializer):

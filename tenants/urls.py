@@ -2,7 +2,7 @@
 from django.urls import path, include  # new
 
 from commons.integrations.mercadopago import pagoefectivo
-from tenants.views import TenantListView, TenantDetailView
+from tenants.views import TenantListView, TenantDetailView, TenantStaffDoctorDetailBySpecialityView
 from tenants.views import TenantStaffView, TenantStaffSpecialitiesView
 from tenants.views import TenantStaffDoctorsBySpecialityView, TenantStaffDoctorsView
 # from tenants.views import TenantStaffDoctorScheduleView
@@ -32,10 +32,12 @@ urlpatterns = [
         TenantStaffDoctorsBySpecialityView.as_view()
     ),
     path(
-        'v1/tenant/<pk>/staff/doctors',
-        TenantStaffDoctorsView.as_view()
+        'v1/tenant/<pk>/staff/specialty/<specialty_id>/doctor/<doctor_id>',
+        TenantStaffDoctorDetailBySpecialityView.as_view()
     ),
-    # path('v1/doctor/<pk>/schedule', TenantStaffDoctorScheduleView.as_view()),
+    path(
+        'v1/tenant/<pk>/staff/doctors', TenantStaffDoctorsView.as_view()
+    ),
     path('v1/doctor/<pk>/schedule', gcalendar.free_time),
     path('v1/booking/', BookingView.as_view()),
     path('v1/booking/<pk>/', BookingView.as_view()),
