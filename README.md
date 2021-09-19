@@ -1,5 +1,5 @@
 ```shell
-python manage.py loaddata specialties.json gender.json document_type.json tenant.json tenant_settings.json user.json integration.json 
+python manage.py loaddata specialties.json gender.json document_type.json tenant.json tenant_settings.json user.json integration.json --settings=core.settings.local
 python manage.py createsuperuser --email yahyr@gmail.com 
 django-admin makemessages -l es
 ```
