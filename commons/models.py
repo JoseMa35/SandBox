@@ -64,59 +64,61 @@ class Specialty(models.Model):
 
 class Integration(models.Model):
     name = models.CharField(
-        max_length=255, 
+        max_length=255,
         blank=True
     )
     key = models.CharField(
-        max_length=150, 
-        blank=True, 
+        max_length=150,
+        blank=True,
         unique=True
     )
     key_secret = models.CharField(
-        max_length=150, 
-        blank=True, 
+        max_length=150,
+        blank=True,
     )
     is_active = models.BooleanField(
         _('active'),
         default=True,
         help_text=_('Integration for default true, is necesary for use'))
     logo = models.ImageField(
-        upload_to='core/static/images/integration/', 
+        upload_to='core/static/images/integration/',
         blank=True, null=True
     )
     redirect = models.CharField(
-        max_length=500, 
-        blank=True, 
+        max_length=500,
+        blank=True,
         null=True
     )
     authorization_url = models.CharField(
         max_length=500,
-        blank=True, 
+        blank=True,
         null=True
     )
-    
+
     @property
     def parsed_authorization_url(self):
         if self.authorization_url == None:
-            return self.authorization_url, self.redirect
+            # return self.authorization_url, self.redirect
+            return self.redirect
         else:
-            return self.authorization_url.replace('REDIRECT', self.redirect ).replace('KEY',self.key)
+            return self.authorization_url.replace('REDIRECT', self.redirect).replace('KEY', self.key)
 
     def __str__(self):
         return self.name
 
+
 class IntegrationKey(models.Model):
     user = models.ForeignKey(
-        'accounts.User', 
+        'accounts.User',
         on_delete=models.CASCADE,
         null=True
     )
     integration = models.ForeignKey(
-        Integration, 
+        Integration,
         on_delete=models.CASCADE
     )
     # Todo: delete columm
-    token = models.TextField( blank=True, null=True)
+    token = models.TextField(blank=True, null=True)
     meta_data = models.TextField(
         null=True,
         blank=True
@@ -127,11 +129,11 @@ class IntegrationKey(models.Model):
         blank=True
     )
     token_refresh = models.CharField(
-        max_length= 255,
+        max_length=255,
         null=True
     )
     public_key = models.CharField(
-        max_length= 255,
+        max_length=255,
         null=True
     )
     last_token_update = models.DateTimeField(
@@ -139,12 +141,12 @@ class IntegrationKey(models.Model):
         null=True,
         blank=True
     )
-    calendar = models.TextField( 
-        blank=True, 
+    calendar = models.TextField(
+        blank=True,
         null=True
     )
     calendar_id = models.CharField(
-        max_length=500, 
-        blank=True, 
+        max_length=500,
+        blank=True,
         null=True
     )

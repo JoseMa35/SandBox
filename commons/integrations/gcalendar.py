@@ -9,8 +9,8 @@ from django.shortcuts import HttpResponseRedirect
 import pandas as pd
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-REDIRECT_URI = 'https://app-citas-medicas.herokuapp.com/integrations/calendar/oauth2/google/callback'
-# REDIRECT_URI = 'https://localhost:8000/integrations/calendar/oauth2/google/callback'
+# REDIRECT_URI = 'https://app-citas-medicas.herokuapp.com/integrations/calendar/oauth2/google/callback'
+REDIRECT_URI = 'https://localhost:8000/integrations/calendar/oauth2/google/callback'
 JSON_FILEPATH = os.path.join(os.getcwd(), 'client_secret_web.apps.googleusercontent.com.json')
 KEY = 'gcalendar'
 TIME_ZONE = 'America/Lima'
@@ -27,18 +27,12 @@ import json
 import pytz
 
 
-# Sing In whit google
 def AuthGoogle(request):
-    code = request.GET.get('code', None)
 
-    if not code:
-        raise Exception
+    oauth_url = google_apis_oauth.get_authorization_url(
+        JSON_FILEPATH, SCOPES, REDIRECT_URI, consent_prompt=True)
 
-    if code == KEY:
-        oauth_url = google_apis_oauth.get_authorization_url(
-            JSON_FILEPATH, SCOPES, REDIRECT_URI, consent_prompt=True)
-
-        return HttpResponseRedirect(oauth_url)
+    return HttpResponseRedirect(oauth_url)
 
 
 # Callback
