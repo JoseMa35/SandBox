@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'nested_inline',
     'multiselectfield',
     'payment_gateways',
-    'sslserver', # Only `for dev  python manage.py runsslserver
+    # 'sslserver', # Only `for dev  python manage.py runsslserver
 ]
 
 MIDDLEWARE = [
