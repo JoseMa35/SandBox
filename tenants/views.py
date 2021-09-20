@@ -3,9 +3,10 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.http import Http404
 from commons.serializers import SpecialtySerializer
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from tenants.models import Schedule, Staff, Tenant, Booking
 from tenants.serializers import DoctorSerializer, TenantSerializer, BookingSerializer, TenantStaffSpecialityDoctor
+from rest_framework.authentication import TokenAuthentication
 
 
 class TenantListView(APIView):
@@ -29,7 +30,8 @@ class TenantDetailView(APIView):
 
 
 class TenantStaffView(APIView):
-
+    # permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
     def get(self, request, pk):
         staff_query = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
         _staff = []
@@ -75,6 +77,8 @@ class TenantStaffDoctorsBySpecialityView(APIView):
 
 
 class TenantStaffDoctorsView(APIView):
+    # permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
 
     def get(self, request, pk):
         doctors = []
