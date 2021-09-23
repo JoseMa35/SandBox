@@ -1,7 +1,6 @@
 # Setup Google Calendar
 from django.http import HttpResponse
 
-from accounts.models import User
 from commons.models import IntegrationKey, Integration
 
 import os

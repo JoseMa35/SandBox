@@ -1,4 +1,4 @@
-"""xiabel URL Configuration"""
+""" URL Configuration"""
 from django.urls import path, include  # new
 
 from commons.integrations.mercadopago import pagoefectivo
