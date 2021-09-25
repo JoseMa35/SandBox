@@ -1,7 +1,9 @@
 import mercadopago
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-    
+from payments.models import Payment
+
 class MercadoPagoApiView(APIView):
     SDK_MERCADO = mercadopago.SDK("TEST-2734577806631487-052504-21c1748fdb47e0fd69b3399272c9f3dc-465550336")
   
@@ -32,3 +34,44 @@ class MercadoPagoApiView(APIView):
             } # paso 4 devolvermos las url obtenedias en la creacion de preferencia
         )
 
+class NotificationWebHookApiView(APIView):
+    
+    def post(self, request):
+      print(request.data)
+
+      SDK_MERCADO = mercadopago.SDK("TEST-2734577806631487-052504-21c1748fdb47e0fd69b3399272c9f3dc-465550336")
+      
+      mp_id = self.request.data['data']['id']
+      
+      data = SDK_MERCADO.payment().get(payment_id=mp_id)
+      data = data['response']
+
+  
+      print("informacion del data", data)
+      if data['status'] == 'approved':
+        
+        payment, _ = Payment.objects.get_or_create(
+            #user = data.user,
+            payment_id = data['id'],
+            status_payment = data['status'],
+            amount = data['transaction_amount'],
+            currency = data['currency_id'],
+            external_reference = data['external_reference'],
+            
+        )
+        
+        # payment.save()
+
+        return Response({
+            "status": "Ok"
+        },
+        status = status.HTTP_200_OK
+        )
+
+      return Response(
+        {
+            "status": "failed",
+            "message": "No fue pagado"
+        },
+        status = status.HTTP_200_OK
+      )
