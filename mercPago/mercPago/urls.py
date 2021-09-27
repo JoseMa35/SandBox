@@ -15,19 +15,22 @@ Including another URLconf
 """
 from typing import Pattern
 from django import urls
-from checkOut.views import FailPayView, ListadoItems, PendingPayView, SuccesfulPayView
+#from checkOut.views import  ( 
+    #FailPayView, ListadoItems, PendingPayView, SuccesfulPayView)
 from django.contrib import admin
 from django.urls import path, include
 from .router import router
+from checkOut.views import MercadoPagoApiView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth',include('rest_framework.urls')),
-    path('articulos/',ListadoItems.as_view(), name="listadoArticulos"),
-    path('success/',SuccesfulPayView.as_view(),name='pagoExitoso'),
-    path('pending/',PendingPayView.as_view(),name='pagoPendiente'),
-    path('failure/',FailPayView.as_view(),name='pagoDenegado'),
+    #path('articulos/',ListadoItems.as_view(), name="listadoArticulos"),
+    #path('success/',SuccesfulPayView.as_view(),name='pagoExitoso'),
+    #path('pending/',PendingPayView.as_view(),name='pagoPendiente'),
+    #path('failure/',FailPayView.as_view(),name='pagoDenegado'),
+    path('api/mercadoPago/',MercadoPagoApiView.as_view()),
     path('api/',include(router.urls)),
     
 ]
