@@ -20,7 +20,7 @@ from django import urls
 from django.contrib import admin
 from django.urls import path, include
 from .router import router
-from checkOut.views import MercadoPagoApiView
+from checkOut.views import MercadoPagoApiView, Refund
 
 
 urlpatterns = [
@@ -31,6 +31,7 @@ urlpatterns = [
     #path('pending/',PendingPayView.as_view(),name='pagoPendiente'),
     #path('failure/',FailPayView.as_view(),name='pagoDenegado'),
     path('api/mercadoPago/',MercadoPagoApiView.as_view()),
+    path('api/refund/',Refund.as_view()),
     path('api/',include(router.urls)),
     
 ]
