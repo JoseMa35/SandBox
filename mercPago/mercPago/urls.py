@@ -17,16 +17,17 @@ from typing import Pattern
 from django import urls
 #from checkOut.views import  ( 
     #FailPayView, ListadoItems, PendingPayView, SuccesfulPayView)
+  
 from django.contrib import admin
 from django.urls import path, include
 from .router import router
-from checkOut.views import MercadoPagoApiView, Refund
+from checkOut.views import MercadoPagoApiView, Refund, ListadoItems
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth',include('rest_framework.urls')),
-    #path('articulos/',ListadoItems.as_view(), name="listadoArticulos"),
+    path('articulos/',ListadoItems.as_view()),
     #path('success/',SuccesfulPayView.as_view(),name='pagoExitoso'),
     #path('pending/',PendingPayView.as_view(),name='pagoPendiente'),
     #path('failure/',FailPayView.as_view(),name='pagoDenegado'),
