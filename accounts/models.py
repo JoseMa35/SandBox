@@ -27,7 +27,7 @@ class Profile(models.Model):
     """
         Profile model
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', blank=True, null=True )
     full_name = models.CharField(max_length=255, blank=True, null=True)
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, )
     document_type = models.ForeignKey(Document_Type, on_delete=models.CASCADE, )
