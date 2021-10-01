@@ -171,3 +171,10 @@ CORS_ORIGIN_WHITELIST = [
 AUTH_USER_MODEL = 'accounts.User'
 AUTH_PROFILE_MODULE = 'accounts.Profile'
 USER_DELETE_PREFIX = '_removed__'
+
+# # 
+# Configuration Emails by sendGrid 
+# #
+
+SENDGRID_API_KEY = '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'
+DEFAULT_FROM_EMAIL = 'lardinarmas@gmail.com'
