@@ -11,7 +11,7 @@ class Tenant(models.Model):
         max_length=100
     )
     subdomain_prefix = models.CharField(
-        max_length=100, 
+        max_length=100,
         unique=True
     )
     description = models.TextField(
@@ -24,7 +24,7 @@ class Tenant(models.Model):
 
 class TenantAwareModel(models.Model):
     tenant = models.ForeignKey(
-        Tenant, 
+        Tenant,
         on_delete=models.CASCADE
     )
 
@@ -34,33 +34,33 @@ class TenantAwareModel(models.Model):
 
 class Schedule(models.Model):
     tenant = models.ForeignKey(
-        Tenant, 
-        on_delete=models.CASCADE, 
+        Tenant,
+        on_delete=models.CASCADE,
         null=True
     )
     doctor = models.ForeignKey(
-        User, 
-        on_delete=models.CASCADE, 
+        User,
+        on_delete=models.CASCADE,
         related_name='schedule'
     )
-    
+
 
 class ScheduleTimeFrame(models.Model):
     schedule = models.ForeignKey(
-        Schedule, 
-        on_delete=models.CASCADE, 
+        Schedule,
+        on_delete=models.CASCADE,
         related_name='time_frames'
     )
     date = models.DateField(
-        auto_now=False, 
+        auto_now=False,
         auto_now_add=False
     )
     start_time = models.TimeField(
-        auto_now=False, 
+        auto_now=False,
         auto_now_add=False
     )
     end_time = models.TimeField(
-        auto_now=False, 
+        auto_now=False,
         auto_now_add=False
     )
     available = models.BooleanField(
@@ -70,17 +70,17 @@ class ScheduleTimeFrame(models.Model):
 
 class Booking(models.Model):
     doctor_id = models.ForeignKey(
-        User, 
-        on_delete=models.CASCADE, 
+        User,
+        on_delete=models.CASCADE,
         related_name='appointments'
-        )
+    )
     client_id = models.ForeignKey(
-        User, 
-        on_delete=models.CASCADE, 
+        User,
+        on_delete=models.CASCADE,
         related_name='bookings'
     )
     virtual_profile = models.ForeignKey(
-        Profile, 
+        Profile,
         on_delete=models.CASCADE
     )
     status = models.CharField(
@@ -100,10 +100,11 @@ class Booking(models.Model):
         auto_now=True
     )
 
+
 class BookingDetail(models.Model):
     booking_id = models.OneToOneField(
-        Booking, 
-        on_delete=models.CASCADE, 
+        Booking,
+        on_delete=models.CASCADE,
         null=True
     )
     has_disability = models.BooleanField(
@@ -131,9 +132,10 @@ class BookingDetail(models.Model):
         auto_now=True
     )
 
+
 class BookingDetailFile(models.Model):
     booking_detail = models.ForeignKey(
-        BookingDetail, 
+        BookingDetail,
         on_delete=models.CASCADE,
         related_name='files'
     )
@@ -141,22 +143,24 @@ class BookingDetailFile(models.Model):
         upload_to='booking_attachments/'
     )
 
+
 class Staff(models.Model):
     doctors = models.ManyToManyField(
-        User, 
-        related_name='staff', 
+        User,
+        related_name='staff',
         blank=True
     )
     specialty = models.ForeignKey(
-        Specialty, 
-        on_delete=models.CASCADE, 
+        Specialty,
+        on_delete=models.CASCADE,
         related_name='staff'
     )
     tenant = models.ForeignKey(
-        Tenant, 
-        on_delete=models.CASCADE, 
+        Tenant,
+        on_delete=models.CASCADE,
         related_name='staff'
     )
+
     class Meta:
         verbose_name = "Staff"
         verbose_name_plural = "Staff"
@@ -182,16 +186,16 @@ class TenantSettings(models.Model):
         max_length=100
     )
     logo = models.ImageField(
-        upload_to='core/static/images/tenants/', 
-        blank=True, 
+        upload_to='core/static/images/tenants/',
+        blank=True,
         null=True
     )
     tenant = models.OneToOneField(
-        Tenant, 
-        on_delete=models.CASCADE, 
+        Tenant,
+        on_delete=models.CASCADE,
         related_name='settings'
     )
-    labor_days =  MultiSelectField(
+    labor_days = MultiSelectField(
         choices=WEELDAYS
     )
     quote_duration = models.IntegerField(
@@ -202,4 +206,3 @@ class TenantSettings(models.Model):
     )
     work_start = models.DateTimeField()
     work_end = models.DateTimeField()
-

@@ -2,7 +2,6 @@ from django.contrib import admin
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
 from tenants.models import Booking, BookingDetail, BookingDetailFile, Schedule, ScheduleTimeFrame, Staff, Tenant, \
     TenantSettings
-from commons.models import Specialty
 
 class TenantSettingsOfficerStackedInline(admin.StackedInline):
     model = TenantSettings

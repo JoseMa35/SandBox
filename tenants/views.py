@@ -3,10 +3,10 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.http import Http404
 from commons.serializers import SpecialtySerializer
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from tenants.models import Schedule, Staff, Tenant, Booking
-from tenants.serializers import DoctorSerializer, TenantSerializer, BookingSerializer, TenantStaffSpecialityDoctor
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import AllowAny
+from tenants.models import Staff, Tenant, Booking, BookingDetailFile
+from tenants.serializers import DoctorSerializer, TenantSerializer, BookingSerializer, TenantStaffSpecialityDoctor, \
+    BookingDetailFileSerializer
 
 
 class TenantListView(APIView):
@@ -133,15 +133,56 @@ class BookingView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         else:
-            booking = Booking.objects.filter(bookingdetail__files=True)
+            booking = Booking.objects.select_related('bookingdetail').all()
             serializer = BookingSerializer(booking, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         serializer = BookingSerializer(data=request.data)
-        print(serializer)
         serializer.is_valid(raise_exception=True)
         instance = serializer.save()
-        serializer = BookingSerializer(instance=instance)
+        booking = BookingSerializer(instance)
 
+        return Response(booking.data, status=status.HTTP_201_CREATED)
+
+
+from rest_framework.parsers import MultiPartParser, FormParser
+
+
+class BookingFileView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        booking = BookingDetailFile.objects.all()
+        serializer = BookingDetailFileSerializer(booking, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+
+        if 'file' not in request.FILES:
+            return Response({'file error'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if 'booking_detail' not in request.data:
+            return Response({'booking_detail error'}, status=status.HTTP_400_BAD_REQUEST)
+
+        booking_detail = request.data.get('booking_detail')
+        files = request.FILES.getlist('file')
+        print('booking_detail', booking_detail)
+        if len(files) > 1:  # Multiple Files
+            for file in files:
+                serializer_class = BookingDetailFileSerializer(data={'file': file, 'booking_detail': booking_detail})
+                if serializer_class.is_valid():
+                    serializer_class.save()
+            print('finish for')
+        else:  # Single File
+            file = request.FILES['file']
+            serializer_class = BookingDetailFileSerializer(data={'file': file, 'booking_detail': booking_detail})
+            if serializer_class.is_valid():
+                serializer_class.save()
+
+        booking = BookingDetailFile.objects.filter(booking_detail=booking_detail)
+        print(booking)
+        serializer = BookingDetailFileSerializer(booking, many=True)
+        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

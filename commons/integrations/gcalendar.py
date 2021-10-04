@@ -74,14 +74,12 @@ def get_calendar(request):
     creds = google_apis_oauth.load_credentials(key.token)
     service = build('calendar', 'v3', credentials=creds)
     calendar = service.calendars().get(calendarId='primary').execute()
-    print(calendar)
     return HttpResponse(calendar['summary'])
 
 
 def get_freebusy(request):
     key = IntegrationKey.objects.get(integration__key=KEY, user__email='yahyr@gmail.com')
     creds = google_apis_oauth.load_credentials(key.token)
-    print(creds)
     service = build('calendar', 'v3', credentials=creds)
 
     # This event should be returned by freebusy
@@ -103,10 +101,10 @@ def get_freebusy(request):
     }
     calendar = service.freebusy().query(body=body).execute()
 
-    print(calendar)
-    print(calendar['kind'])
-    print(calendar['timeMin'])
-    print(calendar['timeMax'])
+    # print(calendar)
+    # print(calendar['kind'])
+    # print(calendar['timeMin'])
+    # print(calendar['timeMax'])
 
     return HttpResponse(calendar)
 
@@ -129,12 +127,12 @@ def list_all_events(request):
         maxResults=20, singleEvents=True,
         orderBy='startTime').execute()
 
-    print(events_result)
+    # print(events_result)
 
     events = events_result.get('items', [])
 
     if not events:
-        print('No upcoming events found.')
+        # print('No upcoming events found.')
         return HttpResponse('No upcoming events found.')
 
     return HttpResponse(events)
@@ -165,8 +163,8 @@ def free_time(request, pk):
     start = datetime.datetime.strftime(start_tz_datetime, "%Y-%m-%dT%H:%M:%S%z")
     end = datetime.datetime.strftime(end_tz_datetime, "%Y-%m-%dT%H:%M:%S%z")
 
-    print(start_tz_datetime)
-    print(end_tz_datetime)
+    # print(start_tz_datetime)
+    # print(end_tz_datetime)
 
     # if key.calendar_id is None:
     calendar_name = 'primary'  # use for defaut
@@ -186,12 +184,12 @@ def free_time(request, pk):
             'end_time': datetime.datetime.fromisoformat(event['end']['dateTime']),
             'status': 'buzy'
         }
-        print({'START': event['start']['dateTime'], 'END': event['end']['dateTime']})
+        # print({'START': event['start']['dateTime'], 'END': event['end']['dateTime']})
         schedule_busy.append(item)
 
     date_range = pd.date_range(start=start_tz_datetime, end=end_tz_datetime, freq=(str(WORK_TIME_SCHEDULE) + 'min'),
                                closed=None)
-    print(date_range)
+    # print(date_range)
     df = pd.DataFrame({'A': [x for x in range(date_range.size)]}, index=date_range)
 
     busy_pd = []
@@ -202,15 +200,15 @@ def free_time(request, pk):
             include_start=True, include_end=False)
 
         basic = colition.values[:]
-        print('basic', basic[:])
-        print('basic', basic.size)
+        # print('basic', basic[:])
+        # print('basic', basic.size)
         for xi in basic:
             busy_pd.append(xi[0])
 
     # Generate list schedule free
     schedule = []
     for x in range(date_range.size - 1):
-        print(date_range[x])
+        # print(date_range[x])
         item = {
             'index': x,
             'date': request_date,
@@ -218,7 +216,7 @@ def free_time(request, pk):
             'end_time': date_range[x + 1].time().strftime('%H:%M:%S'),
             'status': 'free'
         }
-        print('FREE', item)
+        # print('FREE', item)
         schedule.append(item)
 
     # Change or remove free for buzy

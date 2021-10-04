@@ -31,6 +31,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'cell_phone',
             'address',
             'date_of_birth',
+            # 'email',
             'user',
         )
 

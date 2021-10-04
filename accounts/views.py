@@ -21,25 +21,3 @@ class ProfileView(generics.RetrieveUpdateDestroyAPIView):
         profile = get_object_or_404(Profile, user__pk=pk)
         serializador = ProfileSerializer(profile)
         return Response(serializador.data)
-
-# class UserProfileView(APIView):
-#
-#     def get(self, request, pk):
-#         profile = get_object_or_404(Profile, user__pk=pk)
-#         serializador = ProfileSerializer(profile)
-#         return Response(serializador.data)
-#
-#     def put(self, request, pk):
-#         serializer = ProfileSerializer(data=request.data)
-#
-#         if serializer.is_valid():
-#             Profile.objects.update_or_create(user__pk=pk)
-#             print(serializer.data)
-#         print(pk)
-#
-#         return Response(serializer.data)
-#
-#     def post(self, request, pk, format=None):
-#         profile = get_object_or_404(Profile, user__pk=pk)
-#         serializer = ProfileSerializer(profile)
-#         return Response(serializer.data)

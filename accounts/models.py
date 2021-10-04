@@ -27,7 +27,7 @@ class Profile(models.Model):
     """
         Profile model
     """
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', blank=True, null=True )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', blank=True, null=True)
     full_name = models.CharField(max_length=255, blank=True, null=True)
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, )
     document_type = models.ForeignKey(Document_Type, on_delete=models.CASCADE, )
@@ -41,7 +41,7 @@ class Profile(models.Model):
         upload_to="core/static/images/avatar/",
         default='core/static/images/avatar/default.jpeg',
     )
-
+    # email = models.CharField(max_length=255, blank=True, null=True, default=None)
     is_active = models.BooleanField(default=True, )
     is_email_verified = models.BooleanField(default=False, )
     is_phone_verified = models.BooleanField(default=False, )
@@ -54,7 +54,7 @@ class Profile(models.Model):
     updated_at = models.DateTimeField(_('Updated at'), auto_now=True, )
 
     def __str__(self):
-        return self.user.email
+        return self.full_name
 
     def _gender(self):
         return self.gender.long_name
