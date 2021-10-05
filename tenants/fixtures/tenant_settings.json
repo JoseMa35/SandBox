@@ -45,8 +45,50 @@
     "model": "tenants.TenantSettings",
     "fields": {
       "color": "#0432A0",
-      "logo": "core/static/images/tenants/clinica-internacional.png",
+      "logo": "core/static/images/tenants/logo_clinica tranvia.jpg",
       "tenant": 3,
+      "labor_days": [
+        "Lunes",
+        "Martes",
+        "Miercoles",
+        "jueves",
+        "Viernes",
+        "Sabado",
+        "Domingo"
+      ],
+      "quote_duration": 0,
+      "wait_time": 0,
+      "work_start": "2011-11-04 00:05:23.283+00:00",
+      "work_end": "2011-11-04 00:05:23.283+00:00"
+    }
+  },
+  {
+    "model": "tenants.TenantSettings",
+    "fields": {
+      "color": "#0432A0",
+      "logo": "core/static/images/tenants/logo_clinica la cumbre.jp",
+      "tenant": 4,
+      "labor_days": [
+        "Lunes",
+        "Martes",
+        "Miercoles",
+        "jueves",
+        "Viernes",
+        "Sabado",
+        "Domingo"
+      ],
+      "quote_duration": 0,
+      "wait_time": 0,
+      "work_start": "2011-11-04 00:05:23.283+00:00",
+      "work_end": "2011-11-04 00:05:23.283+00:00"
+    }
+  },
+  {
+    "model": "tenants.TenantSettings",
+    "fields": {
+      "color": "#0432A0",
+      "logo": "core/static/images/tenants/logo_clinica independencia.png",
+      "tenant": 5,
       "labor_days": [
         "Lunes",
         "Martes",

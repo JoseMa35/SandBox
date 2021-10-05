@@ -31,7 +31,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'cell_phone',
             'address',
             'date_of_birth',
-            # 'email',
+            'email',
             'user',
         )
 
@@ -45,6 +45,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         instance.document_type = validated_data.get('document_type', instance.document_type)
         instance.document = validated_data.get('document', instance.document)
         instance.cell_phone = validated_data.get('cell_phone', instance.cell_phone)
+        instance.email = validated_data.get('email', instance.email)#TODO: REVISAR SI REQUIERE UPDATE ESTE CAMPO
         instance.address = validated_data.get('address', instance.address)
         instance.date_of_birth = validated_data.get('date_of_birth', instance.date_of_birth)
         instance.save()

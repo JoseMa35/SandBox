@@ -75,3 +75,51 @@ class NotificationWebHookApiView(APIView):
         },
         status = status.HTTP_200_OK
       )
+
+ #integracion de JoseMa para cancelaciones
+class Refund(APIView):
+
+    SDK_MERCADO_Jose = mercadopago.SDK("TEST-2734577806631487-052504-21c1748fdb47e0fd69b3399272c9f3dc-465550336")  
+
+    def update(self, request):
+        print(" datos a recibir ", request.data)
+        payment_data  = {
+            "status": "canceled" ,
+            "id": "465550336-efa9c2ec-dd6b-4330-9d4f-149200d75c73"
+        }
+        
+        payment_id = payment_data["id"]
+        #payment_id = self.request.data['id']
+        payment_response = self.SDK_MERCADO_Jose.payment().update(payment_id, payment_data)
+        payment = payment_response["response"]
+        print("Payment data", payment)
+        return Response(payment_data)  
+
+    def post(self, request):
+        #print(" datos a recibir ", request.data)
+        if 'id' in request.data:
+            pay_id = self.request.data['id']
+
+            refund_response = self.SDK_MERCADO_Jose.refund().create(payment_id=pay_id)
+            refund = refund_response["response"]
+        else:
+            print("Payment_ID missing")    
+        print("Refund data", refund)
+        return Response({
+            "status": "Ok"
+        },
+        status = status.HTTP_200_OK
+        )          
+
+    def get(self, request):
+
+        print(" datos a recibir ", request.data)
+        if 'id' in request.data:
+            pay_id = self.request.data["id"]
+        else:
+            pay_id = "No PAYMENT_ID yet"      
+        refunds_list = self.SDK_MERCADO_Jose.refund().list_all(payment_id=pay_id)
+        refunds = refunds_list["response"]
+        print("data preference", refunds)
+        #return Response(refunds)
+        return Response(pay_id)

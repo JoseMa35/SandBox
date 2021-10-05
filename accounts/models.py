@@ -41,7 +41,7 @@ class Profile(models.Model):
         upload_to="core/static/images/avatar/",
         default='core/static/images/avatar/default.jpeg',
     )
-    # email = models.CharField(max_length=255, blank=True, null=True, default=None)
+    email = models.CharField(max_length=255, blank=True, null=True)
     is_active = models.BooleanField(default=True, )
     is_email_verified = models.BooleanField(default=False, )
     is_phone_verified = models.BooleanField(default=False, )

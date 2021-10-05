@@ -21,9 +21,27 @@
     "model": "tenants.tenant",
     "pk": 3,
     "fields": {
-      "name": "Clínica Internacional",
-      "subdomain_prefix": "clinicainternacional",
-      "description": "Somos una red de Clínica y Centros médicos a nivel nacional, con la tecnología más moderna y el Staff médico más comprometido con la salud de nuestros pacientes y la de su familia."
+      "name": "Clínica Tranvía",
+      "subdomain_prefix": "clinicatranvia",
+      "description": "Somos una red de Clínica y Centros médicos a nivel nacional, con la tecnología más moderna y el Staff médico más comprometido con la salud de nuestros pacientes y la de su familia.."
+    }
+  },
+  {
+    "model": "tenants.tenant",
+    "pk": 4,
+    "fields": {
+      "name": "Clínica Privada La Cumbre",
+      "subdomain_prefix": "clinicalacumbre",
+      "description": "Clínica Privada La Cumbre es el primer y único centro asistencial que brinda atención médica de 1° y 2° nivel en la región. Clínica Privada La Cumbre, interactúa con otros centros de salud influyentes en la región como; Centro de Diagnóstico por Imágenes Cruz del Eje, Centro Médico SANOS, Clínica Santa Rita, entre otros y, además, posee una flota de ambulancias que permitirá ampliar los servicios para los pacientes de todas las obras sociales, con una vocación clara de atención integral."
+    }
+  },
+  {
+    "model": "tenants.tenant",
+    "pk": 5,
+    "fields": {
+      "name": "Clínica Independencia",
+      "subdomain_prefix": "clinicaindependencia",
+      "description": "La Clínica Independencia es un instituto médico integral privado. Ofrecemos modernas instalaciones para brindar el mejor diagnóstico y tratamiento a nuestros clientes. Contamos con amplio equipo médico capacitado en varias áreas de la salud, guardia de emergencias y sala de internación."
     }
   }
 ]
