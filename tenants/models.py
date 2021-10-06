@@ -121,10 +121,12 @@ class BookingDetail(models.Model):
         default=False
     )
     extra_info = models.CharField(
-        max_length=100
+        max_length=100,
+        blank=True, null=True
     )
     brief_description = models.TextField(
-        max_length=100
+        max_length=100,
+        blank=True, null=True
     )
     created_at = models.DateTimeField(
         auto_now_add=True
