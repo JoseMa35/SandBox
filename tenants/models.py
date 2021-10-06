@@ -77,7 +77,8 @@ class Booking(models.Model):
     client_id = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='bookings'
+        related_name='bookings',
+        blank=True, null=True
     )
     virtual_profile = models.ForeignKey(
         Profile,
