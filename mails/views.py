@@ -5,9 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from core.settings.common import DEFAULT_FROM_EMAIL, SENDGRID_API_KEY
+from core.settings.common import DEFAULT_FROM_EMAIL_DEV, SENDGRID_API_KEY_DEV, DEFAULT_TEMPLATE_ID
 
-sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY)
+sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY_DEV)
 
 class ConfirmationSendEmailApiView(APIView):
     def send_mail(self, template_id, sender, recipient, data_dict):
@@ -35,8 +35,9 @@ class ConfirmationSendEmailApiView(APIView):
         fullname = request.data['fullname']
         body = request.data['body']
 
-        template_id = "d-1772e8ac6b5442e68975394ea71a4957"
-        sender = DEFAULT_FROM_EMAIL
+        # template_id = "d-1772e8ac6b5442e68975394ea71a4957"
+        template_id = DEFAULT_TEMPLATE_ID
+        sender = DEFAULT_FROM_EMAIL_DEV
         data_dict = {
             "subject": subject,
             "user_name": fullname, 
