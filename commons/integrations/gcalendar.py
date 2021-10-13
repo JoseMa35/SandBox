@@ -8,8 +8,8 @@ from django.shortcuts import HttpResponseRedirect
 import pandas as pd
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-REDIRECT_URI = 'https://app-citas-medicas.herokuapp.com/integrations/calendar/oauth2/google/callback'
-# REDIRECT_URI = 'https://localhost:8000/integrations/calendar/oauth2/google/callback'
+# REDIRECT_URI = 'https://app-citas-medicas.herokuapp.com/integrations/calendar/oauth2/google/callback'
+REDIRECT_URI = 'https://localhost:8000/integrations/calendar/oauth2/google/callback'
 JSON_FILEPATH = os.path.join(os.getcwd(), 'client_secret_web.apps.googleusercontent.com.json')
 KEY = 'gcalendar'
 TIME_ZONE = 'America/Lima'
@@ -27,7 +27,6 @@ import pytz
 
 
 def AuthGoogle(request):
-
     oauth_url = google_apis_oauth.get_authorization_url(
         JSON_FILEPATH, SCOPES, REDIRECT_URI, consent_prompt=True)
 
@@ -226,3 +225,34 @@ def free_time(request, pk):
                 item['status'] = 'buzy'
 
     return HttpResponse(json.dumps(schedule, sort_keys=True))
+
+
+# Registrar
+def insert_event(request, doctor_id, summary, location, description, start, end, patient_email, patient_phone):
+    pk = 5
+    # El pk requerido es el id del doctor
+    tz = pytz.timezone(TIME_ZONE)
+
+    key = IntegrationKey.objects.get(integration__key=KEY, user__pk=doctor_id)
+    creds = google_apis_oauth.load_credentials(key.token)
+    service = build('calendar', 'v3', credentials=creds)
+
+    event = {
+        'summary': summary,
+        'location': location,
+        'description': description,
+        'start': {
+            'dateTime': start,
+            'timeZone': TIME_ZONE,
+        },
+        'end': {
+            'dateTime': end,
+            'timeZone': TIME_ZONE,
+        },
+        'attendees': [
+            {'email': patient_email},
+            {'phone': patient_phone},
+        ],
+    }
+    event = service.events().insert(calendarId='primary', body=event).execute()
+    print('Event created: %s' % (event.get('htmlLink')))
