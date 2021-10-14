@@ -9,7 +9,7 @@ django-admin makemessages -l es
 # How to run 
 
 ```python
-python3 manage.py runserver --settings core.settings.local
+python manage.py runserver --settings core.settings.local
 ```
 
 Usuarios de prueba

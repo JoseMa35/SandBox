@@ -92,7 +92,8 @@ class Booking(models.Model):
         auto_now_add=False
     )
     meeting_link = models.CharField(
-        max_length=100
+        max_length=100,
+        blank=True, null=True
     )
     created_at = models.DateTimeField(
         auto_now_add=True

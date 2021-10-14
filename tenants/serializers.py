@@ -141,9 +141,9 @@ class BookingSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
 
-    def save(self, ):
-        booking_data = self.validated_data
-        booking_detail_data = booking_data.pop('bookingdetail')
-        booking = Booking.objects.create(**booking_data)
-        BookingDetail.objects.create(booking_id=booking, **booking_detail_data)
-        return booking
+    # def save(self, ):
+    #     booking_data = self.validated_data
+    #     booking_detail_data = booking_data.pop('bookingdetail')
+    #     booking = Booking.objects.create(**booking_data)
+    #     BookingDetail.objects.create(booking_id=booking, **booking_detail_data)
+    #     return booking

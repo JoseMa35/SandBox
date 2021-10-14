@@ -4,7 +4,7 @@ from rest_framework import status
 from django.http import Http404
 from commons.serializers import SpecialtySerializer
 from rest_framework.permissions import AllowAny
-from tenants.models import Staff, Tenant, Booking, BookingDetailFile
+from tenants.models import Staff, Tenant, Booking, BookingDetailFile, BookingDetail
 from tenants.serializers import DoctorSerializer, TenantSerializer, BookingSerializer, TenantStaffSpecialityDoctor, \
     BookingDetailFileSerializer
 
@@ -140,10 +140,16 @@ class BookingView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = BookingSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        instance = serializer.save()
-        booking = BookingSerializer(instance)
+        booking_data = serializer.validated_data
+        booking_detail_data = booking_data.pop('bookingdetail')
+        booking = Booking.objects.create(**booking_data)
+        BookingDetail.objects.create(booking_id=booking, **booking_detail_data)
+        booking_serializer = BookingSerializer(booking)
+        return Response(booking_serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response(booking.data, status=status.HTTP_201_CREATED)
+        # instance = serializer.save()
+        # booking = BookingSerializer(instance)
+        # return Response(booking.data, status=status.HTTP_201_CREATED)
 
 
 from rest_framework.parsers import MultiPartParser, FormParser

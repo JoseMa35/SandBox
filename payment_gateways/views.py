@@ -18,9 +18,12 @@ class MercadoPagoApiView(APIView):
                 }
             ],
             "back_urls": {
-                "success": "http://127.0.0.1:8888/success/",
-                "failure": "http://127.0.0.1:8888/failure/",
-                "pending": "http://127.0.0.1:8888/pendings/"
+                #"success": "http://127.0.0.1:8888/success/",
+                #"failure": "http://127.0.0.1:8888/failure/",
+                #"pending": "http://127.0.0.1:8888/pendings/"
+                "success": "http://clinicatranvia.tranvia.tech/success/",
+                "failure": "http://clinicatranvia.tranvia.tech/failure/",
+                "pending": "http://clinicatranvia.tranvia.tech/pendings/"
             },
             "auto_return": "approved"
         }

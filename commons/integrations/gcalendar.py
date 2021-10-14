@@ -255,4 +255,4 @@ def insert_event(request, doctor_id, summary, location, description, start, end,
         ],
     }
     event = service.events().insert(calendarId='primary', body=event).execute()
-    print('Event created: %s' % (event.get('htmlLink')))
+    print(event)
