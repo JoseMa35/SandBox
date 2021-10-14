@@ -18,9 +18,8 @@ urlpatterns = [
     path('v1/tenant/<pk>/staff/doctors', TenantStaffDoctorsView.as_view()),
     path('v1/doctor/<pk>/schedule', gcalendar.free_time),
     path('v1/booking/files/', BookingFileView.as_view()),
-    path('v1/booking/', BookingView.as_view()),
-    path('v1/booking/<pk>/', BookingView.as_view()),
-    # path('v1/booking/file/<pk>', BookingFileView.as_view()),
+    path('v1/tenant/<pk>/staff/booking', BookingView.as_view()),
+     # path('v1/booking/file/<pk>', BookingFileView.as_view()),
 
     # Payment
     path('v1/mercadopago/payment', pagoefectivo.available_payment_list),

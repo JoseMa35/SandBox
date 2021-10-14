@@ -3,6 +3,7 @@ import requests
 from django.conf import settings
 from django.utils import timezone
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 
 from django.contrib.auth.decorators import login_required
 from django.template import loader
@@ -11,7 +12,7 @@ from django import template
 
 from accounts.models import User, Profile
 from commons.models import Specialty, IntegrationKey, Integration
-
+from tenants.models import Booking
 
 @login_required(login_url="/login/")
 def index(request):
@@ -157,3 +158,14 @@ def specialty_form(request):
     html_template = loader.get_template('specialties/index.html')
     return HttpResponse(html_template.render(context, request))
 
+# #
+# list online dating
+# #
+
+@login_required(login_url="/login/")
+def list_online(request):
+    patient = Booking.objects.all().order_by('-datetime')
+    return render(request,
+        "online/list.html",
+        {"patient": patient}
+    )

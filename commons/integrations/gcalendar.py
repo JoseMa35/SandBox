@@ -8,8 +8,8 @@ from django.shortcuts import HttpResponseRedirect
 import pandas as pd
 
 SCOPES = ['https://www.googleapis.com/auth/calendar']
-# REDIRECT_URI = 'https://app-citas-medicas.herokuapp.com/integrations/calendar/oauth2/google/callback'
-REDIRECT_URI = 'https://localhost:8000/integrations/calendar/oauth2/google/callback'
+REDIRECT_URI = 'https://app-citas-medicas.herokuapp.com/integrations/calendar/oauth2/google/callback'
+# REDIRECT_URI = 'https://localhost:8000/integrations/calendar/oauth2/google/callback'
 JSON_FILEPATH = os.path.join(os.getcwd(), 'client_secret_web.apps.googleusercontent.com.json')
 KEY = 'gcalendar'
 TIME_ZONE = 'America/Lima'
@@ -228,17 +228,24 @@ def free_time(request, pk):
 
 
 # Registrar
-def insert_event(request, doctor_id, summary, location, description, start, end, patient_email, patient_phone):
-    pk = 5
+def insert_event(request, doctor, summary, location, description, eventtime, attendee_email,
+                 tz=TIME_ZONE):
+    # print('***************** CALENDAR - ADD EVENT  *****************')
     # El pk requerido es el id del doctor
-    tz = pytz.timezone(TIME_ZONE)
+    time_zone = pytz.timezone(tz)
 
-    key = IntegrationKey.objects.get(integration__key=KEY, user__pk=doctor_id)
+    key = IntegrationKey.objects.get(integration__key=KEY, user__pk=doctor)
     creds = google_apis_oauth.load_credentials(key.token)
     service = build('calendar', 'v3', credentials=creds)
 
+    start_tz = eventtime.replace(tzinfo=time_zone)
+    end_tz = start_tz + datetime.timedelta(minutes=30)
+
+    start = datetime.datetime.strftime(start_tz, "%Y-%m-%dT%H:%M:%S%z")
+    end = datetime.datetime.strftime(end_tz, "%Y-%m-%dT%H:%M:%S%z")
+
     event = {
-        'summary': summary,
+        'summary': 'Cita en ' + summary + ' by tranvia.tech',
         'location': location,
         'description': description,
         'start': {
@@ -250,9 +257,21 @@ def insert_event(request, doctor_id, summary, location, description, start, end,
             'timeZone': TIME_ZONE,
         },
         'attendees': [
-            {'email': patient_email},
-            {'phone': patient_phone},
+            {'email': attendee_email},
         ],
+        'conferenceData': {
+            'createRequest': {
+                'conferenceSolutionKey': {
+                    'type': 'hangoutsMeet'
+                },
+                'requestId': 'RandomString'
+            }
+        },
     }
-    event = service.events().insert(calendarId='primary', body=event).execute()
-    print(event)
+
+    event_response = service.events().insert(calendarId='primary', conferenceDataVersion=1, body=event).execute()
+    event = {
+        'meet_link': event_response['hangoutLink'],
+        'event_id': event_response['id']
+    }
+    return event

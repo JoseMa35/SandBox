@@ -1,7 +1,12 @@
+from datetime import timedelta
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from django.http import Http404
+
+from accounts.models import Profile, User
+from commons.integrations.gcalendar import insert_event
 from commons.serializers import SpecialtySerializer
 from rest_framework.permissions import AllowAny
 from tenants.models import Staff, Tenant, Booking, BookingDetailFile, BookingDetail
@@ -113,20 +118,16 @@ class TenantStaffDoctorDetailBySpecialityView(APIView):
         return Response(doctor)
 
 
-class TenantStaffDoctorBookingView(APIView):
-
-    def post(self, request, pk):
-        # doctor = User.objects.filter(id=pk).first()
-        pass
+from string import Template
 
 
 class BookingView(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self, request, pk=None):
-        if pk:
+    def get(self, request, pk, booking_id=None):
+        if booking_id:
             try:
-                booking = Booking.objects.get(bookingdetail__files=True, id=pk)
+                booking = Booking.objects.get(bookingdetail__files=True, id=booking_id)
             except Booking.DoesNotExist:
                 raise Http404()
             serializer = BookingSerializer(booking, many=False)
@@ -137,19 +138,44 @@ class BookingView(APIView):
             serializer = BookingSerializer(booking, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, pk, *args, **kwargs):
+
         serializer = BookingSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        booking_data = serializer.validated_data
-        booking_detail_data = booking_data.pop('bookingdetail')
-        booking = Booking.objects.create(**booking_data)
-        BookingDetail.objects.create(booking_id=booking, **booking_detail_data)
-        booking_serializer = BookingSerializer(booking)
-        return Response(booking_serializer.data, status=status.HTTP_201_CREATED)
+        booking = serializer.save()
 
-        # instance = serializer.save()
-        # booking = BookingSerializer(instance)
-        # return Response(booking.data, status=status.HTTP_201_CREATED)
+        tenant = Tenant.objects.get(subdomain_prefix=pk)
+        profile = booking.virtual_profile
+        description = description_template.substitute(
+            name=profile.full_name,
+            gender=profile.gender.long_name,
+            birthdate=profile.date_of_birth,
+            has_disability=booking.bookingdetail.has_disability,
+            smoke=booking.bookingdetail.smoke,
+            drink=booking.bookingdetail.drink,
+            allergic=booking.bookingdetail.allergic,
+            extra_info=booking.bookingdetail.extra_info,
+            brief_description=booking.bookingdetail.brief_description)
+
+        if booking.client_id is not None:
+            email = booking.client_id.email
+        else:
+            email = profile.email
+
+        event = insert_event(request,
+                             doctor=booking.doctor_id.pk,
+                             summary=tenant.name,
+                             location=tenant.address,
+                             description=description,
+                             eventtime=booking.datetime,
+                             attendee_email=email)
+
+        booking.meeting_link = event['meet_link']
+        booking.event_id = event['event_id']
+        booking.save()
+
+        booking_serializer = BookingSerializer(booking).data
+        return Response(booking_serializer, status=status.HTTP_201_CREATED)
 
 
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -192,3 +218,19 @@ class BookingFileView(APIView):
         serializer = BookingDetailFileSerializer(booking, many=True)
         print(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+description_template = Template("""
+Datos del paciente:  
+Nombre completo : $name   
+Genero: $gender  
+Fecha de Nacimiento: $birthdate 
+
+Datos de la Reserva:  
+Discapacidad: $has_disability 
+Fuma: $smoke  
+Bebe: $drink  
+Alergia: $allergic  
+Detalle la alergia: $extra_info  
+Sintomas: $brief_description 
+""")

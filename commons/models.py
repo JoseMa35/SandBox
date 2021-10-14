@@ -150,3 +150,6 @@ class IntegrationKey(models.Model):
         blank=True,
         null=True
     )
+
+    def __str__(self):
+        return self.integration.name + self.user.email

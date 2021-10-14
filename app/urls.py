@@ -84,4 +84,12 @@ urlpatterns = [
         "integrations/calendar/event/freetime", 
         gcalendar.free_time
     ),
+
+    # #
+    # urls online reservation
+    # #
+    path(
+        "online",
+        views.list_online
+    )
 ]

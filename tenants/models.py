@@ -3,7 +3,7 @@ from multiselectfield import MultiSelectField
 # Create your models here.
 from accounts.models import User, Profile
 from commons.models import Specialty
-
+from . import StatusQoutes
 
 # Create your models here.
 class Tenant(models.Model):
@@ -16,6 +16,10 @@ class Tenant(models.Model):
     )
     description = models.TextField(
         blank=True
+    )
+    address = models.CharField(
+        max_length=500,
+        blank=True,
     )
 
     def __str__(self):
@@ -84,9 +88,15 @@ class Booking(models.Model):
         Profile,
         on_delete=models.CASCADE
     )
-    status = models.CharField(
-        max_length=100
+    # status = models.CharField(
+    #     max_length=100
+    # )
+    
+    status = models.IntegerField(
+        choices=StatusQoutes.choices,
+        default=StatusQoutes.NEW
     )
+
     datetime = models.DateTimeField(
         auto_now=False,
         auto_now_add=False
@@ -95,13 +105,22 @@ class Booking(models.Model):
         max_length=100,
         blank=True, null=True
     )
+    event_id = models.CharField(
+        max_length=255,
+        blank=True, null=True
+    )
     created_at = models.DateTimeField(
         auto_now_add=True
     )
     updated_at = models.DateTimeField(
         auto_now=True
     )
+    class  Meta:
+        verbose_name = "Reserva"
+        verbose_name_plural = "Reservas"
 
+    def __str__(self):
+        return str(self.doctor_id)
 
 class BookingDetail(models.Model):
     booking_id = models.OneToOneField(
