@@ -43,5 +43,5 @@ class  Payment(models.Model):
         verbose_name = "Pago"
         verbose_name_plural = "Pagos"
     
-    def __self(self):
+    def __str__(self):
         return self.payment_id

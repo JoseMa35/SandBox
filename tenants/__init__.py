@@ -1,25 +1,22 @@
 from django.db import models
 from django.utils.translation import pgettext_lazy
 
-class Weekdays(models.IntegerChoices):
-    MONDAY = (
-        0, pgettext_lazy("Week days", "Lunes")
+class StatusQoutes(models.IntegerChoices):
+    NEW = (
+        0, pgettext_lazy("Week days", "Nueva")
     )
-    TUESDAY = (
-        1, pgettext_lazy("Week days", "Martes")
+    CONFIRMED = (
+        1, pgettext_lazy("Week days", "Confirmada")
     )
-    WENDNESDAY = (
-        2, pgettext_lazy("Week days", "Miercoles")
+    UNCONFIRMED = (
+        2, pgettext_lazy("Week days", "Sin Confirmar")
     )
-    THURDAYS = (
-        3, pgettext_lazy("Week days", "Jueves")
+    CANCELLED = (
+        3, pgettext_lazy("Week days", "Cancelada")
     )
-    FRIDAY = (
-        4, pgettext_lazy("Week days", "Viernes")
+    DID_NOT_SHOW_UP = (
+        4, pgettext_lazy("Week days", "No se presentó")
     )
-    SATURDAY = (
-        5, pgettext_lazy("Week days", "Sabado")
-    )
-    SUNDAY = (
-        6, pgettext_lazy("Week days", "Domingo")
+    RESCHEDULED = (
+        5, pgettext_lazy("Week days", "Reagendada")
     )
