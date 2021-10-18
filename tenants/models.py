@@ -111,7 +111,7 @@ class Booking(models.Model):
     )
     created_at = models.DateTimeField(
         auto_now_add=True
-    )
+    )# Fecha de registro
     updated_at = models.DateTimeField(
         auto_now=True
     )

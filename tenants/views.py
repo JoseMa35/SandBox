@@ -1,17 +1,15 @@
-from datetime import timedelta
-
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from django.http import Http404
 
-from accounts.models import Profile, User
 from commons.integrations.gcalendar import insert_event
 from commons.serializers import SpecialtySerializer
 from rest_framework.permissions import AllowAny
 from tenants.models import Staff, Tenant, Booking, BookingDetailFile, BookingDetail
 from tenants.serializers import DoctorSerializer, TenantSerializer, BookingSerializer, TenantStaffSpecialityDoctor, \
     BookingDetailFileSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class TenantListView(APIView):
@@ -167,7 +165,7 @@ class BookingView(APIView):
                              summary=tenant.name,
                              location=tenant.address,
                              description=description,
-                             eventtime=booking.datetime,
+                             eventtime=booking.datetime, # HORA INICIO
                              attendee_email=email)
 
         booking.meeting_link = event['meet_link']
@@ -176,9 +174,6 @@ class BookingView(APIView):
 
         booking_serializer = BookingSerializer(booking).data
         return Response(booking_serializer, status=status.HTTP_201_CREATED)
-
-
-from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class BookingFileView(APIView):
