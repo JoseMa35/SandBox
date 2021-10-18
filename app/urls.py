@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from app import views
 from commons.integrations import gcalendar
 
@@ -29,6 +29,11 @@ urlpatterns = [
         'doctors', 
         views.doctors, 
         name='doctors'
+    ),
+    path(
+        'doctors/<int:pk>/edit', 
+        views.doctors, 
+        name='doctors-edit'
     ),
     path(
         'prescriptions', 
@@ -89,7 +94,31 @@ urlpatterns = [
     # urls online reservation
     # #
     path(
-        "online",
-        views.list_online
+        "online/",
+        views.list_online,
+        name = "online"
+    ),
+
+
+    path(
+        "online/",
+        include(
+            (
+                [
+                    path(
+                        "",
+                        views.list_online,
+                        name = "list"
+                    ),
+                    path(
+                        "<int:booking_id>/detail/",
+                        views.detailOnline,
+                        name="detail"
+                    )
+                ],
+                "online"
+            ),namespace="online"
+        )
+
     )
 ]

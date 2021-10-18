@@ -160,7 +160,8 @@ class BookingDetailFile(models.Model):
 
 class Staff(models.Model):
     doctors = models.ManyToManyField(
-        User,
+        # User,
+        Profile,
         related_name='staff',
         blank=True
     )
