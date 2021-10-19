@@ -5,9 +5,9 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('tenants', '0010_merge_0007_alter_staff_doctors_0009_booking_event_id'),
         ('tenants', '0010_alter_staff_doctors'),
     ]
 

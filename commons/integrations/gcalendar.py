@@ -228,18 +228,20 @@ def free_time(request, pk):
 
 
 # Registrar
-def insert_event(request, doctor, summary, location, description, eventtime, attendee_email,
-                 tz=TIME_ZONE):
+def insert_event(request, doctor, summary, location, description, eventtime, attendee_email):
     # print('***************** CALENDAR - ADD EVENT  *****************')
     # El pk requerido es el id del doctor
-    time_zone = pytz.timezone(tz)
+    time_zone = pytz.timezone(TIME_ZONE)
 
     key = IntegrationKey.objects.get(integration__key=KEY, user__pk=doctor)
+    print(key)
     creds = google_apis_oauth.load_credentials(key.token)
     service = build('calendar', 'v3', credentials=creds)
 
-    start_tz = eventtime.replace(tzinfo=time_zone)
-    end_tz = start_tz + datetime.timedelta(minutes=30)
+    start_tz = eventtime.astimezone(time_zone) + datetime.timedelta(
+        hours=5)  # Aqui sumo 5 horas por el TIME ZONE
+
+    end_tz = start_tz + datetime.timedelta(minutes=WORK_TIME_SCHEDULE)
 
     start = datetime.datetime.strftime(start_tz, "%Y-%m-%dT%H:%M:%S%z")
     end = datetime.datetime.strftime(end_tz, "%Y-%m-%dT%H:%M:%S%z")

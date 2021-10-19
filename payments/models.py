@@ -1,19 +1,19 @@
 from django.db import models
 import uuid
 from tenants.models import Booking
-# Create your models here.
-class  Payment(models.Model):
+
+
+class Payment(models.Model):
     uuid = models.UUIDField(
         primary_key=True,
-        default= uuid.uuid4,
+        default=uuid.uuid4,
         editable=False,
     )
-    user = models.ForeignKey(
+    booking = models.ForeignKey(
         Booking,
         on_delete=models.CASCADE,
         null=True,
     )
-    
     payment_id = models.IntegerField(
         unique=True,
         blank=True,
@@ -38,10 +38,10 @@ class  Payment(models.Model):
         blank=True,
         null=True,
     )
-    
+
     class Meta:
         verbose_name = "Pago"
         verbose_name_plural = "Pagos"
-    
+
     def __str__(self):
         return self.payment_id

@@ -10,10 +10,12 @@ from django.template import loader
 from django.http import HttpResponse
 from django import template
 
+from payments.models import Payment
 from .forms import StaffForm
 from accounts.models import User, Profile
 from commons.models import Specialty, IntegrationKey, Integration
 from tenants.models import Booking, Staff
+
 
 @login_required(login_url="/login/")
 def index(request):
@@ -80,12 +82,12 @@ def mercado_pago(request):
     integration = Integration.objects.get(name="mercado pago")
     code = request.GET.get("code", None)
     data = {
-        "client_secret" : integration.key_secret,
-        "grant_type":  "authorization_code",
+        "client_secret": integration.key_secret,
+        "grant_type": "authorization_code",
         "code": code,
         "redirect_uri": integration.redirect,
     }
-    resp = requests.post("https://api.mercadopago.com/oauth/token",  data=data)
+    resp = requests.post("https://api.mercadopago.com/oauth/token", data=data)
     if resp.status_code == 200:
         resp_json = resp.json()
         integration_key = IntegrationKey()
@@ -97,6 +99,7 @@ def mercado_pago(request):
         integration_key.last_token_update = timezone.now()
         integration_key.save()
     return HttpResponseRedirect('/integrations')
+
 
 @login_required(login_url="/login/")
 def pages(request):
@@ -124,13 +127,13 @@ def pages(request):
 @login_required(login_url="/login/")
 def doctors(request):
     staff = Staff.objects.all()
-    return  render(
-        request, 
+    return render(
+        request,
         "doctors/index.html",
         {"staff": staff}
     )
 
-    
+
 #     context = {}
 #     context['segment'] = 'doctors'
 # 
@@ -142,15 +145,11 @@ def doctors(request):
 # 
 #     html_template = loader.get_template('doctors/index.html')
 #     return HttpResponse(html_template.render(context, request))
-   
 
 
 @login_required(login_url="/login/")
 def doctorUpdate(request):
     pass
-
-
-
 
 
 @login_required(login_url="/login/")
@@ -176,22 +175,27 @@ def specialty_form(request):
     html_template = loader.get_template('specialties/index.html')
     return HttpResponse(html_template.render(context, request))
 
-# #
-# list online dating
-# #
 
 @login_required(login_url="/login/")
 def list_online(request):
     patient = Booking.objects.all().order_by('-datetime')
-    return render(request,
-        "online/list.html",
-        {"patient": patient}
-    )
+    return render(request, "online/list.html", {"patient": patient})
+
 
 @login_required(login_url="/login/")
 def detailOnline(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    return render(request, 
-        "online/detail.html",
-        {"booking": booking}
-    )
+    return render(request, "online/detail.html", {"booking": booking})
+
+
+@login_required(login_url="/login/")
+def payment(request):
+    context = {}
+    context['segment'] = 'payment'
+
+    payment = Payment.objects.all()
+    print(payment)
+    context['payment'] = payment
+
+    html_template = loader.get_template('payment/index.html')
+    return HttpResponse(html_template.render(context, request))
