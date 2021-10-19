@@ -234,6 +234,7 @@ def insert_event(request, doctor, summary, location, description, eventtime, att
     time_zone = pytz.timezone(TIME_ZONE)
 
     key = IntegrationKey.objects.get(integration__key=KEY, user__pk=doctor)
+    print(key)
     creds = google_apis_oauth.load_credentials(key.token)
     service = build('calendar', 'v3', credentials=creds)
 
