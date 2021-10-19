@@ -18,11 +18,7 @@
                 {% if msg %}
                   <p>{{ msg | safe }}</p>
                 {% else %}
-                  <p>
-                    Add your credentials
-                    <br />
-                    OR <a href={% url 'register' %} >create your own user</a>
-                  </p>
+                  <p> Add your credentials</a>
                 {% endif %}  
 
               </div>
