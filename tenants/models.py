@@ -129,7 +129,8 @@ class BookingDetail(models.Model):
     booking_id = models.OneToOneField(
         Booking,
         on_delete=models.CASCADE,
-        null=True
+        null=True,
+        related_name='booking_detail' 
     )
     has_disability = models.BooleanField(
         default=False
