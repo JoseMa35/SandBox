@@ -175,6 +175,12 @@ def specialty_form(request):
     html_template = loader.get_template('specialties/index.html')
     return HttpResponse(html_template.render(context, request))
 
+@login_required(login_url="/login/")
+def close_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    #bookings = Booking.objects.all().order_by('-datetime')
+    return render(request, "online/close.html", {"booking": booking})
+    #return HttpResponse(html_template.render(context, request))
 
 
 @login_required(login_url="/login/")

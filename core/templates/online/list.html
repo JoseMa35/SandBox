@@ -18,7 +18,7 @@
             <div class="col">
                 <div class="card shadow">
                     <div class="card-header border-0">
-                        <h3 class="mb-0">Proximas Citas</h3>
+                        <h3 class="mb-0">Reservas</h3>
                     </div>
                     <div class="table-responsive">
                         <table class="table align-items-center table-flush">
@@ -102,6 +102,7 @@
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                                 <a class="dropdown-item" href="{% url 'online:detail' booking_id=patients.id %}">Reprogramar Cita</a>
                                                 <a class="dropdown-item" href="{% url 'online:detail' booking_id=patients.id %}">Cancelar Cita</a>
+                                                <a class="dropdown-item" href="/online/{{patients.id}}/close/">Finalizar</a>
                                             </div>
                                         </div>
                                     </td>

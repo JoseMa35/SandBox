@@ -82,7 +82,6 @@ class TenantStaffDoctorsBySpecialityView(APIView):
 class TenantStaffDoctorsView(APIView):
     # permission_classes = (IsAuthenticated,)
     # authentication_classes = (TokenAuthentication,)
-
     def get(self, request, pk):
         doctors = []
         query_staff = Staff.objects.filter(tenant__subdomain_prefix=pk)
@@ -101,7 +100,6 @@ class TenantStaffDoctorsView(APIView):
                 }
             doctors += docs
         return Response(doctors)
-
 
 class TenantStaffDoctorDetailBySpecialityView(APIView):
     def get(self, request, pk, specialty_id, doctor_id):

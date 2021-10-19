@@ -1,0 +1,124 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %} Profile {% endblock title %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+         style="min-height: 100px; center top;">
+        <!-- Mask -->
+        <span class="mask bg-gradient-default opacity-8"></span>
+        <!-- Header container -->
+        <div class="container-fluid d-flex align-items-center">
+
+        </div>
+    </div>
+
+    <div class="container-fluid mt--7">
+
+        <div class="row">
+           
+            <div class="col-xl-12">
+                <div class="card bg-secondary shadow">
+                    <div class="card-header bg-white border-0">
+                        <div class="row align-items-center">
+                            <div class="col-12">
+                                <h3 class="mb-0">Finalizar Reserva </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <h6 class="heading-small text-muted mb-4">Prescripcion</h6>
+                            <div class="p-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                      <div class="form-group"> 
+                                          <textarea rows="13" class="form-control form-control-alternative" placeholder="Prescripcion Medica ..." value=""></textarea>
+                                      </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                      <div class="form-group">
+                                          <label class="form-control-label" for="input-username">Nombre y Apellido</label>
+                                          <input type="text" id="input-username"
+                                                 class="form-control form-control-alternative" placeholder="Username"
+                                                 value="{{ booking.virtual_profile | title }}" disabled>
+                                      </div>
+                                      <div class="form-group">
+                                        <label class="form-control-label" for="input-email">Correo</label>
+                                        <input type="email" id="input-email"
+                                               class="form-control form-control-alternative"
+                                               placeholder="{{ request.user.email }}" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                      <label class="form-control-label" for="input-email">Fecha de Nacimiento</label>
+                                      <input type="email" id="input-email"
+                                             class="form-control form-control-alternative"
+                                             value="{{ booking.virtual_profile.date_of_birth|date:"SHORT_DATE_FORMAT" }}" disabled>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-xl-12">
+                <br/>
+                <div class="card bg-secondary shadow">
+        
+                    <div class="card-body">
+                        <form>
+                            <h6 class="heading-small text-muted mb-4">Cargar Archivos Extra</h6>
+                            <div class="p-lg-4>
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <input type="file" id="input-username"
+                                                   class="form-control form-control-alternative" 
+                                                   value="{{ booking.booking_detail.has_disability | title }}" >
+                                            
+                                        </div>
+                                        <a href="{{ booking.meeting_link |title }}" class="btn btn-sm ">Agregar otro archivo</a>
+                                    </div>
+                  
+                                   
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-12">
+              <br/>
+              <div class="card bg-secondary shadow">
+      
+                  <div class="card-body">
+                      <form>
+                          <div class="p-lg-4>
+                              <div class="row">
+                                  <div class="col-lg-6">
+                                      <a href="/" class="btn btn-success">Finalizar</a>
+                                  </div>
+                
+                                 
+                          </div>
+                          
+                      </form>
+                  </div>
+              </div>
+          </div>
+        </div>
+
+        {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}{% endblock javascripts %}

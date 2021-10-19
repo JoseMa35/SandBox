@@ -107,6 +107,11 @@ urlpatterns = [
         views.upcoming_bookings,
         name="upcoming_bookings"
     ),
+    path(
+        "online/<int:booking_id>/close/",
+        views.close_booking,
+        name="close_booking"
+    ),
     
     path(
         "online/",
