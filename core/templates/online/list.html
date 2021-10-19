@@ -25,8 +25,9 @@
                             <thead class="thead-light">
                             <tr>
                                 <th scope="col">Fecha de cita</th>
+                                <th scope="col">Hora de cita</th>
                                 <th scope="col">Paciente</th>
-                                <th scope="col">Estado</th>
+                                <th scope="col">Estado</th> 
                                 <th scope="col">Acciones</th>
                             </tr>
                             </thead>
@@ -35,6 +36,9 @@
                                 <tr>
                                     <td>
                                         <b>{{ patients.datetime|date:"SHORT_DATE_FORMAT" }}</b>
+                                    </td>
+                                    <td>
+                                        <b>{{ patients.datetime|time:"TIME_FORMAT" }}</b>
                                     </td>
                                     <th scope="row">
                                         <div class="media align-items-center">
@@ -76,6 +80,17 @@
                                             </span>
                                         {% endif %}
                                     </td>
+                                    <th scope="row">
+                                        <div class="media align-items-center">
+                                            <div class="media-body">
+                                                <span class="mb-0 text-sm">
+                                                    <a href="{{ patients.meeting_link |title }}" class="btn btn-sm btn-success">Entrar a Reunion</a>
+                                                 
+                                                    <a href="{% url 'online:detail' booking_id=patients.id %}" class="btn btn-sm btn-info">Ver Detalle</a>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </th>
                                     <td class="text-right">
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
@@ -83,7 +98,8 @@
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                <a class="dropdown-item" href="{% url 'online:detail' booking_id=patients.id %}">detalle    </a>
+                                                <a class="dropdown-item" href="{% url 'online:detail' booking_id=patients.id %}">Reprogramar Cita</a>
+                                                <a class="dropdown-item" href="{% url 'online:detail' booking_id=patients.id %}">Cancelar Cita</a>
                                             </div>
                                         </div>
                                     </td>
@@ -92,7 +108,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="card-footer py-4">
+                    <!-- <div class="card-footer py-4">
                         <nav aria-label="...">
                             <ul class="pagination justify-content-end mb-0">
                                 <li class="page-item disabled">
@@ -116,7 +132,7 @@
                                 </li>
                             </ul>
                         </nav>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

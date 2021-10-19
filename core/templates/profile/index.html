@@ -53,7 +53,9 @@
                                 {{ request.user.email }}
                             </div>
                             <div class="h5 mt-4">
-                                <i class="ni business_briefcase-24 mr-2"></i> Pediatria / Medicina General
+                                {% for staff in request.user.staff.all %}
+                                     <span>{{ staff }}</span><br/>
+                                {% endfor %}
                             </div>
                             <hr class="my-4"/>
                             <p>
@@ -98,22 +100,41 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" hidden>
+                                <div class="row" >
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-father-lastname">Apellido Paterno</label>
+                                            <label class="form-control-label" for="input-father-lastname">Tipo de documento</label>
                                             <input type="text" id="input-father-lastname"
                                                    class="form-control form-control-alternative"
-                                                   placeholder="{{ request.user.father_lastname|title }}">
+                                                   value="{{ request.user.profile.document_type }}">
 
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-mother-lastname">Apellido Materno</label>
+                                            <label class="form-control-label" for="input-mother-lastname">Numero de documento</label>
                                             <input type="text" id="input-mother-lastname"
                                                    class="form-control form-control-alternative"
-                                                   placeholder="{{ request.user.mother_lastname|title }}">
+                                                   value="{{ request.user.profile.document }}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" >
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-father-lastname">Fecha de nacimiento</label>
+                                            <input type="text" id="input-father-lastname"
+                                                   class="form-control form-control-alternative"
+                                                   value="{{ request.user.profile.date_of_birth }}">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-mother-lastname">Telefono</label>
+                                            <input type="text" id="input-mother-lastname"
+                                                   class="form-control form-control-alternative"
+                                                   placeholder="{{ request.user.profile.cell_phone }}">
                                         </div>
                                     </div>
                                 </div>
@@ -163,8 +184,7 @@
                             <-- Description -->
                             <h6 class="heading-small text-muted mb-4">About me</h6>
                             <div class="pl-lg-4">
-                                <div class="form-group">
-                                    <label>About Me</label>
+                                <div class="form-group"> 
                                     <textarea rows="4" class="form-control form-control-alternative"
                                               placeholder="A few words about you ...">{{ request.user.profile.about }}
                                     </textarea>
