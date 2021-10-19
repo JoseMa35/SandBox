@@ -37,11 +37,7 @@ class TenantAwareModel(models.Model):
 
 
 class Schedule(models.Model):
-    tenant = models.ForeignKey(
-        Tenant,
-        on_delete=models.CASCADE,
-        null=True
-    )
+    
     doctor = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -73,6 +69,12 @@ class ScheduleTimeFrame(models.Model):
 
 
 class Booking(models.Model):
+    tenant = models.ForeignKey(
+        Tenant,
+        on_delete=models.CASCADE,
+        null=True,
+        related_name='bookings'
+    )
     doctor_id = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

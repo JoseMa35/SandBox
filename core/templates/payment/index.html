@@ -27,44 +27,45 @@
                                 <th scope="col">ID</th>
                                 <th scope="col">Paciente</th>
                                 <th scope="col">Estado</th>
-                                <th scope="col">Acciones</th>
+                                <th scope="col">Monto</th>
+                                <th scope="col">Medio de Pago</th>
+                                <th scope="col">Fecha de Creacion</th>
+                                <th scope="col">Ultima Actualizacion</th>
+                                
                             </tr>
                             </thead>
                             <tbody>
                             {% for payment in payments %}
                                 <tr>
+                                   
                                     <td>
-                                        <b>{{ patients.datetime|date:"SHORT_DATE_FORMAT" }}</b>
+                                        <b>{{ payment.payment_id }}</b>
                                     </td>
-                                    <th scope="row">
-                                        <div class="media align-items-center">
-                                            <div class="media-body">
-                                                <span class="mb-0 text-sm">{{ patients.virtual_profile |title }}</span>
-                                            </div>
-                                        </div>
-                                    </th>
                                     <td>
-                                        {% if patients.status == 0 %}
+                                        <b>{{ payment.booking.virtual_profile }}</b>
+                                    </td>
+                                    <td>
+                                        {% if payment.status == 0 %}
                                             <span class="badge badge-dot mr-4">
                                                 <i class="bg-warning"></i>
                                                 <span class="status">Nueva</span>
                                               </span>
-                                        {% elif patients.status == 1%}
+                                        {% elif payment.status == 1%}
                                             <span class="badge badge-dot mr-4">
                                                 <i class="bg-success"></i>
                                                 <span class="status">Confirmado</span>
                                             </span>
-                                        {% elif patients.status == 2%}
+                                        {% elif payment.status == 2%}
                                             <span class="badge badge-dot mr-4">
                                                 <i class="bg-primary"></i>
                                                 <span class="status">Sin Confirmar</span>
                                             </span>
-                                        {% elif patients.status == 3 %}
+                                        {% elif payment.status == 3 %}
                                             <span class="badge badge-dot mr-4">
                                                 <i class="bg-danger"></i>
                                                 <span class="status">Cancelada</span>
                                             </span>
-                                        {% elif patients.status == 4 %}
+                                        {% elif payment.status == 4 %}
                                             <span class="badge badge-dot mr-4">
                                                 <i class="bg-info"></i>
                                                 <span class="status">No se presentó</span>
@@ -72,9 +73,21 @@
                                         {% else %}
                                             <span class="badge badge-dot mr-4">
                                                 <i class="bg-default"></i>
-                                                <span class="status">Reagendada</span>
+                                                <span class="status">Confirmado</span>
                                             </span>
                                         {% endif %}
+                                    </td>
+                                    <td>
+                                        <b>{{ payment.amount }} {{payment.currency }}</b>
+                                    </td>
+                                    <td>
+                                        <b>MercadoPago</b>
+                                    </td>
+                                    <td>
+                                        <b>{{ payment.created_at }}</b>
+                                    </td>
+                                    <td>
+                                        <b>{{ payment.updated_at }}</b>
                                     </td>
                                     <td class="text-right">
                                         <div class="dropdown">
@@ -83,7 +96,7 @@
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                <a class="dropdown-item" href="{% url 'online:detail' booking_id=patients.id %}">detalle    </a>
+                                                
                                             </div>
                                         </div>
                                     </td>

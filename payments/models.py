@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from tenants.models import Booking
+from datetime import datetime
 
 
 class Payment(models.Model):
@@ -38,6 +39,12 @@ class Payment(models.Model):
         max_length=250,
         blank=True,
         null=True,
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )  # Fecha de registro
+    updated_at = models.DateTimeField(
+        auto_now=True
     )
 
     class Meta:

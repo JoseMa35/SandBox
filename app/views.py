@@ -193,9 +193,10 @@ def payment(request):
     context = {}
     context['segment'] = 'payment'
 
-    payment = Payment.objects.all()
-    print(payment)
-    context['payment'] = payment
+    payments = Payment.objects.all()
+    print(payments)
+    context['payments'] = payments
 
-    html_template = loader.get_template('payment/index.html')
-    return HttpResponse(html_template.render(context, request))
+    #html_template = loader.get_template('payment/index.html')
+    return render(request, "payment/index.html", {"payments": payments})
+    #return HttpResponse(html_template.render(context, request))
