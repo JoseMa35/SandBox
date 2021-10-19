@@ -1,8 +1,10 @@
 {% extends 'layouts/base.html' %}
+{% load static %}
 
-{% block title %} Tables {% endblock title %}
+{% block title %} Citas Medicas {% endblock title %}
 
 {% block content %}
+
 
     <!-- Header -->
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
@@ -10,42 +12,69 @@
 
         </div>
     </div>
-
     <div class="container-fluid mt--7">
         <!-- Table -->
         <div class="row">
             <div class="col">
                 <div class="card shadow">
                     <div class="card-header border-0">
-                        <h3 class="mb-0">Doctores</h3>
+                        <h3 class="mb-0">Pagos</h3>
                     </div>
                     <div class="table-responsive">
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                             <tr>
-                                <th scope="col">Clinica</th>
-                                <th scope="col">Doctor</th>
-                                <th scope="col">Especialidades</th>
+                                <th scope="col">Fecha de cita</th>
+                                <th scope="col">Paciente</th>
+                                <th scope="col">Estado</th>
                                 <th scope="col">Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for staffs in staff %}
+                            {% for patients in patient %}
                                 <tr>
                                     <td>
-                                        <b> {{ staffs.tenant |title }}</b>
+                                        <b>{{ patients.datetime|date:"SHORT_DATE_FORMAT" }}</b>
                                     </td>
                                     <th scope="row">
                                         <div class="media align-items-center">
                                             <div class="media-body">
-                                                {% for doctor in staffs.doctors.all %}
-                                                    <span class="mb-0 text-sm">{{ doctor.full_name }}</span>{% if not forloop.last%}, {% endif %}
-                                                {% endfor %}
+                                                <span class="mb-0 text-sm">{{ patients.virtual_profile |title }}</span>
                                             </div>
                                         </div>
                                     </th>
                                     <td>
-                                        {{ staffs.specialty |title }}
+                                        {% if patients.status == 0 %}
+                                            <span class="badge badge-dot mr-4">
+                                                <i class="bg-warning"></i>
+                                                <span class="status">Nueva</span>
+                                              </span>
+                                        {% elif patients.status == 1%}
+                                            <span class="badge badge-dot mr-4">
+                                                <i class="bg-success"></i>
+                                                <span class="status">Confirmado</span>
+                                            </span>
+                                        {% elif patients.status == 2%}
+                                            <span class="badge badge-dot mr-4">
+                                                <i class="bg-primary"></i>
+                                                <span class="status">Sin Confirmar</span>
+                                            </span>
+                                        {% elif patients.status == 3 %}
+                                            <span class="badge badge-dot mr-4">
+                                                <i class="bg-danger"></i>
+                                                <span class="status">Cancelada</span>
+                                            </span>
+                                        {% elif patients.status == 4 %}
+                                            <span class="badge badge-dot mr-4">
+                                                <i class="bg-info"></i>
+                                                <span class="status">No se presentó</span>
+                                            </span>
+                                        {% else %}
+                                            <span class="badge badge-dot mr-4">
+                                                <i class="bg-default"></i>
+                                                <span class="status">Reagendada</span>
+                                            </span>
+                                        {% endif %}
                                     </td>
                                     <td class="text-right">
                                         <div class="dropdown">
@@ -54,7 +83,7 @@
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                <a class="dropdown-item" href="#">Editar</a>
+                                                <a class="dropdown-item" href="{% url 'online:detail' booking_id=patients.id %}">detalle    </a>
                                             </div>
                                         </div>
                                     </td>
@@ -91,13 +120,10 @@
                 </div>
             </div>
         </div>
-
-
         {% include "includes/footer.html" %}
-
     </div>
-
 {% endblock content %}
+
 
 <!-- Specific JS goes HERE -->
 {% block javascripts %}{% endblock javascripts %}

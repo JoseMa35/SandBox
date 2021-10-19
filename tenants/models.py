@@ -1,9 +1,9 @@
 from django.db import models
 from multiselectfield import MultiSelectField
-# Create your models here.
 from accounts.models import User, Profile
 from commons.models import Specialty
 from . import StatusQoutes
+
 
 # Create your models here.
 class Tenant(models.Model):
@@ -88,14 +88,15 @@ class Booking(models.Model):
         Profile,
         on_delete=models.CASCADE
     )
-    # status = models.CharField(
-    #     max_length=100
-    # )
-    
     status = models.IntegerField(
         choices=StatusQoutes.choices,
         default=StatusQoutes.NEW
     )
+
+    # status = models.CharField(
+    #     choices=STATUS_PAYMENT,
+    #     default=STATUS_PAYMENT.count('in_process'),
+    # )
 
     datetime = models.DateTimeField(
         auto_now=False,
@@ -111,16 +112,18 @@ class Booking(models.Model):
     )
     created_at = models.DateTimeField(
         auto_now_add=True
-    )# Fecha de registro
+    )  # Fecha de registro
     updated_at = models.DateTimeField(
         auto_now=True
     )
-    class  Meta:
+
+    class Meta:
         verbose_name = "Reserva"
         verbose_name_plural = "Reservas"
 
     def __str__(self):
         return str(self.doctor_id)
+
 
 class BookingDetail(models.Model):
     booking_id = models.OneToOneField(
@@ -170,6 +173,7 @@ class BookingDetailFile(models.Model):
 class Staff(models.Model):
     doctors = models.ManyToManyField(
         User,
+        # Profile,
         related_name='staff',
         blank=True
     )

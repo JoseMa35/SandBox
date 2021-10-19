@@ -165,7 +165,7 @@ class BookingView(APIView):
                              summary=tenant.name,
                              location=tenant.address,
                              description=description,
-                             eventtime=booking.datetime, # HORA INICIO
+                             eventtime=booking.datetime,  # HORA INICIO
                              attendee_email=email)
 
         booking.meeting_link = event['meet_link']

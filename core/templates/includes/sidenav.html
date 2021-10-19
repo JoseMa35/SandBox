@@ -102,38 +102,37 @@
 
                 <li class="nav-item">
                     <a class=" nav-link {% if 'index' in segment %} active {% endif %}" href="/"> <i
-                            class="ni ni-tv-2 text-primary"></i> Dashboardasdas
+                            class="ni ni-tv-2 text-primary"></i>Dashboard
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if 'profile' in segment %} active {% endif %}" href="/profile">
-                        <i class="ni ni-single-02 text-blue"></i> Perfil
+                        <i class="ni ni-single-02 text-blue"></i>Perfil
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if 'users' in segment %} active {% endif %}" href="/users">
-                        <i class="fa fa-users text-blue"></i> Usuarios
+                        <i class="fa fa-users text-blue"></i>Usuarios
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if 'online' in segment %} active {% endif %}" href="/online">
-                        <i class="fa fa-users text-blue"></i> Citas Medicas
+                        <i class="fa fa-users text-blue"></i>Citas Medicas
                     </a>
                 </li>
-                
-                {#          <li class="nav-item">#}
-                {#            <a class="nav-link {% if 'appointments' in segment %} active {% endif %}" href="/appointments">#}
-                {#              <i class="fa fa-calendar text-blue"></i> Appointments#}
-                {#            </a>#}
-                {#          </li>#}
+                <li class="nav-item">
+                    <a class="nav-link {% if 'payment' in segment %} active {% endif %}" href="/payment">
+                        <i class="fas fa-money-bill-alt  text-blue"></i>Pagos
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link {% if 'doctors' in segment %} active {% endif %}" href="/doctors">
-                        <i class="fa fa-calendar text-blue"></i> Doctores
+                        <i class="fa fa-calendar text-blue"></i>Doctores
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {% if 'specialties' in segment %} active {% endif %}" href="/specialties">
-                        <i class="fa fa-file text-blue"></i> Especialidades
+                        <i class="fa fa-file text-blue"></i>Especialidades
                     </a>
                 </li>
                 {#                <li class="nav-item">#}
@@ -143,7 +142,7 @@
                 {#                </li>#}
                 <li class="nav-item">
                     <a class="nav-link {% if 'integrations' in segment %} active {% endif %}" href="/integrations">
-                        <i class="fa fa-cube text-blue"></i> Integrations
+                        <i class="fa fa-cube text-blue"></i>Integrations
                     </a>
                 </li>
                 <!-- <li class="nav-item">
@@ -166,7 +165,6 @@
               <i class="ni ni-bullet-list-67 text-info"></i> Tables
             </a>
           </li> -->
-
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">
                         <i class="ni ni-user-run text-red"></i> Logout
