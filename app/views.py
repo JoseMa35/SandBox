@@ -126,12 +126,13 @@ def pages(request):
 
 @login_required(login_url="/login/")
 def doctors(request):
+    context = {}
+    context['segment'] = 'doctors'
     staff = Staff.objects.all()
-    return render(
-        request,
-        "doctors/index.html",
-        {"staff": staff}
-    )
+    context['staff'] = staff
+
+    html_template = loader.get_template('doctors/index.html')
+    return HttpResponse(html_template.render(context, request))
 
 
 #     context = {}
@@ -175,21 +176,20 @@ def specialty_form(request):
     html_template = loader.get_template('specialties/index.html')
     return HttpResponse(html_template.render(context, request))
 
+
 @login_required(login_url="/login/")
 def close_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    #bookings = Booking.objects.all().order_by('-datetime')
+    # bookings = Booking.objects.all().order_by('-datetime')
     return render(request, "online/close.html", {"booking": booking})
-    #return HttpResponse(html_template.render(context, request))
+    # return HttpResponse(html_template.render(context, request))
 
 
 @login_required(login_url="/login/")
 def upcoming_bookings(request):
     bookings = Booking.objects.all().order_by('-datetime')
     return render(request, "online/upcoming.html", {"bookings": bookings})
-    #return HttpResponse(html_template.render(context, request))
-
-
+    # return HttpResponse(html_template.render(context, request))
 
 
 @login_required(login_url="/login/")
@@ -203,6 +203,7 @@ def detailOnline(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     return render(request, "online/detail.html", {"booking": booking})
 
+
 @login_required(login_url="/login/")
 def payment(request):
     context = {}
@@ -212,6 +213,6 @@ def payment(request):
     print(payments)
     context['payments'] = payments
 
-    #html_template = loader.get_template('payment/index.html')
+    # html_template = loader.get_template('payment/index.html')
     return render(request, "payment/index.html", {"payments": payments})
-    #return HttpResponse(html_template.render(context, request))
+    # return HttpResponse(html_template.render(context, request))
