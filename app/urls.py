@@ -103,6 +103,12 @@ urlpatterns = [
         name="online"
     ),
     path(
+        "online/upcoming_bookings",
+        views.upcoming_bookings,
+        name="upcoming_bookings"
+    ),
+    
+    path(
         "online/",
         include(
             (

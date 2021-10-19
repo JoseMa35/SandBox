@@ -148,12 +148,12 @@ class BookingView(APIView):
             name=profile.full_name,
             gender=profile.gender.long_name,
             birthdate=profile.date_of_birth,
-            has_disability=booking.bookingdetail.has_disability,
-            smoke=booking.bookingdetail.smoke,
-            drink=booking.bookingdetail.drink,
-            allergic=booking.bookingdetail.allergic,
-            extra_info=booking.bookingdetail.extra_info,
-            brief_description=booking.bookingdetail.brief_description)
+            has_disability=booking.booking_detail.has_disability,
+            smoke=booking.booking_detail.smoke,
+            drink=booking.booking_detail.drink,
+            allergic=booking.booking_detail.allergic,
+            extra_info=booking.booking_detail.extra_info,
+            brief_description=booking.booking_detail.brief_description)
 
         if booking.client_id is not None:
             email = booking.client_id.email

@@ -176,6 +176,16 @@ def specialty_form(request):
     return HttpResponse(html_template.render(context, request))
 
 
+
+@login_required(login_url="/login/")
+def upcoming_bookings(request):
+    bookings = Booking.objects.all().order_by('-datetime')
+    return render(request, "online/upcoming.html", {"bookings": bookings})
+    #return HttpResponse(html_template.render(context, request))
+
+
+
+
 @login_required(login_url="/login/")
 def list_online(request):
     patient = Booking.objects.all().order_by('-datetime')
@@ -186,7 +196,6 @@ def list_online(request):
 def detailOnline(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     return render(request, "online/detail.html", {"booking": booking})
-
 
 @login_required(login_url="/login/")
 def payment(request):
