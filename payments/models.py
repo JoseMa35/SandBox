@@ -14,7 +14,8 @@ class Payment(models.Model):
         on_delete=models.CASCADE,
         null=True,
     )
-    payment_id = models.IntegerField(
+    payment_id = models.CharField(
+        max_length=200,
         unique=True,
         blank=True,
         null=True

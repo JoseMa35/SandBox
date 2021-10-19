@@ -24,14 +24,14 @@
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                             <tr>
-                                <th scope="col">Fecha de cita</th>
+                                <th scope="col">ID</th>
                                 <th scope="col">Paciente</th>
                                 <th scope="col">Estado</th>
                                 <th scope="col">Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for patients in patient %}
+                            {% for payment in payments %}
                                 <tr>
                                     <td>
                                         <b>{{ patients.datetime|date:"SHORT_DATE_FORMAT" }}</b>
