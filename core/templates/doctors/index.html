@@ -12,7 +12,6 @@
     </div>
 
     <div class="container-fluid mt--7">
-
         <!-- Table -->
         <div class="row">
             <div class="col">
@@ -24,48 +23,30 @@
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                             <tr>
+                                <th scope="col">Clinica</th>
                                 <th scope="col">Doctor</th>
-                                <th scope="col">Fecha y Hora</th>
                                 <th scope="col">Especialidades</th>
-                                <th scope="col">Status</th>
                                 <th scope="col">Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
-                            {% for profile in profiles %}
+                            {% for staffs in staff %}
                                 <tr>
                                     <td>
-                                        <b> {{ profile.user.get_full_name |title }}</b>
+                                        <b> {{ staffs.tenant |title }}</b>
                                     </td>
                                     <th scope="row">
                                         <div class="media align-items-center">
                                             <div class="media-body">
-                                                <span class="mb-0 text-sm">{{ profile.user.date_joined }}</span>
+                                                {% for doctor in staffs.doctors.all %}
+                                                    <span class="mb-0 text-sm">{{ doctor.full_name }}</span>{% if not forloop.last%}, {% endif %}
+                                                {% endfor %}
                                             </div>
                                         </div>
                                     </th>
                                     <td>
-                                        {% for specialty in specialties %}
-                                            {% if specialty.user.id == profile.user.id %}
-                                                {{ specialty.specialty.name }}
-                                            {% endif %}
-                                        {% endfor %}
+                                        {{ staffs.specialty |title }}
                                     </td>
-                                    <td>
-                                        <span class="badge badge-dot mr-4">
-                                          {% if user.is_active %}
-                                              <i class="bg-success"></i> Activo
-                                          {% else %}
-                                              <i class="bg-danger"></i> Desabilitado
-                                          {% endif %}
-                                      </span>
-                                    </td>
-                                    {#                                    <td>#}
-                                    {##}
-                                    {#                                    </td>#}
-                                    {#                                    <td>#}
-                                    {#                                        <a href="#" class="btn btn-sm btn-success">Entrar a Reunion</a>#}
-                                    {#                                    </td>#}
                                     <td class="text-right">
                                         <div class="dropdown">
                                             <a class="btn btn-sm btn-icon-only text-light" href="#" role="button"
@@ -78,7 +59,6 @@
                                         </div>
                                     </td>
                                 </tr>
-
                             {% endfor %}
                             </tbody>
                         </table>

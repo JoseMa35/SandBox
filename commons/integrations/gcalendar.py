@@ -1,7 +1,6 @@
 # Setup Google Calendar
 from django.http import HttpResponse
 
-from accounts.models import User
 from commons.models import IntegrationKey, Integration
 
 import os
@@ -27,18 +26,11 @@ import json
 import pytz
 
 
-# Sing In whit google
 def AuthGoogle(request):
-    code = request.GET.get('code', None)
+    oauth_url = google_apis_oauth.get_authorization_url(
+        JSON_FILEPATH, SCOPES, REDIRECT_URI, consent_prompt=True)
 
-    if not code:
-        raise Exception
-
-    if code == KEY:
-        oauth_url = google_apis_oauth.get_authorization_url(
-            JSON_FILEPATH, SCOPES, REDIRECT_URI, consent_prompt=True)
-
-        return HttpResponseRedirect(oauth_url)
+    return HttpResponseRedirect(oauth_url)
 
 
 # Callback
@@ -81,14 +73,12 @@ def get_calendar(request):
     creds = google_apis_oauth.load_credentials(key.token)
     service = build('calendar', 'v3', credentials=creds)
     calendar = service.calendars().get(calendarId='primary').execute()
-    print(calendar)
     return HttpResponse(calendar['summary'])
 
 
 def get_freebusy(request):
     key = IntegrationKey.objects.get(integration__key=KEY, user__email='yahyr@gmail.com')
     creds = google_apis_oauth.load_credentials(key.token)
-    print(creds)
     service = build('calendar', 'v3', credentials=creds)
 
     # This event should be returned by freebusy
@@ -110,10 +100,10 @@ def get_freebusy(request):
     }
     calendar = service.freebusy().query(body=body).execute()
 
-    print(calendar)
-    print(calendar['kind'])
-    print(calendar['timeMin'])
-    print(calendar['timeMax'])
+    # print(calendar)
+    # print(calendar['kind'])
+    # print(calendar['timeMin'])
+    # print(calendar['timeMax'])
 
     return HttpResponse(calendar)
 
@@ -136,12 +126,12 @@ def list_all_events(request):
         maxResults=20, singleEvents=True,
         orderBy='startTime').execute()
 
-    print(events_result)
+    # print(events_result)
 
     events = events_result.get('items', [])
 
     if not events:
-        print('No upcoming events found.')
+        # print('No upcoming events found.')
         return HttpResponse('No upcoming events found.')
 
     return HttpResponse(events)
@@ -172,8 +162,8 @@ def free_time(request, pk):
     start = datetime.datetime.strftime(start_tz_datetime, "%Y-%m-%dT%H:%M:%S%z")
     end = datetime.datetime.strftime(end_tz_datetime, "%Y-%m-%dT%H:%M:%S%z")
 
-    print(start_tz_datetime)
-    print(end_tz_datetime)
+    # print(start_tz_datetime)
+    # print(end_tz_datetime)
 
     # if key.calendar_id is None:
     calendar_name = 'primary'  # use for defaut
@@ -193,12 +183,12 @@ def free_time(request, pk):
             'end_time': datetime.datetime.fromisoformat(event['end']['dateTime']),
             'status': 'buzy'
         }
-        print({'START': event['start']['dateTime'], 'END': event['end']['dateTime']})
+        # print({'START': event['start']['dateTime'], 'END': event['end']['dateTime']})
         schedule_busy.append(item)
 
     date_range = pd.date_range(start=start_tz_datetime, end=end_tz_datetime, freq=(str(WORK_TIME_SCHEDULE) + 'min'),
                                closed=None)
-    print(date_range)
+    # print(date_range)
     df = pd.DataFrame({'A': [x for x in range(date_range.size)]}, index=date_range)
 
     busy_pd = []
@@ -209,15 +199,15 @@ def free_time(request, pk):
             include_start=True, include_end=False)
 
         basic = colition.values[:]
-        print('basic', basic[:])
-        print('basic', basic.size)
+        # print('basic', basic[:])
+        # print('basic', basic.size)
         for xi in basic:
             busy_pd.append(xi[0])
 
     # Generate list schedule free
     schedule = []
     for x in range(date_range.size - 1):
-        print(date_range[x])
+        # print(date_range[x])
         item = {
             'index': x,
             'date': request_date,
@@ -225,7 +215,7 @@ def free_time(request, pk):
             'end_time': date_range[x + 1].time().strftime('%H:%M:%S'),
             'status': 'free'
         }
-        print('FREE', item)
+        # print('FREE', item)
         schedule.append(item)
 
     # Change or remove free for buzy
@@ -235,3 +225,53 @@ def free_time(request, pk):
                 item['status'] = 'buzy'
 
     return HttpResponse(json.dumps(schedule, sort_keys=True))
+
+
+# Registrar
+def insert_event(request, doctor, summary, location, description, eventtime, attendee_email,
+                 tz=TIME_ZONE):
+    # print('***************** CALENDAR - ADD EVENT  *****************')
+    # El pk requerido es el id del doctor
+    time_zone = pytz.timezone(tz)
+
+    key = IntegrationKey.objects.get(integration__key=KEY, user__pk=doctor)
+    creds = google_apis_oauth.load_credentials(key.token)
+    service = build('calendar', 'v3', credentials=creds)
+
+    start_tz = eventtime.replace(tzinfo=time_zone)
+    end_tz = start_tz + datetime.timedelta(minutes=30)
+
+    start = datetime.datetime.strftime(start_tz, "%Y-%m-%dT%H:%M:%S%z")
+    end = datetime.datetime.strftime(end_tz, "%Y-%m-%dT%H:%M:%S%z")
+
+    event = {
+        'summary': 'Cita en ' + summary + ' by tranvia.tech',
+        'location': location,
+        'description': description,
+        'start': {
+            'dateTime': start,
+            'timeZone': TIME_ZONE,
+        },
+        'end': {
+            'dateTime': end,
+            'timeZone': TIME_ZONE,
+        },
+        'attendees': [
+            {'email': attendee_email},
+        ],
+        'conferenceData': {
+            'createRequest': {
+                'conferenceSolutionKey': {
+                    'type': 'hangoutsMeet'
+                },
+                'requestId': 'RandomString'
+            }
+        },
+    }
+
+    event_response = service.events().insert(calendarId='primary', conferenceDataVersion=1, body=event).execute()
+    event = {
+        'meet_link': event_response['hangoutLink'],
+        'event_id': event_response['id']
+    }
+    return event

@@ -1,13 +1,17 @@
+from datetime import timedelta
+
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from django.http import Http404
 
-from django.shortcuts import get_object_or_404
+from accounts.models import Profile, User
+from commons.integrations.gcalendar import insert_event
 from commons.serializers import SpecialtySerializer
 from rest_framework.permissions import AllowAny
-from tenants.models import Schedule, Staff, Tenant, Booking
-from tenants.serializers import DoctorSerializer, ScheduleTimeFrameSerializer, \
-    TenantSerializer, BookingSerializer
+from tenants.models import Staff, Tenant, Booking, BookingDetailFile, BookingDetail
+from tenants.serializers import DoctorSerializer, TenantSerializer, BookingSerializer, TenantStaffSpecialityDoctor, \
+    BookingDetailFileSerializer
 
 
 class TenantListView(APIView):
@@ -31,17 +35,20 @@ class TenantDetailView(APIView):
 
 
 class TenantStaffView(APIView):
-
+    # permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
     def get(self, request, pk):
-        staff = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
-        specialties = []
-        for s in staff:
-            doctor_serializer = DoctorSerializer(s.doctors, many=True)
-            specialties.append({
-                "title": s.specialty.name,
-                "doctors": doctor_serializer.data
-            })
-        return Response(specialties)
+        staff_query = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
+        _staff = []
+        for s in staff_query:
+            staff = {
+                'doctors': s.doctors,
+                'specialty': s.specialty
+            }
+            doctor_serializer = TenantStaffSpecialityDoctor(staff)
+            staff_data = doctor_serializer.data
+            _staff.append(staff_data)
+        return Response(_staff)
 
 
 class TenantStaffSpecialitiesView(APIView):
@@ -56,90 +63,174 @@ class TenantStaffSpecialitiesView(APIView):
 
 class TenantStaffDoctorsBySpecialityView(APIView):
     def get(self, request, pk, specialty_id):
-        staff = Staff.objects.filter(tenant__subdomain_prefix=pk).filter(specialty_id=specialty_id).all()
+        query_staff = Staff.objects.filter(tenant__subdomain_prefix=pk) \
+            .filter(specialty_id=specialty_id).all()
+
         doctors = []
-        for s in staff:
-            doctor_serializer = DoctorSerializer(s.doctors, many=True)
+        for s in query_staff:
+            # query_doctor = s.doctors.all()
+            query_doctor = s.doctors
+            doctor_serializer = DoctorSerializer(query_doctor, many=True)
             docs = doctor_serializer.data
+            for i in range(0, len(docs)):
+                docs[i]['specialty'] = {
+                    'id': s.specialty.id,
+                    'name': s.specialty.name
+                }
             doctors += docs
-        print(doctors)
         return Response(doctors)
 
 
-# Lista de todos los doctores por Tenant
 class TenantStaffDoctorsView(APIView):
+    # permission_classes = (IsAuthenticated,)
+    # authentication_classes = (TokenAuthentication,)
 
     def get(self, request, pk):
         doctors = []
-
-        if self.request.query_params.get("q") != None:
-            query = self.request.query_params.get("q")
-            staff_doctors = Staff.objects.filter(tenant__subdomain_prefix=pk)
-            for s in staff_doctors:
-                doctor_serializer = DoctorSerializer(s.doctors, many=True)
-
-                docs = doctor_serializer.data
-
-                for d in docs:
-                    if query in d['profile']['full_name']:
-                        doctors.append(d)
-            return Response(doctors)
-        else:
-            staff = Staff.objects.filter(tenant__subdomain_prefix=pk).all()
-            for s in staff:
-                print(s.specialty)
-                doctor_serializer = DoctorSerializer(s.doctors, many=True)
-                docs = doctor_serializer.data
-                for i in range(0, len(docs)):
-                    # esto funciona
-                    docs[i]['specialty_id'] = s.specialty.id
-                    docs[i]['specialty_name'] = s.specialty.name
-
-                doctors += docs
-            return Response(doctors)
+        query_staff = Staff.objects.filter(tenant__subdomain_prefix=pk)
+        for s in query_staff:
+            if self.request.query_params.get("q") != None:
+                filter_key = self.request.query_params.get("q")
+                query_doctor = s.doctors.filter(profile__full_name__icontains=filter_key)
+            else:
+                query_doctor = s.doctors
+            doctor_serializer = DoctorSerializer(query_doctor, many=True)
+            docs = doctor_serializer.data
+            for i in range(0, len(docs)):
+                docs[i]['specialty'] = {
+                    'id': s.specialty.id,
+                    'name': s.specialty.name
+                }
+            doctors += docs
+        return Response(doctors)
 
 
-# class TenantStaffDoctorScheduleView(APIView):
-#     def get(self, request, pk):
-#
-#         schedule = Schedule.objects.filter(doctor_id=pk).first()
-#
-#         if 'date' in request.GET != None:
-#             timeframes = schedule.time_frames.filter(date=request.GET['date']).all()
-#         else:
-#             timeframes = schedule.time_frames.all()
-#
-#         serializer = ScheduleTimeFrameSerializer(timeframes, many=True)
-#         return Response(serializer.data)
+class TenantStaffDoctorDetailBySpecialityView(APIView):
+    def get(self, request, pk, specialty_id, doctor_id):
+        query_staff = Staff.objects.get(tenant__subdomain_prefix=pk, specialty_id=specialty_id)
+        query_doctor = query_staff.doctors.get(profile__user=doctor_id)
+        doctor_serializer = DoctorSerializer(query_doctor)
+        doctor = doctor_serializer.data
+        doctor['specialty'] = {
+            'id': query_staff.specialty.id,
+            'name': query_staff.specialty.name
+        }
+        return Response(doctor)
 
 
-class TenantStaffDoctorBookingView(APIView):
-
-    def post(self, request, pk):
-        # doctor = User.objects.filter(id=pk).first()
-        pass
+from string import Template
 
 
 class BookingView(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self, request, pk=None, form=None):
-        if pk:
-            booking = get_object_or_404(BookingSerializer, id=pk)
+    def get(self, request, pk, booking_id=None):
+        if booking_id:
+            try:
+                booking = Booking.objects.get(bookingdetail__files=True, id=booking_id)
+            except Booking.DoesNotExist:
+                raise Http404()
             serializer = BookingSerializer(booking, many=False)
-
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         else:
-            booking = Booking.objects.all()
+            booking = Booking.objects.select_related('bookingdetail').all()
             serializer = BookingSerializer(booking, many=True)
-
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, pk, *args, **kwargs):
+
         serializer = BookingSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        instance = serializer.save()
-        serializer = BookingSerializer(instance=instance)
+        booking = serializer.save()
 
+        tenant = Tenant.objects.get(subdomain_prefix=pk)
+        profile = booking.virtual_profile
+        description = description_template.substitute(
+            name=profile.full_name,
+            gender=profile.gender.long_name,
+            birthdate=profile.date_of_birth,
+            has_disability=booking.bookingdetail.has_disability,
+            smoke=booking.bookingdetail.smoke,
+            drink=booking.bookingdetail.drink,
+            allergic=booking.bookingdetail.allergic,
+            extra_info=booking.bookingdetail.extra_info,
+            brief_description=booking.bookingdetail.brief_description)
+
+        if booking.client_id is not None:
+            email = booking.client_id.email
+        else:
+            email = profile.email
+
+        event = insert_event(request,
+                             doctor=booking.doctor_id.pk,
+                             summary=tenant.name,
+                             location=tenant.address,
+                             description=description,
+                             eventtime=booking.datetime,
+                             attendee_email=email)
+
+        booking.meeting_link = event['meet_link']
+        booking.event_id = event['event_id']
+        booking.save()
+
+        booking_serializer = BookingSerializer(booking).data
+        return Response(booking_serializer, status=status.HTTP_201_CREATED)
+
+
+from rest_framework.parsers import MultiPartParser, FormParser
+
+
+class BookingFileView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        booking = BookingDetailFile.objects.all()
+        serializer = BookingDetailFileSerializer(booking, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, *args, **kwargs):
+
+        if 'file' not in request.FILES:
+            return Response({'file error'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if 'booking_detail' not in request.data:
+            return Response({'booking_detail error'}, status=status.HTTP_400_BAD_REQUEST)
+
+        booking_detail = request.data.get('booking_detail')
+        files = request.FILES.getlist('file')
+        print('booking_detail', booking_detail)
+        if len(files) > 1:  # Multiple Files
+            for file in files:
+                serializer_class = BookingDetailFileSerializer(data={'file': file, 'booking_detail': booking_detail})
+                if serializer_class.is_valid():
+                    serializer_class.save()
+            print('finish for')
+        else:  # Single File
+            file = request.FILES['file']
+            serializer_class = BookingDetailFileSerializer(data={'file': file, 'booking_detail': booking_detail})
+            if serializer_class.is_valid():
+                serializer_class.save()
+
+        booking = BookingDetailFile.objects.filter(booking_detail=booking_detail)
+        print(booking)
+        serializer = BookingDetailFileSerializer(booking, many=True)
+        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+description_template = Template("""
+Datos del paciente:  
+Nombre completo : $name   
+Genero: $gender  
+Fecha de Nacimiento: $birthdate 
+
+Datos de la Reserva:  
+Discapacidad: $has_disability 
+Fuma: $smoke  
+Bebe: $drink  
+Alergia: $allergic  
+Detalle la alergia: $extra_info  
+Sintomas: $brief_description 
+""")

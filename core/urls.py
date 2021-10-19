@@ -1,8 +1,3 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
-
 from django.contrib import admin
 from django.template.context_processors import static
 from django.urls import path, include  # add this
@@ -35,6 +30,9 @@ urlpatterns = [
     # url(r'^api/login/', obtain_auth_token, name='api_token_auth'),
     url(r'^api/', include("tenants.urls")),
     url(r'^api/', include("commons.urls")),
+    url(r'^api/', include("accounts.urls")),
+    url(r'^api/', include("payment_gateways.urls")),
+    url(r'^api/', include("mails.urls")),
     url(r'^api/swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url(r'^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^api/redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),

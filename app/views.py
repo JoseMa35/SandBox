@@ -1,16 +1,19 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2019 - present AppSeed.us
-"""
+import requests
+
+from django.conf import settings
+from django.utils import timezone
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
 
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from django.http import HttpResponse
 from django import template
 
+from .forms import StaffForm
 from accounts.models import User, Profile
 from commons.models import Specialty, IntegrationKey, Integration
-
+from tenants.models import Booking, Staff
 
 @login_required(login_url="/login/")
 def index(request):
@@ -73,6 +76,29 @@ def integrations(request):
 
 
 @login_required(login_url="/login/")
+def mercado_pago(request):
+    integration = Integration.objects.get(name="mercado pago")
+    code = request.GET.get("code", None)
+    data = {
+        "client_secret" : integration.key_secret,
+        "grant_type":  "authorization_code",
+        "code": code,
+        "redirect_uri": integration.redirect,
+    }
+    resp = requests.post("https://api.mercadopago.com/oauth/token",  data=data)
+    if resp.status_code == 200:
+        resp_json = resp.json()
+        integration_key = IntegrationKey()
+        integration_key.user = request.user
+        integration_key.integration = integration
+        integration_key.acceses_token = resp_json["access_token"]
+        integration_key.token_refresh = resp_json["refresh_token"]
+        integration_key.public_key = resp_json["public_key"]
+        integration_key.last_token_update = timezone.now()
+        integration_key.save()
+    return HttpResponseRedirect('/integrations')
+
+@login_required(login_url="/login/")
 def pages(request):
     context = {}
     # All resource paths end in .html.
@@ -97,17 +123,34 @@ def pages(request):
 
 @login_required(login_url="/login/")
 def doctors(request):
-    context = {}
-    context['segment'] = 'doctors'
+    staff = Staff.objects.all()
+    return  render(
+        request, 
+        "doctors/index.html",
+        {"staff": staff}
+    )
 
-    profile = Profile.objects.filter(is_doctor=True)
-    specialty = Specialty.objects.filter(is_active=True)
+    
+#     context = {}
+#     context['segment'] = 'doctors'
+# 
+#     profile = Profile.objects.filter(is_doctor=True)
+#     specialty = Specialty.objects.filter(is_active=True)
+# 
+#     context['profiles'] = profile
+#     context['specialties'] = specialty
+# 
+#     html_template = loader.get_template('doctors/index.html')
+#     return HttpResponse(html_template.render(context, request))
+   
 
-    context['profiles'] = profile
-    context['specialties'] = specialty
 
-    html_template = loader.get_template('doctors/index.html')
-    return HttpResponse(html_template.render(context, request))
+@login_required(login_url="/login/")
+def doctorUpdate(request):
+    pass
+
+
+
 
 
 @login_required(login_url="/login/")
@@ -133,3 +176,22 @@ def specialty_form(request):
     html_template = loader.get_template('specialties/index.html')
     return HttpResponse(html_template.render(context, request))
 
+# #
+# list online dating
+# #
+
+@login_required(login_url="/login/")
+def list_online(request):
+    patient = Booking.objects.all().order_by('-datetime')
+    return render(request,
+        "online/list.html",
+        {"patient": patient}
+    )
+
+@login_required(login_url="/login/")
+def detailOnline(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    return render(request, 
+        "online/detail.html",
+        {"booking": booking}
+    )

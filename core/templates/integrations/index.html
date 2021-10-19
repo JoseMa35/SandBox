@@ -5,78 +5,53 @@
 
 {% block content %}
 
-    <!-- Header -->
-    <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
-        <div class="container-fluid">
-
-        </div>
+<!-- Header -->
+<div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
+    <div class="container-fluid">
     </div>
-
-    <div class="container-fluid mt--7">
-
-        <!-- Table -->
-        <div class="row">
-            <div class="col">
-                <div class="card shadow">
-                    <div class="card-header border-0">
-                        <h3 class="mb-0">Integraciones</h3>
-                    </div>
-
-
+</div>
+<div class="container-fluid mt--7">
+    <!-- Table -->
+    <div class="row">
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-header border-0">
+                    <h3 class="mb-0">Integraciones</h3>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <br/>
-            </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <br/>
         </div>
-        <div class="row">
-            {% for item in integrations %}
-                <div class="col">
-                    <div class="card shadow">
-                        <div class="card-header border-0">
-                            <div class="row">
-                                <div class="col-8">
-                                    <h3 class="mb-0">{{ item.name }} </h3>
-                                    <br/>
-                                    {% if item ==  key.integration %}
-                                        <button  disabled class="btn btn btn-success">Autorizacion Completa</button>
-                                    {% else %}
-                                        <a href="{{ item.redirect }}?code={{ item.key }}" class="btn btn btn-primary">Autorizar</a>
-                                    {% endif %}
-                                </div>
-                                <div class="col-4">
-                                    <img alt="Image placeholder" src="{{ item.logo }}" width="100px">
-                                </div>
+    </div>
+    <div class="row">
+        {% for item in integrations %}
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-header border-0">
+                        <div class="row">
+                            <div class="col-8">
+                                <h3 class="mb-0">{{ item.name }} </h3>
+                                <br/>
+                                {% if item ==  key.integration %}
+                                    <button  disabled class="btn btn btn-success">Autorizacion Completa</button>
+                                {% else %}
+                                    <a href="{{ item.parsed_authorization_url }}" class="btn btn btn-primary">Autorizar</a>
+                                {% endif %}
+                            </div>
+                            <div class="col-4">
+                                <img alt="Image placeholder" src="{{ item.logo }}" width="100px">
                             </div>
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-            <!--div class="col">
-          <div class="card shadow">
-            <div class="card-header border-0">
-              <div class="row">
-                <div class="col-8">
-                  <h3 class="mb-0">Culqi</h3>
-                  <br/>
-                  <a href="#" class="btn btn btn-primary">Authorize</a>
-                </div>
-                <div class="col-4">
-                  <img alt="Image placeholder" src="{% static 'assets/img/theme/culqi.png' %}"   width="150px">
-                </div>
-              </div>
             </div>
-          </div>
-        </div-->
-        </div>
-
-
-        {% include "includes/footer.html" %}
-
+        {% endfor %}
     </div>
-
+    {% include "includes/footer.html" %}
+</div>
 {% endblock content %}
 
 <!-- Specific JS goes HERE -->

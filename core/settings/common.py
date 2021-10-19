@@ -5,6 +5,7 @@ from unipath import Path
 import dj_database_url
 
 import pymysql
+
 pymysql.install_as_MySQLdb()
 
 print(f"FILE: {os.path.dirname(os.path.abspath(__file__))}")
@@ -33,21 +34,23 @@ INSTALLED_APPS = [
     'tenants',
     'nested_inline',
     'multiselectfield',
+    'payment_gateways',
+    'payments',
     # 'sslserver', # Only `for dev  python manage.py runsslserver
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.csrf.CsrfViewMiddleware',
+    'tenants.middleware.TranviaMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
 ]
 
 LANGUAGE_CODE = 'es'
@@ -85,8 +88,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -170,3 +171,14 @@ CORS_ORIGIN_WHITELIST = [
 AUTH_USER_MODEL = 'accounts.User'
 AUTH_PROFILE_MODULE = 'accounts.Profile'
 USER_DELETE_PREFIX = '_removed__'
+
+# # 
+# Configuration Emails by sendGrid 
+# #
+
+# SENDGRID_API_KEY = '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'
+# DEFAULT_FROM_EMAIL = 'lardinarmas@gmail.com'
+
+SENDGRID_API_KEY_DEV = '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'
+DEFAULT_FROM_EMAIL_DEV = 'josemcastilloc@gmail.com'
+DEFAULT_TEMPLATE_ID =  "d-43ac5a2ef8e14900905c85b108caf25e"

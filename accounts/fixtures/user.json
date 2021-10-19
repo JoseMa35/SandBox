@@ -3,28 +3,28 @@
     "model": "accounts.user",
     "fields": {
       "email": "joel@gmail.com",
-      "password": "Lima123456"
+      "password": "pbkdf2_sha256$260000$25aKOTHGqBzZuV8wR4LjuN$vsJ/COTe3kC28ynSMD731lDODB01+A3xwT83/P26znY="
     }
   },
   {
     "model": "accounts.user",
     "fields": {
       "email": "andres@gmail.com",
-      "password": "Lima123456"
+      "password": "pbkdf2_sha256$260000$25aKOTHGqBzZuV8wR4LjuN$vsJ/COTe3kC28ynSMD731lDODB01+A3xwT83/P26znY="
     }
   },
   {
     "model": "accounts.user",
     "fields": {
       "email": "david@gmail.com",
-      "password": "Lima123456"
+      "password": "pbkdf2_sha256$260000$25aKOTHGqBzZuV8wR4LjuN$vsJ/COTe3kC28ynSMD731lDODB01+A3xwT83/P26znY="
     }
   },
   {
     "model": "accounts.user",
     "fields": {
       "email": "demo@tranvia.tech",
-      "password": "Lima123456"
+      "password": "pbkdf2_sha256$260000$25aKOTHGqBzZuV8wR4LjuN$vsJ/COTe3kC28ynSMD731lDODB01+A3xwT83/P26znY="
     }
   }
 ]

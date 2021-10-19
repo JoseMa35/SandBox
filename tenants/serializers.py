@@ -1,4 +1,3 @@
-from django.db.models.base import Model
 from tenants.models import (
     Schedule,
     ScheduleTimeFrame,
@@ -12,7 +11,7 @@ from tenants.models import (
 from accounts.models import User, Profile
 from commons.serializers import SpecialtySerializer
 
-from rest_framework import fields, serializers
+from rest_framework import serializers
 
 
 class StaffSerializer(serializers.ModelSerializer):
@@ -24,8 +23,8 @@ class StaffSerializer(serializers.ModelSerializer):
 class TenantSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = TenantSettings
-        fields =  [
-            'color', 
+        fields = [
+            'color',
             'logo',
             'labor_days',
             'quote_duration',
@@ -33,7 +32,8 @@ class TenantSettingsSerializer(serializers.ModelSerializer):
             'work_start',
             'work_end',
         ]
-        
+
+
 class TenantSerializer(serializers.ModelSerializer):
     settings = TenantSettingsSerializer(read_only=True)
 
@@ -68,11 +68,19 @@ class DoctorProfileSerializer(serializers.ModelSerializer):
 
 class DoctorSerializer(serializers.ModelSerializer):
     profile = DoctorProfileSerializer(read_only=True)
-    specialty = SpecialtySerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'email', 'profile', 'specialty')
+        fields = ('id', 'email', 'profile')
+
+
+class TenantStaffSpecialityDoctor(serializers.ModelSerializer):
+    doctors = DoctorSerializer(read_only=True, many=True)
+    specialty = SpecialtySerializer(read_only=True)
+
+    class Meta:
+        model = Tenant
+        fields = ('doctors', 'specialty')
 
 
 class ScheduleTimeFrameSerializer(serializers.ModelSerializer):
@@ -89,11 +97,19 @@ class ScheduleSerializer(serializers.ModelSerializer):
         fields = ('doctor', 'schedule')
 
 
+class BookingDetailFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookingDetailFile
+        fields = ('file', 'booking_detail')
+
+
 class BookingDetailSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = BookingDetail
         fields = [
-            # "booking_id"
+            'id',
             "has_disability",
             "smoke",
             "drink",
@@ -103,39 +119,32 @@ class BookingDetailSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-
-
-class BookingDetailFileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BookingDetailFile
-        fields = [
-            "file",
-        ]
+        read_only_fields = ['id', ]
 
 
 class BookingSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     booking_detail = BookingDetailSerializer(source="bookingdetail")
 
     class Meta:
         model = Booking
         fields = [
+            'id',
             "doctor_id",
             "client_id",
             "virtual_profile",
             "status",
             "datetime",
             "meeting_link",
+            "event_id",
+            "booking_detail",
             "created_at",
             "updated_at",
-            "booking_detail",
         ]
 
     def save(self):
-        print(self.validated_data)
         booking_data = self.validated_data
         booking_detail_data = booking_data.pop('bookingdetail')
-
         booking = Booking.objects.create(**booking_data)
         BookingDetail.objects.create(booking_id=booking, **booking_detail_data)
-
         return booking

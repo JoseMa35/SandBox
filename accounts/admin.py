@@ -25,6 +25,7 @@ class ProfileAdmin(admin.ModelAdmin):
     list_filter = ('is_doctor', 'is_patient', 'is_admin', 'document_type')
     search_fields = ('user__email',)
     ordering = ('user__email',)
+    readonly_fields = ('id',)
 
 
 class UserForm(UserCreationForm):
@@ -42,6 +43,7 @@ class ProfileInline(admin.StackedInline):
 @admin.register(User)
 class UserAdmin(UserAdmin):
     inlines = (ProfileInline,)
+    list_display = ('email', 'password', )
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Permissions'), {
