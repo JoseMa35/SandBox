@@ -196,6 +196,10 @@ class Staff(models.Model):
         return f"{self.tenant.name}: {self.specialty.name}"
 
 
+    # def staffs_by_user(self, user_id):
+    #     return Staff.objects.filter(doctors=user_id)
+
+
 class TenantSettings(models.Model):
     WEELDAYS = (
         ("Lunes", "Lunes"),

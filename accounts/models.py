@@ -7,6 +7,7 @@ from commons.models import Document_Type, Gender, Specialty
 from accounts.managers import UserManager
 
 
+
 class User(AbstractUser):
     username = models.CharField(_('username'), max_length=150, blank=True, null=True)
     email = models.EmailField(_('email'),
@@ -21,6 +22,8 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
+
+    
 
 
 class Profile(models.Model):
