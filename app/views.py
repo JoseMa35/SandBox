@@ -201,7 +201,10 @@ def list_online(request):
 @login_required(login_url="/login/")
 def detailOnline(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    return render(request, "online/detail.html", {"booking": booking})
+    return render(request, 
+        "online/detail.html", 
+        {"booking": booking}
+    )
 
 
 @login_required(login_url="/login/")
