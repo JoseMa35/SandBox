@@ -194,8 +194,8 @@ def upcoming_bookings(request):
 
 @login_required(login_url="/login/")
 def list_online(request):
-    patient = Booking.objects.all().order_by('-datetime')
-    return render(request, "online/list.html", {"patient": patient})
+    patients = Booking.objects.all().order_by('-datetime')
+    return render(request, "online/list.html", {"patients": patients})
 
 
 @login_required(login_url="/login/")

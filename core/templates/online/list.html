@@ -4,8 +4,6 @@
 {% block title %} Citas Medicas {% endblock title %}
 
 {% block content %}
-
-
     <!-- Header -->
     <div class="header bg-gradient-primary pb-8 pt-5 pt-md-8">
         <div class="container-fluid">
@@ -33,13 +31,13 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for patients in patient %}
+                            {% for patient in patients %}
                                 <tr>
                                     <td>
-                                        <b>{{ patients.datetime|date:"SHORT_DATE_FORMAT" }}</b>
+                                        <b>{{ patient.datetime|date:"SHORT_DATE_FORMAT" }}</b>
                                     </td>
                                     <td>
-                                        <b>{{ patients.datetime|time:"TIME_FORMAT" }}</b>
+                                        <b>{{ patient.datetime|time:"TIME_FORMAT" }}</b>
                                     </td>
                                     <th scope="col">{{ patients.tenant |title }}</th>
                                     <th scope="row">
@@ -50,27 +48,27 @@
                                         </div>
                                     </th>
                                     <td>
-                                        {% if patients.status == 0 %}
+                                        {% if patient.status == 0 %}
                                             <span class="badge badge-dot mr-4">
                                                 <i class="bg-warning"></i>
                                                 <span class="status">Nueva</span>
                                               </span>
-                                        {% elif patients.status == 1%}
+                                        {% elif patient.status == 1%}
                                             <span class="badge badge-dot mr-4">
                                                 <i class="bg-success"></i>
                                                 <span class="status">Confirmado</span>
                                             </span>
-                                        {% elif patients.status == 2%}
+                                        {% elif patient.status == 2%}
                                             <span class="badge badge-dot mr-4">
                                                 <i class="bg-primary"></i>
                                                 <span class="status">Sin Confirmar</span>
                                             </span>
-                                        {% elif patients.status == 3 %}
+                                        {% elif patient.status == 3 %}
                                             <span class="badge badge-dot mr-4">
                                                 <i class="bg-danger"></i>
                                                 <span class="status">Cancelada</span>
                                             </span>
-                                        {% elif patients.status == 4 %}
+                                        {% elif patient.status == 4 %}
                                             <span class="badge badge-dot mr-4">
                                                 <i class="bg-info"></i>
                                                 <span class="status">No se presentó</span>
@@ -82,13 +80,14 @@
                                             </span>
                                         {% endif %}
                                     </td>
+                                    
                                     <th scope="row">
                                         <div class="media align-items-center">
                                             <div class="media-body">
                                                 <span class="mb-0 text-sm">
-                                                    <a href="{{ patients.meeting_link |title }}" class="btn btn-sm btn-success">Entrar a Reunion</a>
+                                                    <a href="{{ patient.meeting_link |title }}" class="btn btn-sm btn-success">Entrar a Reunion</a>
                                                  
-                                                    <a href="{% url 'online:detail' booking_id=patients.id %}" class="btn btn-sm btn-info">Ver Detalle</a>
+                                                    <a href="{% url 'online:detail' booking_id=patient.id %}" class="btn btn-sm btn-info">Ver Detalle</a>
                                                 </span>
                                             </div>
                                         </div>
@@ -100,9 +99,9 @@
                                                 <i class="fas fa-ellipsis-v"></i>
                                             </a>
                                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                                                <a class="dropdown-item" href="{% url 'online:detail' booking_id=patients.id %}">Reprogramar Cita</a>
-                                                <a class="dropdown-item" href="{% url 'online:detail' booking_id=patients.id %}">Cancelar Cita</a>
-                                                <a class="dropdown-item" href="/online/{{patients.id}}/close/">Finalizar</a>
+                                                <a class="dropdown-item" href="{% url 'online:detail' booking_id=patient.id %}">Reprogramar Cita</a>
+                                                <a class="dropdown-item" href="{% url 'online:detail' booking_id=patient.id %}">Cancelar Cita</a>
+                                                <a class="dropdown-item" href="/online/{{patient.id}}/close/">Finalizar</a>
                                             </div>
                                         </div>
                                     </td>
@@ -111,38 +110,11 @@
                             </tbody>
                         </table>
                     </div>
-                    <!-- <div class="card-footer py-4">
-                        <nav aria-label="...">
-                            <ul class="pagination justify-content-end mb-0">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1">
-                                        <i class="fas fa-angle-left"></i>
-                                        <span class="sr-only">Previous</span>
-                                    </a>
-                                </li>
-                                <li class="page-item active">
-                                    <a class="page-link" href="#">1</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-                                </li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">
-                                        <i class="fas fa-angle-right"></i>
-                                        <span class="sr-only">Next</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div> -->
                 </div>
             </div>
         </div>
         {% include "includes/footer.html" %}
     </div>
 {% endblock content %}
-
-
 <!-- Specific JS goes HERE -->
 {% block javascripts %}{% endblock javascripts %}

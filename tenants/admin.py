@@ -43,6 +43,13 @@ class BookingAdmin(NestedModelAdmin):
     model = Booking
     inlines = [BookingDetailStackedInline]
 
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form  = super().get_form(request, obj=obj, change=change, **kwargs)
+        def is_multipart(self):
+            return True
+        form.is_multipart=is_multipart
+        return form
+
 @admin.register(BookingDetailFile)
 class BookingDetailFileAdmin(admin.ModelAdmin):  # TOP
     model = BookingDetailFile
