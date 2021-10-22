@@ -161,7 +161,6 @@ class BookingDetail(models.Model):
         auto_now=True
     )
 
-
 class BookingDetailFile(models.Model):
     booking_detail = models.ForeignKey(
         BookingDetail,
@@ -171,8 +170,7 @@ class BookingDetailFile(models.Model):
     file = models.FileField(
         upload_to='booking_attachments/'
     )
-
-
+    
 class Staff(models.Model):
     doctors = models.ManyToManyField(
         User,
