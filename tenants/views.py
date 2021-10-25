@@ -101,6 +101,7 @@ class TenantStaffDoctorsView(APIView):
             doctors += docs
         return Response(doctors)
 
+
 class TenantStaffDoctorDetailBySpecialityView(APIView):
     def get(self, request, pk, specialty_id, doctor_id):
         query_staff = Staff.objects.get(tenant__subdomain_prefix=pk, specialty_id=specialty_id)
@@ -170,8 +171,8 @@ class BookingView(APIView):
         booking.event_id = event['event_id']
         booking.save()
 
-        booking_serializer = BookingSerializer(booking).data
-        return Response(booking_serializer, status=status.HTTP_201_CREATED)
+        booking_serializer = BookingSerializer(booking)
+        return Response(booking_serializer.data, status=status.HTTP_201_CREATED)
 
 
 class BookingFileView(APIView):

@@ -28,8 +28,7 @@
 #     is_phone_verified = models.BooleanField(default=False)
 #     is_deleted = models.BooleanField(default=False)
 #     is_blocked = models.BooleanField(default=False)
-#
-#
+
 from django.contrib import admin
 from django.contrib.admin.models import LogEntry
  
