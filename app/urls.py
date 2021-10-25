@@ -97,11 +97,11 @@ urlpatterns = [
     # #
     # urls online reservation
     # #
-    path(
-        "online/",
-        views.list_online,
-        name="online"
-    ),
+    # path(
+    #     "online/",
+    #     views.list_online,
+    #     name="online"
+    # ),
     path(
         "online/upcoming_bookings",
         views.upcoming_bookings,
@@ -114,7 +114,7 @@ urlpatterns = [
     ),
     
     path(
-        "online/",
+        "online",
         include(
             (
                 [
