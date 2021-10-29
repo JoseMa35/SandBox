@@ -36,8 +36,10 @@ INSTALLED_APPS = [
     'multiselectfield',
     'payment_gateways',
     'payments'
+
     # 'sslserver', # Only `for dev  python manage.py runsslserver
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
