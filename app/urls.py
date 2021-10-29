@@ -1,43 +1,52 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from app import views
 from commons.integrations import gcalendar
 
 urlpatterns = [
     # The home page
     path(
-        '', 
-        views.index, 
+        '',
+        views.index,
         name='home'
     ),
-
     path(
-        'profile', 
-        views.profile, 
+        'payment',
+        views.payment,
+        name='payment'
+    ),
+    path(
+        'profile',
+        views.profile,
         name='profile'
     ),
     path(
-        'users', 
-        views.users, 
+        'users',
+        views.users,
         name='users'
     ),
     path(
-        'appointments', 
-        views.appointments, 
+        'appointments',
+        views.appointments,
         name='appointments'
     ),
     path(
-        'doctors', 
-        views.doctors, 
+        'doctors',
+        views.doctors,
         name='doctors'
     ),
     path(
-        'prescriptions', 
-        views.prescriptions, 
+        'doctors/<int:pk>/edit',
+        views.doctors,
+        name='doctors-edit'
+    ),
+    path(
+        'prescriptions',
+        views.prescriptions,
         name='prescriptions'
     ),
     path(
-        'specialties', 
-        views.specialties, 
+        'specialties',
+        views.specialties,
         name='specialties'
     ),
     path(
@@ -46,42 +55,83 @@ urlpatterns = [
         name='specialty_add'
     ),
     path(
-        'integrations', 
-        views.integrations, 
+        'integrations',
+        views.integrations,
         name='integrations'
     ),
 
     # OAUTH2 GOOGLE CALENDAR
     path(
-        "integrations/calendar/oauth2/google/redirect", 
+        "integrations/calendar/oauth2/google/redirect",
         gcalendar.AuthGoogle
     ),
     path(
-        "integrations/mercado-pago/oauth2/redirect", 
+        "integrations/mercado-pago/oauth2/redirect",
         views.mercado_pago
     ),
     path(
-        "integrations/calendar/oauth2/google/callback", 
+        "integrations/calendar/oauth2/google/callback",
         gcalendar.CallbackAuthGoogle
     ),
     path(
-        "integrations/calendar/create", 
+        "integrations/calendar/create",
         gcalendar.create_calendar
     ),
     path(
-        "integrations/calendar/detail", 
+        "integrations/calendar/detail",
         gcalendar.get_calendar
     ),
     path(
-        "integrations/calendar/freebuzy", 
+        "integrations/calendar/freebuzy",
         gcalendar.get_freebusy
     ),
     path(
-        "integrations/calendar/event/list", 
+        "integrations/calendar/event/list",
         gcalendar.list_all_events
     ),
     path(
-        "integrations/calendar/event/freetime", 
+        "integrations/calendar/event/freetime",
         gcalendar.free_time
     ),
+
+    # #
+    # urls online reservation
+    # #
+    # path(
+    #     "online/",
+    #     views.list_online,
+    #     name="online"
+    # ),
+    path(
+        "online/upcoming_bookings",
+        views.upcoming_bookings,
+        name="upcoming_bookings"
+    ),
+    path(
+        "online/<int:booking_id>/close/",
+        views.close_booking,
+        name="close_booking"
+    ),
+    
+    path(
+        "online",
+        include(
+            (
+                [
+                    path(
+                        "",
+                        views.list_online,
+                        name="list"
+                    ),
+                    path(
+                        "<int:booking_id>/detail/",
+                        views.detailOnline,
+                        name="detail"
+                    )
+                ],
+                "online"
+            ), namespace="online"
+        )
+
+    )
 ]

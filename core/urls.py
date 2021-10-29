@@ -32,8 +32,14 @@ urlpatterns = [
     url(r'^api/', include("commons.urls")),
     url(r'^api/', include("accounts.urls")),
     url(r'^api/', include("payment_gateways.urls")),
+    url(r'^api/', include("mails.urls")),
     url(r'^api/swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     url(r'^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^api/redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path("", include("app.urls")),  # UI Kits Html files
 ]
+if settings.DEBUG:
+    from django.conf.urls.static import static
+
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

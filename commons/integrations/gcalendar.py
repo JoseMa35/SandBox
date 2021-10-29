@@ -27,7 +27,6 @@ import pytz
 
 
 def AuthGoogle(request):
-
     oauth_url = google_apis_oauth.get_authorization_url(
         JSON_FILEPATH, SCOPES, REDIRECT_URI, consent_prompt=True)
 
@@ -226,3 +225,55 @@ def free_time(request, pk):
                 item['status'] = 'buzy'
 
     return HttpResponse(json.dumps(schedule, sort_keys=True))
+
+
+# Registrar
+def insert_event(request, doctor, summary, location, description, eventtime, attendee_email):
+    # print('***************** CALENDAR - ADD EVENT  *****************')
+    # El pk requerido es el id del doctor
+    time_zone = pytz.timezone(TIME_ZONE)
+
+    key = IntegrationKey.objects.get(integration__key=KEY, user__pk=doctor)
+    print(key)
+    creds = google_apis_oauth.load_credentials(key.token)
+    service = build('calendar', 'v3', credentials=creds)
+
+    start_tz = eventtime.astimezone(time_zone) + datetime.timedelta(
+        hours=5)  # Aqui sumo 5 horas por el TIME ZONE
+
+    end_tz = start_tz + datetime.timedelta(minutes=WORK_TIME_SCHEDULE)
+
+    start = datetime.datetime.strftime(start_tz, "%Y-%m-%dT%H:%M:%S%z")
+    end = datetime.datetime.strftime(end_tz, "%Y-%m-%dT%H:%M:%S%z")
+
+    event = {
+        'summary': 'Cita en ' + summary + ' by tranvia.tech',
+        'location': location,
+        'description': description,
+        'start': {
+            'dateTime': start,
+            'timeZone': TIME_ZONE,
+        },
+        'end': {
+            'dateTime': end,
+            'timeZone': TIME_ZONE,
+        },
+        'attendees': [
+            {'email': attendee_email},
+        ],
+        'conferenceData': {
+            'createRequest': {
+                'conferenceSolutionKey': {
+                    'type': 'hangoutsMeet'
+                },
+                'requestId': 'RandomString'
+            }
+        },
+    }
+
+    event_response = service.events().insert(calendarId='primary', conferenceDataVersion=1, body=event).execute()
+    event = {
+        'meet_link': event_response['hangoutLink'],
+        'event_id': event_response['id']
+    }
+    return event

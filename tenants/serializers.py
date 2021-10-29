@@ -124,7 +124,8 @@ class BookingDetailSerializer(serializers.ModelSerializer):
 
 class BookingSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)
-    booking_detail = BookingDetailSerializer(source="bookingdetail")
+    # booking_detail = BookingDetailSerializer(source="bookingdetail")
+    booking_detail = BookingDetailSerializer()
 
     class Meta:
         model = Booking
@@ -136,14 +137,15 @@ class BookingSerializer(serializers.ModelSerializer):
             "status",
             "datetime",
             "meeting_link",
+            "event_id",
             "booking_detail",
             "created_at",
             "updated_at",
         ]
 
-    def save(self, ):
+    def save(self):
         booking_data = self.validated_data
-        booking_detail_data = booking_data.pop('bookingdetail')
+        booking_detail_data = booking_data.pop('booking_detail')
         booking = Booking.objects.create(**booking_data)
         BookingDetail.objects.create(booking_id=booking, **booking_detail_data)
         return booking

@@ -3,14 +3,18 @@ import requests
 from django.conf import settings
 from django.utils import timezone
 from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
 
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from django.http import HttpResponse
 from django import template
 
+from payments.models import Payment
+from .forms import StaffForm
 from accounts.models import User, Profile
 from commons.models import Specialty, IntegrationKey, Integration
+from tenants.models import Booking, Staff
 
 
 @login_required(login_url="/login/")
@@ -78,12 +82,12 @@ def mercado_pago(request):
     integration = Integration.objects.get(name="mercado pago")
     code = request.GET.get("code", None)
     data = {
-        "client_secret" : integration.key_secret,
-        "grant_type":  "authorization_code",
+        "client_secret": integration.key_secret,
+        "grant_type": "authorization_code",
         "code": code,
         "redirect_uri": integration.redirect,
     }
-    resp = requests.post("https://api.mercadopago.com/oauth/token",  data=data)
+    resp = requests.post("https://api.mercadopago.com/oauth/token", data=data)
     if resp.status_code == 200:
         resp_json = resp.json()
         integration_key = IntegrationKey()
@@ -95,6 +99,7 @@ def mercado_pago(request):
         integration_key.last_token_update = timezone.now()
         integration_key.save()
     return HttpResponseRedirect('/integrations')
+
 
 @login_required(login_url="/login/")
 def pages(request):
@@ -123,15 +128,29 @@ def pages(request):
 def doctors(request):
     context = {}
     context['segment'] = 'doctors'
-
-    profile = Profile.objects.filter(is_doctor=True)
-    specialty = Specialty.objects.filter(is_active=True)
-
-    context['profiles'] = profile
-    context['specialties'] = specialty
+    staff = Staff.objects.all()
+    context['staff'] = staff
 
     html_template = loader.get_template('doctors/index.html')
     return HttpResponse(html_template.render(context, request))
+
+
+#     context = {}
+#     context['segment'] = 'doctors'
+# 
+#     profile = Profile.objects.filter(is_doctor=True)
+#     specialty = Specialty.objects.filter(is_active=True)
+# 
+#     context['profiles'] = profile
+#     context['specialties'] = specialty
+# 
+#     html_template = loader.get_template('doctors/index.html')
+#     return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+def doctorUpdate(request):
+    pass
 
 
 @login_required(login_url="/login/")
@@ -157,3 +176,46 @@ def specialty_form(request):
     html_template = loader.get_template('specialties/index.html')
     return HttpResponse(html_template.render(context, request))
 
+
+@login_required(login_url="/login/")
+def close_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    # bookings = Booking.objects.all().order_by('-datetime')
+    return render(request, "online/close.html", {"booking": booking})
+    # return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+def upcoming_bookings(request):
+    bookings = Booking.objects.all().order_by('-datetime')
+    return render(request, "online/upcoming.html", {"bookings": bookings})
+    # return HttpResponse(html_template.render(context, request))
+
+
+@login_required(login_url="/login/")
+def list_online(request):
+    patients = Booking.objects.all().order_by('-datetime')
+    return render(request, "online/list.html", {"patients": patients})
+
+
+@login_required(login_url="/login/")
+def detailOnline(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    return render(request, 
+        "online/detail.html", 
+        {"booking": booking}
+    )
+
+
+@login_required(login_url="/login/")
+def payment(request):
+    context = {}
+    context['segment'] = 'payment'
+
+    payments = Payment.objects.all()
+    print(payments)
+    context['payments'] = payments
+
+    # html_template = loader.get_template('payment/index.html')
+    return render(request, "payment/index.html", {"payments": payments})
+    # return HttpResponse(html_template.render(context, request))

@@ -1,8 +1,8 @@
 from django.db import models
 from multiselectfield import MultiSelectField
-# Create your models here.
 from accounts.models import User, Profile
 from commons.models import Specialty
+from . import StatusQoutes
 
 
 # Create your models here.
@@ -16,6 +16,10 @@ class Tenant(models.Model):
     )
     description = models.TextField(
         blank=True
+    )
+    address = models.CharField(
+        max_length=500,
+        blank=True,
     )
 
     def __str__(self):
@@ -33,11 +37,7 @@ class TenantAwareModel(models.Model):
 
 
 class Schedule(models.Model):
-    tenant = models.ForeignKey(
-        Tenant,
-        on_delete=models.CASCADE,
-        null=True
-    )
+    
     doctor = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -69,6 +69,12 @@ class ScheduleTimeFrame(models.Model):
 
 
 class Booking(models.Model):
+    tenant = models.ForeignKey(
+        Tenant,
+        on_delete=models.CASCADE,
+        null=True,
+        related_name='bookings'
+    )
     doctor_id = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -84,29 +90,49 @@ class Booking(models.Model):
         Profile,
         on_delete=models.CASCADE
     )
-    status = models.CharField(
-        max_length=100
+    status = models.IntegerField(
+        choices=StatusQoutes.choices,
+        default=StatusQoutes.NEW
     )
+
+    # status = models.CharField(
+    #     choices=STATUS_PAYMENT,
+    #     default=STATUS_PAYMENT.count('in_process'),
+    # )
+
     datetime = models.DateTimeField(
         auto_now=False,
         auto_now_add=False
     )
     meeting_link = models.CharField(
-        max_length=100
+        max_length=100,
+        blank=True, null=True
+    )
+    event_id = models.CharField(
+        max_length=255,
+        blank=True, null=True
     )
     created_at = models.DateTimeField(
         auto_now_add=True
-    )
+    )  # Fecha de registro
     updated_at = models.DateTimeField(
         auto_now=True
     )
+
+    class Meta:
+        verbose_name = "Reserva"
+        verbose_name_plural = "Reservas"
+
+    def __str__(self):
+        return str(self.doctor_id)
 
 
 class BookingDetail(models.Model):
     booking_id = models.OneToOneField(
         Booking,
         on_delete=models.CASCADE,
-        null=True
+        null=True,
+        related_name='booking_detail' 
     )
     has_disability = models.BooleanField(
         default=False
@@ -135,7 +161,6 @@ class BookingDetail(models.Model):
         auto_now=True
     )
 
-
 class BookingDetailFile(models.Model):
     booking_detail = models.ForeignKey(
         BookingDetail,
@@ -145,11 +170,11 @@ class BookingDetailFile(models.Model):
     file = models.FileField(
         upload_to='booking_attachments/'
     )
-
-
+    
 class Staff(models.Model):
     doctors = models.ManyToManyField(
         User,
+        # Profile,
         related_name='staff',
         blank=True
     )
@@ -173,6 +198,10 @@ class Staff(models.Model):
 
     def __str__(self):
         return f"{self.tenant.name}: {self.specialty.name}"
+
+
+    # def staffs_by_user(self, user_id):
+    #     return Staff.objects.filter(doctors=user_id)
 
 
 class TenantSettings(models.Model):
