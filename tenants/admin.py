@@ -1,8 +1,19 @@
 from django.contrib import admin
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
-from tenants.models import Booking, BookingDetail, BookingDetailFile, Schedule, ScheduleTimeFrame, Staff, Tenant, \
-    TenantSettings
+from tenants.models import (
+    Booking, 
+    BookingDetail, 
+    BookingDetailFile, 
+    Schedule, 
+    ScheduleTimeFrame, 
+    Staff, 
+    Tenant,
+    TenantSettings, 
+    BookingDoctorDetail,
+    BookingDoctorDetailFile
+    
 
+)
 class TenantSettingsOfficerStackedInline(admin.StackedInline):
     model = TenantSettings
 
@@ -31,12 +42,29 @@ class BookingDetailFileStackedInline(NestedStackedInline):  # one
     model = BookingDetailFile
     extra = 1
     fk_name = 'booking_detail'
-    
+
+class BookingDoctorDetailFileStackedInline(NestedStackedInline):
+    model = BookingDoctorDetailFile
+    extra = 1
+    fk_name ="booking_doctor_detail"
+
+class BookingDoctorDetailStackedInline(NestedStackedInline):
+    model = BookingDoctorDetail
+    extra = 1
+    fk_name ="booking_detail"
+    inlines = [
+        BookingDoctorDetailFileStackedInline
+    ]
+
 class BookingDetailStackedInline(NestedStackedInline):  # TOP
     model = BookingDetail
     extra = 1
     fk_name = 'booking_id'
-    inlines = [BookingDetailFileStackedInline]
+    inlines = [
+        BookingDetailFileStackedInline, 
+        BookingDoctorDetailStackedInline,
+        
+        ]
 
 @admin.register(Booking)
 class BookingAdmin(NestedModelAdmin):
@@ -53,3 +81,15 @@ class BookingAdmin(NestedModelAdmin):
 @admin.register(BookingDetailFile)
 class BookingDetailFileAdmin(admin.ModelAdmin):  # TOP
     model = BookingDetailFile
+
+@admin.register(BookingDoctorDetail)
+class BookingDoctorDetailAdmin(admin.ModelAdmin):
+    model= BookingDoctorDetail
+    label = [
+        "booking_detail_doctor"
+        "file_doctor",
+    ]
+@admin.register(BookingDoctorDetailFile)
+class BookingDoctorDetailFileAdmin(admin.ModelAdmin):
+    model= BookingDoctorDetailFile
+
