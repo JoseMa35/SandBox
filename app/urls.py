@@ -124,7 +124,7 @@ urlpatterns = [
                         name="list"
                     ),
                     path(
-                        "<int:booking_id>/detail/",
+                        "/<int:booking_id>/detail/",
                         views.detailOnline,
                         name="detail"
                     )

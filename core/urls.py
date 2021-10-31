@@ -24,7 +24,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),  # Django admin route
+    path('admin', admin.site.urls),  # Django admin route
     path("", include("authentication.urls")),  # Auth routes - login / register
     # API V1
     # url(r'^api/login/', obtain_auth_token, name='api_token_auth'),

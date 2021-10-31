@@ -160,12 +160,12 @@ class BookingView(APIView):
             email = profile.email
 
         event = insert_event(request,
-                             doctor=booking.doctor_id.pk,
-                             summary=tenant.name,
-                             location=tenant.address,
-                             description=description,
-                             eventtime=booking.datetime,  # HORA INICIO
-                             attendee_email=email)
+                            doctor=booking.doctor_id.pk,
+                            summary=tenant.name,
+                            location=tenant.address,
+                            description=description,
+                            eventtime=booking.datetime,  # HORA INICIO
+                            attendee_email=email)
 
         booking.meeting_link = event['meet_link']
         booking.event_id = event['event_id']
