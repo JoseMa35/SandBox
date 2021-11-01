@@ -1,3 +1,5 @@
+
+
 import requests
 
 from django.conf import settings
@@ -13,7 +15,7 @@ from django import template
 from payments.models import Payment
 from .forms import StaffForm
 from accounts.models import User, Profile
-from commons.models import Specialty, IntegrationKey, Integration
+from commons.models import Specialty, IntegrationKey, Integration, Gender, Document_Type
 from tenants.models import Booking, Staff, BookingDoctorDetailFile, BookingDoctorDetail
 from .forms import  ProfileForm
 
@@ -39,7 +41,8 @@ def profile(request):
 @login_required(login_url="/login/")
 def update_profile(request):
     profile = request.user.profile
-
+    document = Document_Type.objects.all()
+    gender = Gender.objects.all()
     form = ProfileForm(instance=profile)
 	
     print(dir(form.fields["cell_phone"].widget))
@@ -49,10 +52,13 @@ def update_profile(request):
         if form.is_valid():
             form.save()
             return redirect('/')
-	
+
+    print(document)
     context = {
         "form": form,
         # "profile": profile
+        "document": document,
+        "gender": gender
     }
 
     return render(request, 'profile/edit.html', context)
