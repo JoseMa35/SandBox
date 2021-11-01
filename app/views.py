@@ -3,14 +3,16 @@ import requests
 from django.conf import settings
 from django.utils import timezone
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from django.http import HttpResponse
 from django import template
+from rest_framework.response import Response
 
 from payments.models import Payment
+from tenants import StatusQoutes
 from .forms import StaffForm
 from accounts.models import User, Profile
 from commons.models import Specialty, IntegrationKey, Integration
@@ -190,6 +192,20 @@ def upcoming_bookings(request):
     bookings = Booking.objects.all().order_by('-datetime')
     return render(request, "online/upcoming.html", {"bookings": bookings})
     # return HttpResponse(html_template.render(context, request))
+
+@login_required(login_url="/login/")
+def atended_booking(request,booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    booking.status = StatusQoutes.ATTENDED
+    booking.save()
+    
+    #booking_status = Booking.status.ATTENDED
+    # My code******************************************************************
+    #return render(request, "online/attended.html")  
+    return redirect("/online/upcoming_bookings")
+
+    #return render(request, "online/attended.html", {"bookings": booking_status})  
+     
 
 
 @login_required(login_url="/login/")
