@@ -135,7 +135,7 @@ urlpatterns = [
                         name="edit"
                     )
                 ],
-                "profile"
+                "profile",
             ), namespace="profile" 
         )
 
