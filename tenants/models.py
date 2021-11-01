@@ -147,7 +147,7 @@ class BookingDetail(models.Model):
         blank=True, null=True
     )
     brief_description = models.TextField(
-        max_length=100,
+        # max_length=100,
         blank=True, null=True
     )
     created_at = models.DateTimeField(
