@@ -14,8 +14,8 @@
         <div class="container-fluid d-flex align-items-center">
             <div class="row">
                 <div class="col-lg-8 col-md-10">
-                    <h1 class="display-2 text-white"> Hola {{ request.user.profile.full_name | title }}</h1>
-                    <p class="text-white mt-0 mb-5"> {{ request.user.profile.about }}</p>
+                    <h1 class="display-2 text-white"> Hola {{ form.full_name.initial | title }}</h1>
+                    <p class="text-white mt-0 mb-5"> {{ form.about.initial }}</p>
                 </div>
             </div>
         </div>
@@ -43,11 +43,12 @@
                             <br/>
                         </div>
                     </div>
+                   
                     <div class="card-body pt-0 pt-md-4">
 
                         <div class="text-center">
                             <h3>
-                                {{ request.user.profile.full_name|title }}
+                                {{ form.full_name.initial|title }}
                             </h3>
                             <div class="h5 font-weight-300">
                                 {{ request.user.email }}
@@ -59,17 +60,17 @@
                             </div>
                             <hr class="my-4"/>
                             <p>
-                                {{ request.user.profile.about }}
+                                {{ form.about.initial }} 
                             </p>
                             <hr class="my-4"/>
                             <div>
                                 <h3>
                                     Firma del medico
-                                </h3> 
+                                </h3>
                                 {% if request.user.profile.signature.url == null %}
                                     <img src="{{ request.user.profile.signature.url }}" alt="" width="100" height="100">
                                 {% else %}
-                                    
+                                  
                                 {% endif %}
                             </div>
                         </div>
@@ -81,24 +82,27 @@
                     <div class="card-header bg-white border-0">
                         <div class="row align-items-center">
                             <div class="col-8">
-                                <h3 class="mb-0">My account</h3>
+                                <h3 class="mb-0">Mi Pefil</h3>
                             </div>
                             <div class="col-4 text-right">
-
                             </div>
+                            {{ form.errors }}
                         </div>
                     </div>
                     <div class="card-body">
-                        <form>
+                        <form action="" method="post">
+                            {% csrf_token %}
                             <h6 class="heading-small text-muted mb-4">Información Personal</h6>
                             <div class="pl-lg-4">
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-username">Nombre y Apellido</label>
-                                            <input type="text" id="input-username"
-                                                   class="form-control form-control-alternative" placeholder="Username"
-                                                   value="{{ request.user.profile.full_name|title }}" disabled>
+                                            <label class="form-control-label" for="{{form.full_name.id_for_label}}">Nombre y Apellido</label>
+                                            <input
+                                            id="{{form.full_name.id_for_label}}"
+                                                type="text"
+                                                class="form-control form-control-alternative" 
+                                                placeholder="{{ form.full_name.initial|default:'Ingresa su nombre y apellido'}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -116,97 +120,99 @@
                                             <label class="form-control-label" for="input-father-lastname">Tipo de documento</label>
                                             <input type="text" id="input-father-lastname"
                                                    class="form-control form-control-alternative"
-                                                   value="{{ request.user.profile.document_type }}" disabled>
+                                                   value="{{ request.user.profile.document_type }}" >
 
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-mother-lastname">Numero de documento</label>
-                                            <input type="text" id="input-mother-lastname"
-                                                   class="form-control form-control-alternative"
-                                                   value="{{ request.user.profile.document }}" disabled>
+                                            <label class="form-control-label" for="{{form.document.id_for_label}}">Numero de documento</label>
+                                            <input 
+                                                id="{{form.document.id_for_label}}"
+                                                name="{{ form.document.name }}"
+                                                    type="text" 
+                                                    class="form-control form-control-alternative"
+                                                    placeholder="{{ form.document.initial|default:'Ingresa su documento de identidad'}}"
+                                                >
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" >
+                                    
                                     <div class="col-lg-6">
+
+
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-father-lastname">Fecha de nacimiento</label>
-                                            <input type="text" id="input-father-lastname"
+                                            <label class="form-control-label" for="{{form.gender.id_for_label}}">Sexo</label>
+                                          <!--   <input 
+                                                id="{{form.gender.id_for_label}}"
+                                                name="{{ form.gender.name }}"
+                                                   type="text"
                                                    class="form-control form-control-alternative"
-                                                   value="{{ request.user.profile.date_of_birth }}" disabled>
+                                                   placeholder="{{ form.gender.initial|default:'Sexo'}}"> -->
+                                                   <select class="form-control form-control-alternative">
+                                                    <option>{{ form.gender.initial}}</option>
+                                                  </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{form.date_of_birth.id_for_label}}">Fecha de nacimiento</label>
+                                            <input 
+                                                id="{{form.date_of_birth.id_for_label}}"
+                                                name="{{ form.date_of_birth.name }}"
+                                                   type="text"
+                                                   class="form-control form-control-alternative"
+                                                   placeholder="{{ form.date_of_birth.initial|default:'Ingresa su fecha de nacimiento'}}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-father-lastname">Foto de perfi</label>
+                                            <input 
+                                                type="file" id="input-father-lastname"
+                                                class="form-control form-control-alternative"
+                                                value="{{ request.user.profile.date_of_birth }}" >
 
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-mother-lastname">Telefono</label>
-                                            <input type="text" id="input-mother-lastname"
+                                            <label class="form-control-label" for="{{form.cell_phone.id_for_label}}">Telefono o celular</label>
+                                            <input 
+                                                id="{{form.cell_phone.id_for_label}}"
+                                                name="{{form.cell_phone.name}}"
+                                                    type="text"
+                                                    class="form-control form-control-alternative"
+                                                    placeholder="{{ form.cell_phone.initial|default:'Ingresa tu numero relefonico ' }}" >
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-mother-lastname">Firma</label>
+                                            <input type="file" id="input-mother-lastname"
                                                    class="form-control form-control-alternative"
-                                                   placeholder="{{ request.user.profile.cell_phone }}" disabled>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <hr class="my-4"/>
-                            <!-- Address  >
-                            <h6 class="heading-small text-muted mb-4">Contact information</h6>
-                            <div class="pl-lg-4">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-address">Address</label>
-                                            <input id="input-address" class="form-control form-control-alternative"
-                                                   placeholder="Home Address"
-                                                   value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09" type="text">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-city">City</label>
-                                            <input type="text" id="input-city"
-                                                   class="form-control form-control-alternative" placeholder="City"
-                                                   value="New York">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-country">Country</label>
-                                            <input type="text" id="input-country"
-                                                   class="form-control form-control-alternative" placeholder="Country"
-                                                   value="United States">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="input-country">Postal code</label>
-                                            <input type="number" id="input-postal-code"
-                                                   class="form-control form-control-alternative"
-                                                   placeholder="Postal code">
+                                                   placeholder="{{ request.user.profile.signature }}" >
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <hr class="my-4"/>
-                            <-- Description -->
-                            <h6 class="heading-small text-muted mb-4">About me</h6>
+                            <h6 class="heading-small text-muted mb-4" for="{{form.about.id_for_label}}" >Acercade mi</h6>
                             <div class="pl-lg-4">
-                                <div class="form-group"> 
-                                    <textarea rows="4" class="form-control form-control-alternative"
-                                              placeholder="A few words about you ..." disabled>{{ request.user.profile.about }}
+                                <div class="form-group">
+                                    <textarea
+                                        id="{{form.about.id_for_label}}"
+                                        type="text"
+                                        rows="4" 
+                                        class="form-control form-control-alternative"
+                                        placeholder="{{ form.about.initial|default:'Acerca de mi'}}">{{form.about.initial}}
                                     </textarea>
                                 </div>
                             </div>
                             <div>
                                 <a href="http://" target="_blank" rel="noopener noreferrer"></a>
                             </div>
+                            
+            
                            
-                            <a href="{% url 'profile:edit' %}" class="btn btn-sm btn-success">Editar pefil</a>
-
+                            
+                            <button> guardar</button>
                         </form>
                     </div>
                 </div>
@@ -220,4 +226,7 @@
 {% endblock content %}
 
 <!-- Specific JS goes HERE -->
-{% block javascripts %}{% endblock javascripts %}
+{% block javascripts %}
+<script src="{% static 'assets/js/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js'%}"></script>
+
+{% endblock javascripts %}

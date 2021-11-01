@@ -15,7 +15,7 @@ from .forms import StaffForm
 from accounts.models import User, Profile
 from commons.models import Specialty, IntegrationKey, Integration
 from tenants.models import Booking, Staff, BookingDoctorDetailFile, BookingDoctorDetail
-# from .forms import  BookingForm
+from .forms import  ProfileForm
 
 
 @login_required(login_url="/login/")
@@ -34,6 +34,28 @@ def profile(request):
 
     html_template = loader.get_template('profile/index.html')
     return HttpResponse(html_template.render(context, request))
+
+# update user profile
+@login_required(login_url="/login/")
+def update_profile(request):
+    profile = request.user.profile
+
+    form = ProfileForm(instance=profile)
+	
+    print(dir(form.fields["cell_phone"].widget))
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+	
+    context = {
+        "form": form,
+        # "profile": profile
+    }
+
+    return render(request, 'profile/edit.html', context)
 
 
 @login_required(login_url="/login/")
