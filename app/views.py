@@ -1,5 +1,3 @@
-import datetime
-
 import requests
 
 from django.utils import timezone
@@ -15,8 +13,9 @@ from django import template
 
 from payments.models import Payment
 from tenants import StatusQoutes
-from accounts.models import User, Profile
-from commons.models import Specialty, IntegrationKey, Integration
+from accounts.models import User
+from .forms import  ProfileForm
+from commons.models import Specialty, IntegrationKey, Integration, Gender, Document_Type
 from tenants.models import Booking, Staff, BookingDoctorDetailFile, BookingDoctorDetail, Tenant, TenantSettings
 
 
@@ -36,6 +35,32 @@ def profile(request):
 
     html_template = loader.get_template('profile/index.html')
     return HttpResponse(html_template.render(context, request))
+
+# update user profile
+@login_required(login_url="/login/")
+def update_profile(request):
+    profile = request.user.profile
+    document = Document_Type.objects.all()
+    gender = Gender.objects.all()
+    form = ProfileForm(instance=profile)
+	
+    print(dir(form.fields["cell_phone"].widget))
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+
+    print(document)
+    context = {
+        "form": form,
+        # "profile": profile
+        "document": document,
+        "gender": gender
+    }
+
+    return render(request, 'profile/edit.html', context)
 
 
 @login_required(login_url="/login/")

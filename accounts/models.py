@@ -23,9 +23,6 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
-    
-
-
 class Profile(models.Model):
     """
         Profile model
@@ -69,6 +66,11 @@ class Profile(models.Model):
     avatar = models.ImageField(
         upload_to="core/static/images/avatar/",
         default='core/static/images/avatar/default.jpeg',
+    )
+    signature = models.ImageField(
+        upload_to='booking_attachments/',
+        null=True,
+        blank=True,
     )
     email = models.CharField(
         max_length=255, 

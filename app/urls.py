@@ -14,11 +14,7 @@ urlpatterns = [
         views.payment,
         name='payment'
     ),
-    path(
-        'profile',
-        views.profile,
-        name='profile'
-    ),
+  
     path(
         'users',
         views.users,
@@ -117,6 +113,33 @@ urlpatterns = [
         views.close_booking,
         name="close_booking"
     ),
+    #path(
+    #    'profile',
+    #    views.profile,
+    #    name='profile'
+    #),
+   
+    path(
+        "profile",
+        include(
+            (
+                [
+                    path(
+                        "",
+                        views.profile,
+                        name='profile'
+                    ),
+                    path(
+                        "/edit",
+                        views.update_profile,
+                        name="edit"
+                    )
+                ],
+                "profile"
+            ), namespace="profile"
+        )
+
+    ),
     
     path(
         "online",
@@ -129,7 +152,7 @@ urlpatterns = [
                         name="list"
                     ),
                     path(
-                        "<int:booking_id>/detail/",
+                        "<int:booking_id>/detail",
                         views.detailOnline,
                         name="detail"
                     )
