@@ -30,8 +30,12 @@ def login_view(request):
             password = form.cleaned_data.get("password")
             user = authenticate(email=email, password=password)
             if user is not None:
-                login(request, user)
-                return redirect("/")
+
+                if user.is_patient:
+                    msg = 'Tu usuario no tiene permisos necesarios'
+                else:
+                    login(request, user)
+                    return redirect("/")
             else:
                 msg = 'Invalid credentials'
         else:
