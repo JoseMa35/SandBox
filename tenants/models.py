@@ -142,8 +142,8 @@ class BookingDetail(models.Model):
     allergic = models.BooleanField(
         default=False
     )
-    extra_info = models.CharField(
-        max_length=100,
+    extra_info = models.TextField(
+        # max_length=100,
         blank=True, null=True
     )
     brief_description = models.TextField(
