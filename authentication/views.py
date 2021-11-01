@@ -31,11 +31,11 @@ def login_view(request):
             user = authenticate(email=email, password=password)
             if user is not None:
 
-                if user.is_patient:
-                    msg = 'Tu usuario no tiene permisos necesarios'
-                else:
+                if user.profile.is_doctor or user.profile.is_admin:
                     login(request, user)
                     return redirect("/")
+                else:
+                    msg = 'Tu usuario no tiene permisos necesarios'
             else:
                 msg = 'Invalid credentials'
         else:
