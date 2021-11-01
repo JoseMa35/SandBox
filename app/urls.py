@@ -108,7 +108,7 @@ urlpatterns = [
         name="upcoming_bookings"
     ),
     path(
-        "online/upcoming/<int:booking_id>/attended",#joses
+        "online/upcoming/<int:booking_id>/attended", 
         views.atended_booking,
         name="attended"
     ),
@@ -139,4 +139,4 @@ urlpatterns = [
         )
     ),
     path('pdf/<tenant_pk>/<booking_pk>', views.generatePdf, name='pdf-receta')
-    ]
+]
