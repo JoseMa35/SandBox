@@ -92,7 +92,7 @@
                                                   <a href="https://meet.google.com/jwg-qntn-tqn" class="btn btn-sm btn-success">Entrar a Reunion</a>
                                                 
                                                   <a href="{% url 'online:detail' booking_id=booking.id %}" class="btn btn-sm btn-info">Ver Detalle</a>
-                                                  <a href="online/upcoming/{%=booking.id%}/attended" class="btn btn-sm btn-info">Atendido</a>
+                                                  <a href="online/upcoming/{{booking.id}}/attended" class="btn btn-sm btn-info">Atendido</a>
                                                   
                                               </span>
                                           </div>
