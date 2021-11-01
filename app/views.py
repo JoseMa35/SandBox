@@ -86,6 +86,13 @@ def prescriptions(request):
     context = {}
     context['segment'] = 'prescriptions'
 
+    bookingdoctordetails = BookingDoctorDetail.objects.all()
+    context["bookingdoctordetails"] = bookingdoctordetails
+
+    b = bookingdoctordetails[0]
+
+    print(b.booking_detail.booking_id.doctor_id.profile.full_name)
+
     html_template = loader.get_template('prescriptions/index.html')
     return HttpResponse(html_template.render(context, request))
 
