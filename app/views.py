@@ -87,6 +87,13 @@ def prescriptions(request):
     context = {}
     context['segment'] = 'prescriptions'
 
+    bookingdoctordetails = BookingDoctorDetail.objects.all()
+    context["bookingdoctordetails"] = bookingdoctordetails
+
+    b = bookingdoctordetails[0]
+
+    print(b.booking_detail.booking_id.doctor_id.profile.full_name)
+
     html_template = loader.get_template('prescriptions/index.html')
     return HttpResponse(html_template.render(context, request))
 
@@ -98,7 +105,7 @@ def integrations(request):
     context['integrations'] = integrations
     print(integrations)
     try:
-        key = IntegrationKey.objects.get(user=request.user)
+        key = "" #IntegrationKey.objects.get(user=request.user)
     except:
         key = None
     context['key'] = key
@@ -119,7 +126,7 @@ def mercado_pago(request):
     resp = requests.post("https://api.mercadopago.com/oauth/token", data=data)
     if resp.status_code == 200:
         resp_json = resp.json()
-        integration_key = IntegrationKey()
+        integration_key = IntegrationKey() 
         integration_key.user = request.user
         integration_key.integration = integration
         integration_key.acceses_token = resp_json["access_token"]
