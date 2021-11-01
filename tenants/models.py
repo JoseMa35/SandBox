@@ -95,11 +95,6 @@ class Booking(models.Model):
         default=StatusQoutes.NEW
     )
 
-    # status = models.CharField(
-    #     choices=STATUS_PAYMENT,
-    #     default=STATUS_PAYMENT.count('in_process'),
-    # )
-
     datetime = models.DateTimeField(
         auto_now=False,
         auto_now_add=False
@@ -128,6 +123,7 @@ class Booking(models.Model):
 
 
 class BookingDetail(models.Model):
+    # booking 
     booking_id = models.OneToOneField(
         Booking,
         on_delete=models.CASCADE,
@@ -146,12 +142,12 @@ class BookingDetail(models.Model):
     allergic = models.BooleanField(
         default=False
     )
-    extra_info = models.CharField(
-        max_length=100,
+    extra_info = models.TextField(
+        # max_length=100,
         blank=True, null=True
     )
     brief_description = models.TextField(
-        max_length=100,
+        # max_length=100,
         blank=True, null=True
     )
     created_at = models.DateTimeField(
@@ -171,6 +167,32 @@ class BookingDetailFile(models.Model):
         upload_to='booking_attachments/'
     )
     
+    def filename(self):
+        return self.file.name.split('/')[-1]
+
+class BookingDoctorDetail(models.Model):
+    booking_detail = models.OneToOneField(
+        BookingDetail,
+        on_delete=models.CASCADE,
+        related_name='doctor_detail'
+    )
+    description = models.TextField()
+
+
+class BookingDoctorDetailFile(models.Model):
+    booking_doctor_detail = models.ForeignKey(
+        BookingDoctorDetail,
+        on_delete=models.CASCADE,
+        related_name='files_doctor'
+    )
+    file = models.FileField(
+        upload_to='booking_attachments/'
+    )
+
+    def filename(self):
+        return self.file.name.split('/')[-1]
+
+
 class Staff(models.Model):
     doctors = models.ManyToManyField(
         User,

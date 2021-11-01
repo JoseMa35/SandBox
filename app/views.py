@@ -3,7 +3,9 @@ import requests
 from django.conf import settings
 from django.utils import timezone
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render, get_object_or_404
+
+from django.shortcuts import render, get_object_or_404, redirect
+
 
 from django.contrib.auth.decorators import login_required
 from django.template import loader
@@ -16,7 +18,10 @@ from tenants import StatusQoutes
 from .forms import StaffForm
 from accounts.models import User, Profile
 from commons.models import Specialty, IntegrationKey, Integration
-from tenants.models import Booking, Staff
+from tenants.models import Booking, Staff, BookingDoctorDetailFile, BookingDoctorDetail, Tenant, TenantSettings
+
+
+# from .forms import  BookingForm
 
 
 @login_required(login_url="/login/")
@@ -140,7 +145,7 @@ def doctors(request):
 #     context = {}
 #     context['segment'] = 'doctors'
 # 
-#     profile = Profile.objects.filter(is_doctor=True)
+#     profile = Profile.objects.filter(is=True)
 #     specialty = Specialty.objects.filter(is_active=True)
 # 
 #     context['profiles'] = profile
@@ -182,9 +187,30 @@ def specialty_form(request):
 @login_required(login_url="/login/")
 def close_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    # bookings = Booking.objects.all().order_by('-datetime')
-    return render(request, "online/close.html", {"booking": booking})
-    # return HttpResponse(html_template.render(context, request))
+
+    if request.method == 'POST':
+        booking_detail = booking.booking_detail
+        doctor_detail = getattr(booking_detail, "doctor_detail", None)
+        description = request.POST.get("description")
+
+        if doctor_detail is None:
+            doctor_detail = BookingDoctorDetail.objects.create(booking_detail=booking_detail, description=description)
+        else:
+            doctor_detail.description = description
+            doctor_detail.save()
+
+        files = request.FILES.getlist("files", [])
+
+        for file in files:
+            BookingDoctorDetailFile.objects.create(booking_doctor_detail=doctor_detail, file=file)
+
+        return redirect("online:list")
+
+    context = {
+        "booking": booking
+    }
+
+    return render(request, "online/close.html", context)
 
 
 @login_required(login_url="/login/")
@@ -217,10 +243,10 @@ def list_online(request):
 @login_required(login_url="/login/")
 def detailOnline(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    return render(request, 
-        "online/detail.html", 
-        {"booking": booking}
-    )
+    return render(request,
+                  "online/detail.html",
+                  {"booking": booking}
+                  )
 
 
 @login_required(login_url="/login/")
@@ -235,3 +261,19 @@ def payment(request):
     # html_template = loader.get_template('payment/index.html')
     return render(request, "payment/index.html", {"payments": payments})
     # return HttpResponse(html_template.render(context, request))
+
+
+from .utils import render_to_pdf
+def generatePdf(request, tenant_pk, booking_pk, *args, **kwargs):
+    booking = Booking.objects.filter(pk=booking_pk)
+    tentant = TenantSettings.objects.filter(tenant__subdomain_prefix=tenant_pk).first()
+    prescription = BookingDoctorDetail.objects.filter(booking_detail=booking_pk).first()
+    data = {
+        'booking': booking,
+        'tentant': tentant,
+        'prescription': prescription,
+    }
+
+    print(data)
+    pdf = render_to_pdf('prescriptions/pdf/index.html', data)
+    return HttpResponse(pdf, content_type='application/pdf')

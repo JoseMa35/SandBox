@@ -286,9 +286,10 @@
                                                 <span class="btn-inner--icon"><i class="fas fa-download mr-2"></i></span>
                                                 <span class="btn-inner--text">With icon</span>
                                             </button> -->
+                                            
                                             {% for file in  booking.booking_detail.files.all %}
                                                 <div class="mb-2">
-                                                    <a href="{{ file.file.url }}" class="btn btn-sm btn-default form-control"><i class="fas fa-download mr-2"></i>Descargar reporte</a>
+                                                    <a href="{{ file.file.url }}" class="btn btn-sm btn-default form-control"><i class="fas fa-download mr-2"></i>Documento {{ file.filename }}</a>
                                                 </div>
                                             {% endfor %}
                                             
