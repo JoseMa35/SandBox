@@ -161,5 +161,5 @@ urlpatterns = [
             ), namespace="online"
         )
     ),
-    path('pdf/<tenant_pk>/<booking_pk>', views.generatePdf, name='pdf-receta')
+    path('pdf/<booking_pk>', views.generatePdf, name='pdf-receta')
 ]

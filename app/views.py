@@ -43,14 +43,15 @@ def update_profile(request):
     document = Document_Type.objects.all()
     gender = Gender.objects.all()
     form = ProfileForm(instance=profile)
-	
-    print(dir(form.fields["cell_phone"].widget))
+
+    # print(dir(form.fields["cell_phone"].widget))
+    print( form)
 
     if request.method == "POST":
         form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return redirect('profile')
 
     print(document)
     context = {
@@ -289,13 +290,13 @@ def payment(request):
 
 
 from .utils import render_to_pdf
-def generatePdf(request, tenant_pk, booking_pk, *args, **kwargs):
-    booking = Booking.objects.filter(pk=booking_pk)
-    tentant = TenantSettings.objects.filter(tenant__subdomain_prefix=tenant_pk).first()
+def generatePdf(request, booking_pk, *args, **kwargs):
+    booking = Booking.objects.filter(pk=booking_pk).first()
+    tenant = TenantSettings.objects.filter(tenant=booking.tenant).first()
     prescription = BookingDoctorDetail.objects.filter(booking_detail=booking_pk).first()
     data = {
         'booking': booking,
-        'tentant': tentant,
+        'tenant': tenant,
         'prescription': prescription,
     }
 

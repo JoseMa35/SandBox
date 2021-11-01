@@ -19,10 +19,10 @@
 <body class="bg-default">
 
 <div class="main-content" role="document">
-    <img src="{{ tentant.logo }}" height="200px" width="230px"/>
+    <img src="{{ tenant.logo }}" height="200px" width="230px"/>
     <div>
-        <h4> {{ tentant.tenant.name }}</h4>
-        <p>  {{ tentant.tenant.description }}</p>
+        <h4> {{ tenant.tenant.name }}</h4>
+        <p>  {{ tenant.tenant.description }}</p>
     </div>
 
     <h1>Instrucciones generales</h1>
@@ -30,7 +30,7 @@
     <br/>
     <br/>
     <br/>
-    Ubicanos en {{ tentant.tenant.address }}
+    Ubicanos en {{ tenant.tenant.address }}
 </div>
 
 {#<div class="modal-dialog no-print" role="document">#}
@@ -40,12 +40,12 @@
 {#                <!-- business information -->#}
 {#                <div class="panel-body prescription_header">#}
 {#                    <div class="row">#}
-{#                        <img src="{{ tentant.logo }}" class="img img-responsive center-block" height="250px"#}
+{#                        <img src="{{ tenant.logo }}" class="img img-responsive center-block" height="250px"#}
 {#                             width="250px">#}
 {##}
 {#                        <div class="col-xs-12 text-center naming">#}
 {#                              <span style="width: 100% !important" class="word-wrap">#}
-{#                                  {{ tentant.tenant.name }} <br>#}
+{#                                  {{ tenant.tenant.name }} <br>#}
 {#                                  by Tranvia.Tech#}
 {#                              </span>#}
 {#                        </div>#}
@@ -84,7 +84,7 @@
 {#                                <tr>#}
 {#                                    <td class="pull-left">#}
 {#                                        <ul class="list-style-none">#}
-{#                                            <li><i class="fa fa-map-marker"></i> Ubicanos en {{ tentant.tenant.address }}</li>#}
+{#                                            <li><i class="fa fa-map-marker"></i> Ubicanos en {{ tenant.tenant.address }}</li>#}
 {#                                        </ul>#}
 {#                                    </td>#}
 {#                                    <td class="pull-right text-right word-wrap" style="width:50%;">#}
