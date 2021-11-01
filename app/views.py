@@ -211,12 +211,9 @@ def close_booking(request, booking_id):
 
 @login_required(login_url="/login/")
 def upcoming_bookings(request):
-    today = datetime.now().date()
-    # yesterday = today - timedelta(1)
-    # tomorrow = today + timedelta(1)
+    today = datetime.now().date() 
     bookings = Booking.objects.filter(datetime__gte=today).order_by('-datetime')
-    return render(request, "online/upcoming.html", {"bookings": bookings})
-    # return HttpResponse(html_template.render(context, request))
+    return render(request, "online/upcoming.html", {"bookings": bookings}) 
 
 @login_required(login_url="/login/")
 def atended_booking(request,booking_id):
