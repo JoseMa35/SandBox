@@ -136,7 +136,7 @@ urlpatterns = [
                     )
                 ],
                 "profile"
-            ), namespace="profile"
+            ), namespace="profile" 
         )
 
     ),
