@@ -139,9 +139,6 @@ def list_all_events(request):
 
 def free_time(request, pk):
     tz = pytz.timezone(TIME_ZONE)
-    key = IntegrationKey.objects.get(integration__key=KEY, user__pk=pk)
-    creds = google_apis_oauth.load_credentials(key.token)
-    service = build('calendar', 'v3', credentials=creds)
 
     if 'date' in request.GET != None:
         request_date = request.GET['date']
@@ -162,69 +159,87 @@ def free_time(request, pk):
     start = datetime.datetime.strftime(start_tz_datetime, "%Y-%m-%dT%H:%M:%S%z")
     end = datetime.datetime.strftime(end_tz_datetime, "%Y-%m-%dT%H:%M:%S%z")
 
-    # print(start_tz_datetime)
-    # print(end_tz_datetime)
+    try:
+        print('Doctor con calendar')
+        key = IntegrationKey.objects.get(integration__key=KEY, user__pk=pk)
+        creds = google_apis_oauth.load_credentials(key.token)
+        service = build('calendar', 'v3', credentials=creds)
 
-    # if key.calendar_id is None:
-    calendar_name = 'primary'  # use for defaut
-    # else:
-    #     calendar_name = key.calendar_id
+        calendar_name = 'primary'  # use for defaut
 
-    events_result = service.events().list(
-        timeMin=start, timeMax=end, calendarId=calendar_name,
-        singleEvents=True, timeZone=TIME_ZONE).execute()
+        events_result = service.events().list(
+            timeMin=start, timeMax=end, calendarId=calendar_name,
+            singleEvents=True, timeZone=TIME_ZONE).execute()
 
-    events = events_result.get('items', [])
-    schedule_busy = []
-    for event in events:
-        item = {
-            'date': request_date,
-            'start_time': datetime.datetime.fromisoformat(event['start']['dateTime']),
-            'end_time': datetime.datetime.fromisoformat(event['end']['dateTime']),
-            'status': 'buzy'
-        }
-        # print({'START': event['start']['dateTime'], 'END': event['end']['dateTime']})
-        schedule_busy.append(item)
+        events = events_result.get('items', [])
+        schedule_busy = []
+        for event in events:
+            item = {
+                'date': request_date,
+                'start_time': datetime.datetime.fromisoformat(event['start']['dateTime']),
+                'end_time': datetime.datetime.fromisoformat(event['end']['dateTime']),
+                'status': 'buzy'
+            }
+            print({'START': event['start']['dateTime'], 'END': event['end']['dateTime']})
+            schedule_busy.append(item)
 
-    date_range = pd.date_range(start=start_tz_datetime, end=end_tz_datetime, freq=(str(WORK_TIME_SCHEDULE) + 'min'),
-                               closed=None)
-    # print(date_range)
-    df = pd.DataFrame({'A': [x for x in range(date_range.size)]}, index=date_range)
+        date_range = pd.date_range(start=start_tz_datetime, end=end_tz_datetime, freq=(str(WORK_TIME_SCHEDULE) + 'min'),
+                                   closed=None)
 
-    busy_pd = []
-    for x in range(len(schedule_busy)):
-        colition = df.between_time(
-            start_time=schedule_busy[x]['start_time'].time(),
-            end_time=schedule_busy[x]['end_time'].time(),
-            include_start=True, include_end=False)
+        df = pd.DataFrame({'A': [x for x in range(date_range.size)]}, index=date_range)
 
-        basic = colition.values[:]
-        # print('basic', basic[:])
-        # print('basic', basic.size)
-        for xi in basic:
-            busy_pd.append(xi[0])
+        busy_pd = []
+        for x in range(len(schedule_busy)):
+            colition = df.between_time(
+                start_time=schedule_busy[x]['start_time'].time(),
+                end_time=schedule_busy[x]['end_time'].time(),
+                include_start=True, include_end=False)
 
-    # Generate list schedule free
-    schedule = []
-    for x in range(date_range.size - 1):
-        # print(date_range[x])
-        item = {
-            'index': x,
-            'date': request_date,
-            'start_time': date_range[x].time().strftime('%H:%M:%S'),
-            'end_time': date_range[x + 1].time().strftime('%H:%M:%S'),
-            'status': 'free'
-        }
-        # print('FREE', item)
-        schedule.append(item)
+            basic = colition.values[:]
+            for xi in basic:
+                busy_pd.append(xi[0])
 
-    # Change or remove free for buzy
-    for item in schedule:
-        for busy in busy_pd:
-            if item['index'] == busy:
-                item['status'] = 'buzy'
+        # Generate list schedule free
+        schedule = []
+        for x in range(date_range.size - 1):
+            # print(date_range[x])
+            item = {
+                'index': x,
+                'date': request_date,
+                'start_time': date_range[x].time().strftime('%H:%M:%S'),
+                'end_time': date_range[x + 1].time().strftime('%H:%M:%S'),
+                'status': 'free'
+            }
+            # print('FREE', item)
+            schedule.append(item)
 
-    return HttpResponse(json.dumps(schedule, sort_keys=True))
+        # Change or remove free for buzy
+        for item in schedule:
+            for busy in busy_pd:
+                if item['index'] == busy:
+                    item['status'] = 'buzy'
+
+        return HttpResponse(json.dumps(schedule, sort_keys=True))
+
+    except:
+        print('Doctor sin calendar')
+        date_range = pd.date_range(start=start_tz_datetime, end=end_tz_datetime, freq=(str(WORK_TIME_SCHEDULE) + 'min'),
+                                   closed=None)
+
+        # Generate list schedule free
+        schedule = []
+        for x in range(date_range.size - 1):
+            item = {
+                'index': x,
+                'date': request_date,
+                'start_time': date_range[x].time().strftime('%H:%M:%S'),
+                'end_time': date_range[x + 1].time().strftime('%H:%M:%S'),
+                'status': 'free'
+            }
+
+            schedule.append(item)
+
+        return HttpResponse(json.dumps(schedule, sort_keys=True))
 
 
 # Registrar
