@@ -1,6 +1,7 @@
+import datetime
+
 import requests
 
-from django.conf import settings
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 
@@ -11,17 +12,12 @@ from django.contrib.auth.decorators import login_required
 from django.template import loader
 from django.http import HttpResponse
 from django import template
-from rest_framework.response import Response
 
 from payments.models import Payment
 from tenants import StatusQoutes
-from .forms import StaffForm
 from accounts.models import User, Profile
 from commons.models import Specialty, IntegrationKey, Integration
 from tenants.models import Booking, Staff, BookingDoctorDetailFile, BookingDoctorDetail, Tenant, TenantSettings
-
-
-# from .forms import  BookingForm
 
 
 @login_required(login_url="/login/")
@@ -215,7 +211,10 @@ def close_booking(request, booking_id):
 
 @login_required(login_url="/login/")
 def upcoming_bookings(request):
-    bookings = Booking.objects.all().order_by('-datetime')
+    today = datetime.now().date()
+    # yesterday = today - timedelta(1)
+    # tomorrow = today + timedelta(1)
+    bookings = Booking.objects.filter(datetime__gte=today).order_by('-datetime')
     return render(request, "online/upcoming.html", {"bookings": bookings})
     # return HttpResponse(html_template.render(context, request))
 
@@ -233,10 +232,14 @@ def atended_booking(request,booking_id):
     #return render(request, "online/attended.html", {"bookings": booking_status})  
      
 
+from datetime import datetime, timedelta, time
 
 @login_required(login_url="/login/")
 def list_online(request):
-    patients = Booking.objects.all().order_by('-datetime')
+    today = datetime.now().date()
+    yesterday = today - timedelta(1)
+    tomorrow = today + timedelta(1)
+    patients = Booking.objects.filter(datetime__lte=yesterday).order_by('-datetime')
     return render(request, "online/list.html", {"patients": patients})
 
 
