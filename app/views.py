@@ -246,7 +246,16 @@ def close_booking(request, booking_id):
 def upcoming_bookings(request):
     user = request.user
     today = datetime.now().date()
-    bookings = Booking.objects.filter(datetime__gte=today, status__in=[0, 1, 2]).filter(doctor_id=user).order_by('-datetime')
+
+    if user.profile.is_admin:
+        bookings = Booking.objects.filter(datetime__gte=today, status__in=[0, 1, 2]) \
+            .filter(tenant__staff__doctors__exact=user).order_by('-datetime')
+    elif user.profile.is_doctor:
+        bookings = Booking.objects.filter(datetime__gte=today, status__in=[0, 1, 2]) \
+            .filter(doctor_id=user).order_by('-datetime')
+    else:
+        bookings = Booking.objects.filter(datetime__gte=today, status__in=[0, 1, 2]).order_by('-datetime')
+
     return render(request, "online/upcoming.html", {"bookings": bookings})
 
 
@@ -274,8 +283,22 @@ def list_online(request):
     today = datetime.now().date()
     yesterday = today - timedelta(1)
     tomorrow = today + timedelta(1)
-    patients = Booking.objects.filter(datetime__lte=yesterday).filter(doctor_id=user).order_by('-datetime')
-    patients_now = Booking.objects.filter(datetime__range=(yesterday, tomorrow)).filter(status__in=[3, 4, 5]).filter(doctor_id=user)
+
+    if user.profile.is_admin:
+        patients = Booking.objects.filter(datetime__lte=yesterday).filter(tenant__staff__doctors__exact=user).order_by(
+            '-datetime')
+        patients_now = Booking.objects.filter(datetime__range=(yesterday, tomorrow)).filter(
+            status__in=[3, 4, 5]).filter(tenant__staff__doctors__exact=user)
+
+    elif user.profile.is_doctor:
+        patients = Booking.objects.filter(datetime__lte=yesterday).filter(doctor_id=user).order_by('-datetime')
+        patients_now = Booking.objects.filter(datetime__range=(yesterday, tomorrow)).filter(
+            status__in=[3, 4, 5]).filter(doctor_id=user)
+    else:
+        patients = Booking.objects.filter(datetime__lte=yesterday).order_by('-datetime')
+        patients_now = Booking.objects.filter(datetime__range=(yesterday, tomorrow)).filter(
+            status__in=[3, 4, 5]).filter(doctor_id=user)
+
     patients_list = list(chain(patients, patients_now))
     return render(request, "online/list.html", {"patients": patients_list})
 

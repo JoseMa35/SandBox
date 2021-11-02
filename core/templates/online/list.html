@@ -39,11 +39,11 @@
                                     <td>
                                         <b>{{ patient.datetime|time:"TIME_FORMAT" }}</b>
                                     </td>
-                                    <th scope="col">{{ patients.tenant |title }}</th>
+                                    <th scope="col">{{ patient.tenant |title }}</th>
                                     <th scope="row">
                                         <div class="media align-items-center">
                                             <div class="media-body">
-                                                <span class="mb-0 text-sm">{{ patients.virtual_profile |title }}</span>
+                                                <span class="mb-0 text-sm">{{ patient.virtual_profile |title }}</span>
                                             </div>
                                         </div>
                                     </th>
