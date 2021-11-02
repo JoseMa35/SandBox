@@ -245,11 +245,13 @@ def free_time(request, pk):
 # Registrar
 def insert_event(request, doctor, summary, location, description, eventtime, attendee_email):
     # print('***************** CALENDAR - ADD EVENT  *****************')
-    # El pk requerido es el id del doctor
-    time_zone = pytz.timezone(TIME_ZONE)
 
-    key = IntegrationKey.objects.get(integration__key=KEY, user__pk=doctor)
-    print(key)
+    time_zone = pytz.timezone(TIME_ZONE)
+    try:
+        key = IntegrationKey.objects.get(integration__key=KEY, user__pk=doctor)
+    except:
+        key = IntegrationKey.objects.get(integration__key=KEY, user__pk=6)
+
     creds = google_apis_oauth.load_credentials(key.token)
     service = build('calendar', 'v3', credentials=creds)
 
