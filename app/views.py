@@ -5,7 +5,6 @@ from django.http import HttpResponseRedirect
 
 from django.shortcuts import render, get_object_or_404, redirect
 
-
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from django.http import HttpResponse
@@ -14,7 +13,7 @@ from django import template
 from payments.models import Payment
 from tenants import StatusQoutes
 from accounts.models import User
-from .forms import  ProfileForm
+from .forms import ProfileForm
 from commons.models import Specialty, IntegrationKey, Integration, Gender, Document_Type
 from tenants.models import Booking, Staff, BookingDoctorDetailFile, BookingDoctorDetail, Tenant, TenantSettings
 
@@ -36,6 +35,7 @@ def profile(request):
     html_template = loader.get_template('profile/index.html')
     return HttpResponse(html_template.render(context, request))
 
+
 # update user profile
 @login_required(login_url="/login/")
 def update_profile(request):
@@ -43,6 +43,7 @@ def update_profile(request):
     document = Document_Type.objects.all()
     gender = Gender.objects.all()
     form = ProfileForm(instance=profile)
+
 
     if request.method == "POST":
         form = ProfileForm(request.POST, request.FILES, instance=profile)
@@ -99,7 +100,7 @@ def integrations(request):
     context['integrations'] = integrations
     print(integrations)
     try:
-        key = "" #IntegrationKey.objects.get(user=request.user)
+        key = ""  # IntegrationKey.objects.get(user=request.user)
     except:
         key = None
     context['key'] = key
@@ -120,7 +121,7 @@ def mercado_pago(request):
     resp = requests.post("https://api.mercadopago.com/oauth/token", data=data)
     if resp.status_code == 200:
         resp_json = resp.json()
-        integration_key = IntegrationKey() 
+        integration_key = IntegrationKey()
         integration_key.user = request.user
         integration_key.integration = integration
         integration_key.acceses_token = resp_json["access_token"]
@@ -238,33 +239,40 @@ def close_booking(request, booking_id):
 
 @login_required(login_url="/login/")
 def upcoming_bookings(request):
-    today = datetime.now().date() 
-    bookings = Booking.objects.filter(datetime__gte=today).order_by('-datetime')
-    return render(request, "online/upcoming.html", {"bookings": bookings}) 
+    user = request.user
+    today = datetime.now().date()
+    bookings = Booking.objects.filter(datetime__gte=today, status__in=[0, 1, 2]).filter(doctor_id=user).order_by('-datetime')
+    return render(request, "online/upcoming.html", {"bookings": bookings})
+
 
 @login_required(login_url="/login/")
-def atended_booking(request,booking_id):
+def atended_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     booking.status = StatusQoutes.ATTENDED
     booking.save()
-    
-    #booking_status = Booking.status.ATTENDED
+
+    # booking_status = Booking.status.ATTENDED
     # My code******************************************************************
-    #return render(request, "online/attended.html")  
+    # return render(request, "online/attended.html")
     return redirect("/online/upcoming_bookings")
 
-    #return render(request, "online/attended.html", {"bookings": booking_status})  
-     
+    # return render(request, "online/attended.html", {"bookings": booking_status})
 
-from datetime import datetime, timedelta, time
+
+from datetime import datetime, timedelta
+from itertools import chain
+
 
 @login_required(login_url="/login/")
 def list_online(request):
+    user = request.user
     today = datetime.now().date()
     yesterday = today - timedelta(1)
     tomorrow = today + timedelta(1)
-    patients = Booking.objects.filter(datetime__lte=yesterday).order_by('-datetime')
-    return render(request, "online/list.html", {"patients": patients})
+    patients = Booking.objects.filter(datetime__lte=yesterday).filter(doctor_id=user).order_by('-datetime')
+    patients_now = Booking.objects.filter(datetime__range=(yesterday, tomorrow)).filter(status__in=[3, 4, 5]).filter(doctor_id=user)
+    patients_list = list(chain(patients, patients_now))
+    return render(request, "online/list.html", {"patients": patients_list})
 
 
 @login_required(login_url="/login/")
@@ -291,6 +299,8 @@ def payment(request):
 
 
 from .utils import render_to_pdf
+
+
 def generatePdf(request, booking_pk, *args, **kwargs):
     booking = Booking.objects.filter(pk=booking_pk).first()
     tenant = TenantSettings.objects.filter(tenant=booking.tenant).first()
