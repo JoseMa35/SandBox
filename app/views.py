@@ -44,24 +44,17 @@ def update_profile(request):
     gender = Gender.objects.all()
     form = ProfileForm(instance=profile)
 
-    # print(dir(form.fields["cell_phone"].widget))
-    print( form)
-
     if request.method == "POST":
-        form = ProfileForm(request.POST, instance=profile)
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('profile')
-
-    print(document)
+            return redirect('profile:profile') 
     context = {
         "form": form,
-        # "profile": profile
         "document": document,
         "gender": gender
     }
-    print("Data",form)
-
+   
     return render(request, 'profile/edit.html', context)
 
 
