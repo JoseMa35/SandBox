@@ -99,7 +99,8 @@
                                         <div class="form-group">
                                             <label class="form-control-label" for="{{form.full_name.id_for_label}}">Nombre y Apellido</label>
                                             <input
-                                            id="{{form.full_name.id_for_label}}"
+                                                id="{{form.full_name.id_for_label}}"
+                                                name="{{ form.full_name.name }}"
                                                 type="text"
                                                 class="form-control form-control-alternative" 
                                                 placeholder="{{ form.full_name.initial|default:'Ingresa su nombre y apellido'}}">
@@ -117,13 +118,19 @@
                                 <div class="row" >
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-father-lastname">Tipo de documento</label>
+                                            <!-- <label class="form-control-label" for="input-father-lastname">Tipo de documento</label>
                                             <select id="input-father-lastname" name="input-father-lastname"  class="form-control form-control-alternative" >\
                                              {% for doc in document %}
                                               <option {% if request.user.profile.document_type.id == doc.id  %} selected {% endif %} value="{{ doc.id }}">{{ doc.short_name }}</option>
                                              {% endfor %}
-                                            </select>
+                                            </select> -->
 
+                                            <label class="form-control-label"  for="{{form.document_type.id_for_label}}">Tipo de documento</label>
+                                            <select id="{{form.document_type.id_for_label}}" name="{{ form.document_type.name }}" class="form-control form-control-alternative" >\
+                                             {% for doc in document %}
+                                              <option {% if request.user.profile.document_type.id == doc.id  %} selected {% endif %} value="{{ doc.id }}">{{ doc.short_name }}</option>
+                                             {% endfor %}
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -134,21 +141,23 @@
                                                 name="{{ form.document.name }}"
                                                     type="text" 
                                                     class="form-control form-control-alternative"
-                                                    placeholder="{{ form.document.initial|default:'Ingresa su documento de identidad'}}"
-                                                >
+                                                    placeholder="{{ form.document.initial|default:'Ingresa su documento de identidad'}}">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" >
-                                    
                                     <div class="col-lg-6">
-
-
                                         <div class="form-group">
-                                            <label class="form-control-label" for="{{form.gender.id_for_label}}">Sexo</label>
+                                          <!--   <label class="form-control-label" for="{{form.gender.id_for_label}}">Sexo</label>
                                            <select id="input-father-lastname" name="input-father-lastname"  class="form-control form-control-alternative" >\
                                              {% for gen in gender %}
                                               <option {% if request.user.profile.gender.id == gen.id  %} selected {% endif %} value="{{ gen.id }}">{{ gen.long_name }}</option>
+                                             {% endfor %}
+                                            </select> -->
+                                            <label class="form-control-label" for="{{form.gender.id_for_label}}">Sexo</label>
+                                            <select id="{{form.gender.id_for_label}}" name="{{ form.gender.name }}"  class="form-control form-control-alternative" >\
+                                             {% for gen in gender %}
+                                              <option  {% if request.user.profile.gender.id == gen.id  %} selected {% endif %} value="{{ gen.id }}">{{ gen.long_name }}</option>
                                              {% endfor %}
                                             </select>
                                         </div>
@@ -163,11 +172,12 @@
                                                    placeholder="{{ form.date_of_birth.initial|default:'Ingresa su fecha de nacimiento'}}">
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-father-lastname">Foto de perfi</label>
+                                            <label class="form-control-label" for="{{form.avatar.id_for_label}}">Foto de perfi</label>
                                             <input 
-                                                type="file" id="input-father-lastname"
-                                                class="form-control form-control-alternative"
-                                                value="{{ request.user.profile.date_of_birth }}" >
+                                                id="{{form.avatar.id_for_label}}"
+                                                name="{{ form.avatar.name }}"
+                                                type="file"
+                                                class="form-control form-control-alternative">
 
                                         </div>
                                     </div>
@@ -182,10 +192,13 @@
                                                     placeholder="{{ form.cell_phone.initial|default:'Ingresa tu numero relefonico ' }}" >
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-control-label" for="input-mother-lastname">Firma</label>
-                                            <input type="file" id="input-mother-lastname"
-                                                   class="form-control form-control-alternative"
-                                                   placeholder="{{ request.user.profile.signature }}" >
+                                            <label class="form-control-label"  for="{{form.signature.id_for_label}}">Firma</label>
+                                            <input 
+                                                id="{{form.signature.id_for_label}}"
+                                                name="{{form.signature.name}}"
+                                                type="file"
+                                                class="form-control form-control-alternative"
+                                                >
                                         </div>
                                     </div>
                                 </div>
@@ -196,6 +209,7 @@
                                 <div class="form-group">
                                     <textarea
                                         id="{{form.about.id_for_label}}"
+                                        name="{{form.about.name}}"
                                         type="text"
                                         rows="4" 
                                         class="form-control form-control-alternative"
@@ -205,12 +219,8 @@
                             </div>
                             <div>
                                 <a href="http://" target="_blank" rel="noopener noreferrer"></a>
-                            </div>
-                            
-            
-                           
-                            
-                            <button> guardar</button>
+                            </div> 
+                            <button  type="submit" class="btn btn-primary my-4">guardar</button>
                         </form>
                     </div>
                 </div>

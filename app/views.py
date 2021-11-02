@@ -60,6 +60,7 @@ def update_profile(request):
         "document": document,
         "gender": gender
     }
+    print("Data",form)
 
     return render(request, 'profile/edit.html', context)
 

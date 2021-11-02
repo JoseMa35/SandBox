@@ -32,11 +32,6 @@ class ProfileForm(ModelForm):
             "signature",
             "email",
         ]
-        
-        def __init__(self, gender=None, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            if gender:
-                self.fields['gender'].choices = gender
 
 
 
