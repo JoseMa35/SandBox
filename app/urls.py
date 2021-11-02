@@ -104,6 +104,11 @@ urlpatterns = [
         name="upcoming_bookings"
     ),
     path(
+        "online/upcoming/<int:booking_id>/attended", 
+        views.atended_booking,
+        name="attended"
+    ),
+    path(
         "online/<int:booking_id>/close/",
         views.close_booking,
         name="close_booking"
@@ -130,8 +135,8 @@ urlpatterns = [
                         name="edit"
                     )
                 ],
-                "profile"
-            ), namespace="profile"
+                "profile",
+            ), namespace="profile" 
         )
 
     ),
@@ -155,6 +160,6 @@ urlpatterns = [
                 "online"
             ), namespace="online"
         )
-
-    )
+    ),
+    path('pdf/<booking_pk>', views.generatePdf, name='pdf-receta')
 ]

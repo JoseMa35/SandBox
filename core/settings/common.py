@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # 'sslserver', # Only `for dev  python manage.py runsslserver
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',

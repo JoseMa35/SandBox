@@ -142,12 +142,12 @@ class BookingDetail(models.Model):
     allergic = models.BooleanField(
         default=False
     )
-    extra_info = models.CharField(
-        max_length=100,
+    extra_info = models.TextField(
+        # max_length=100,
         blank=True, null=True
     )
     brief_description = models.TextField(
-        max_length=100,
+        # max_length=100,
         blank=True, null=True
     )
     created_at = models.DateTimeField(
@@ -177,6 +177,8 @@ class BookingDoctorDetail(models.Model):
         related_name='doctor_detail'
     )
     description = models.TextField()
+
+
 class BookingDoctorDetailFile(models.Model):
     booking_doctor_detail = models.ForeignKey(
         BookingDoctorDetail,
@@ -189,7 +191,8 @@ class BookingDoctorDetailFile(models.Model):
 
     def filename(self):
         return self.file.name.split('/')[-1]
-    
+
+
 class Staff(models.Model):
     doctors = models.ManyToManyField(
         User,
