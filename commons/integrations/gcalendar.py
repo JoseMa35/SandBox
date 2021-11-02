@@ -250,7 +250,7 @@ def insert_event(request, doctor, summary, location, description, eventtime, att
     try:
         key = IntegrationKey.objects.get(integration__key=KEY, user__pk=doctor)
     except:
-        key = IntegrationKey.objects.get(integration__key=KEY, user__pk=6)
+        key = IntegrationKey.objects.get(integration__key=KEY, user__pk=7)
 
     creds = google_apis_oauth.load_credentials(key.token)
     service = build('calendar', 'v3', credentials=creds)
