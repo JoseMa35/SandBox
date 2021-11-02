@@ -314,8 +314,6 @@ def payment(request):
 
 
 from .utils import render_to_pdf
-
-
 def generatePdf(request, booking_pk, *args, **kwargs):
     booking = Booking.objects.filter(pk=booking_pk).first()
     tenant = TenantSettings.objects.filter(tenant=booking.tenant).first()
@@ -326,6 +324,5 @@ def generatePdf(request, booking_pk, *args, **kwargs):
         'prescription': prescription,
     }
 
-    print(data)
     pdf = render_to_pdf('prescriptions/pdf/index.html', data)
     return HttpResponse(pdf, content_type='application/pdf')
