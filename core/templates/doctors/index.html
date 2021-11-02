@@ -29,23 +29,25 @@
                                 <th scope="col">Acciones</th>
                             </tr>
                             </thead>
+                         {% for tenant in staff %}
                             <tbody>
-                            {% for staffs in staff %}
+                            {% for doctor in tenant.doctors.all %}
                                 <tr>
                                     <td>
-                                        <b> {{ staffs.tenant |title }}</b>
+                                        <b> {{ tenant.tenant |title }}</b>
                                     </td>
                                     <th scope="row">
                                         <div class="media align-items-center">
                                             <div class="media-body">
-                                                {% for doctor in staffs.doctors.all %}
-                                                    <span class="mb-0 text-sm">{{ doctor.full_name }}</span>{% if not forloop.last%}, {% endif %}
-                                                {% endfor %}
+
+                                                    <span class="mb-0 text-sm">{{ doctor.profile.full_name }}</span>
+{#                                                {% if not forloop.last%}, {% endif %}#}
+
                                             </div>
                                         </div>
                                     </th>
                                     <td>
-                                        {{ staffs.specialty |title }}
+                                        {{ tenant.specialty |title }}
                                     </td>
                                     <td class="text-right">
                                         <div class="dropdown">
@@ -59,8 +61,9 @@
                                         </div>
                                     </td>
                                 </tr>
-                            {% endfor %}
+                                {% endfor %}
                             </tbody>
+                        {% endfor %}
                         </table>
                     </div>
                     <div class="card-footer py-4">

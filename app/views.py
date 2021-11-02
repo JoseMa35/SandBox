@@ -44,18 +44,17 @@ def update_profile(request):
     gender = Gender.objects.all()
     form = ProfileForm(instance=profile)
 
-
     if request.method == "POST":
         form = ProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('profile:profile') 
+            return redirect('profile:profile')
     context = {
         "form": form,
         "document": document,
         "gender": gender
     }
-   
+
     return render(request, 'profile/edit.html', context)
 
 
@@ -157,26 +156,19 @@ def pages(request):
 
 @login_required(login_url="/login/")
 def doctors(request):
+    user = request.user
     context = {}
     context['segment'] = 'doctors'
-    staff = Staff.objects.all()
+
+    if user.profile.is_admin or user.profile.is_doctor:
+        staff = Staff.objects.filter(doctors=user)
+    else:
+        staff = Staff.objects.filter()
+
     context['staff'] = staff
 
     html_template = loader.get_template('doctors/index.html')
     return HttpResponse(html_template.render(context, request))
-
-
-#     context = {}
-#     context['segment'] = 'doctors'
-# 
-#     profile = Profile.objects.filter(is=True)
-#     specialty = Specialty.objects.filter(is_active=True)
-# 
-#     context['profiles'] = profile
-#     context['specialties'] = specialty
-# 
-#     html_template = loader.get_template('doctors/index.html')
-#     return HttpResponse(html_template.render(context, request))
 
 
 @login_required(login_url="/login/")
