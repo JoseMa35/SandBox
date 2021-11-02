@@ -65,11 +65,11 @@
                             <div>
                                 <h3>
                                     Firma del medico
-                                </h3> 
-                                {% if request.user.profile.signature.url == null %}
+                                </h3>   
+                                {% if request.user.profile.signature %}
                                     <img src="{{ request.user.profile.signature.url }}" alt="" width="100" height="100">
                                 {% else %}
-                                    
+                                    <span>detalle de firma</span>
                                 {% endif %}
                             </div>
                         </div>
