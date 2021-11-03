@@ -1,27 +1,21 @@
 import requests
 
-from django.conf import settings
 from django.utils import timezone
 from django.http import HttpResponseRedirect
 
 from django.shortcuts import render, get_object_or_404, redirect
 
-
 from django.contrib.auth.decorators import login_required
 from django.template import loader
 from django.http import HttpResponse
 from django import template
-from rest_framework.response import Response
 
 from payments.models import Payment
 from tenants import StatusQoutes
-from .forms import StaffForm
-from accounts.models import User, Profile
-from commons.models import Specialty, IntegrationKey, Integration
+from accounts.models import User
+from .forms import ProfileForm
+from commons.models import Specialty, IntegrationKey, Integration, Gender, Document_Type
 from tenants.models import Booking, Staff, BookingDoctorDetailFile, BookingDoctorDetail, Tenant, TenantSettings
-
-
-# from .forms import  BookingForm
 
 
 @login_required(login_url="/login/")
@@ -40,6 +34,28 @@ def profile(request):
 
     html_template = loader.get_template('profile/index.html')
     return HttpResponse(html_template.render(context, request))
+
+
+# update user profile
+@login_required(login_url="/login/")
+def update_profile(request):
+    profile = request.user.profile
+    document = Document_Type.objects.all()
+    gender = Gender.objects.all()
+    form = ProfileForm(instance=profile)
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile:profile')
+    context = {
+        "form": form,
+        "document": document,
+        "gender": gender
+    }
+
+    return render(request, 'profile/edit.html', context)
 
 
 @login_required(login_url="/login/")
@@ -65,6 +81,13 @@ def prescriptions(request):
     context = {}
     context['segment'] = 'prescriptions'
 
+    bookingdoctordetails = BookingDoctorDetail.objects.all()
+    context["bookingdoctordetails"] = bookingdoctordetails
+
+    b = bookingdoctordetails[0]
+
+    print(b.booking_detail.booking_id.doctor_id.profile.full_name)
+
     html_template = loader.get_template('prescriptions/index.html')
     return HttpResponse(html_template.render(context, request))
 
@@ -76,7 +99,7 @@ def integrations(request):
     context['integrations'] = integrations
     print(integrations)
     try:
-        key = IntegrationKey.objects.get(user=request.user)
+        key = ""  # IntegrationKey.objects.get(user=request.user)
     except:
         key = None
     context['key'] = key
@@ -133,26 +156,19 @@ def pages(request):
 
 @login_required(login_url="/login/")
 def doctors(request):
+    user = request.user
     context = {}
     context['segment'] = 'doctors'
-    staff = Staff.objects.all()
+
+    if user.profile.is_admin or user.profile.is_doctor:
+        staff = Staff.objects.filter(doctors=user)
+    else:
+        staff = Staff.objects.filter()
+
     context['staff'] = staff
 
     html_template = loader.get_template('doctors/index.html')
     return HttpResponse(html_template.render(context, request))
-
-
-#     context = {}
-#     context['segment'] = 'doctors'
-# 
-#     profile = Profile.objects.filter(is=True)
-#     specialty = Specialty.objects.filter(is_active=True)
-# 
-#     context['profiles'] = profile
-#     context['specialties'] = specialty
-# 
-#     html_template = loader.get_template('doctors/index.html')
-#     return HttpResponse(html_template.render(context, request))
 
 
 @login_required(login_url="/login/")
@@ -215,29 +231,63 @@ def close_booking(request, booking_id):
 
 @login_required(login_url="/login/")
 def upcoming_bookings(request):
-    bookings = Booking.objects.all().order_by('-datetime')
+    user = request.user
+    today = datetime.now().date()
+
+    if user.profile.is_admin:
+        bookings = Booking.objects.filter(datetime__gte=today, status__in=[0, 1, 2]) \
+            .filter(tenant__staff__doctors__exact=user).order_by('-datetime')
+    elif user.profile.is_doctor:
+        bookings = Booking.objects.filter(datetime__gte=today, status__in=[0, 1, 2]) \
+            .filter(doctor_id=user).order_by('-datetime')
+    else:
+        bookings = Booking.objects.filter(datetime__gte=today, status__in=[0, 1, 2]).order_by('-datetime')
+
     return render(request, "online/upcoming.html", {"bookings": bookings})
-    # return HttpResponse(html_template.render(context, request))
+
 
 @login_required(login_url="/login/")
-def atended_booking(request,booking_id):
+def atended_booking(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
     booking.status = StatusQoutes.ATTENDED
     booking.save()
-    
-    #booking_status = Booking.status.ATTENDED
+
+    # booking_status = Booking.status.ATTENDED
     # My code******************************************************************
-    #return render(request, "online/attended.html")  
+    # return render(request, "online/attended.html")
     return redirect("/online/upcoming_bookings")
 
-    #return render(request, "online/attended.html", {"bookings": booking_status})  
-     
+    # return render(request, "online/attended.html", {"bookings": booking_status})
+
+
+from datetime import datetime, timedelta
+from itertools import chain
 
 
 @login_required(login_url="/login/")
 def list_online(request):
-    patients = Booking.objects.all().order_by('-datetime')
-    return render(request, "online/list.html", {"patients": patients})
+    user = request.user
+    today = datetime.now().date()
+    yesterday = today - timedelta(1)
+    tomorrow = today + timedelta(1)
+
+    if user.profile.is_admin:
+        patients = Booking.objects.filter(datetime__lte=yesterday).filter(tenant__staff__doctors__exact=user).order_by(
+            '-datetime')
+        patients_now = Booking.objects.filter(datetime__range=(yesterday, tomorrow)).filter(
+            status__in=[3, 4, 5]).filter(tenant__staff__doctors__exact=user)
+
+    elif user.profile.is_doctor:
+        patients = Booking.objects.filter(datetime__lte=yesterday).filter(doctor_id=user).order_by('-datetime')
+        patients_now = Booking.objects.filter(datetime__range=(yesterday, tomorrow)).filter(
+            status__in=[3, 4, 5]).filter(doctor_id=user)
+    else:
+        patients = Booking.objects.filter(datetime__lte=yesterday).order_by('-datetime')
+        patients_now = Booking.objects.filter(datetime__range=(yesterday, tomorrow)).filter(
+            status__in=[3, 4, 5]).filter(doctor_id=user)
+
+    patients_list = list(chain(patients, patients_now))
+    return render(request, "online/list.html", {"patients": patients_list})
 
 
 @login_required(login_url="/login/")
@@ -264,16 +314,15 @@ def payment(request):
 
 
 from .utils import render_to_pdf
-def generatePdf(request, tenant_pk, booking_pk, *args, **kwargs):
-    booking = Booking.objects.filter(pk=booking_pk)
-    tentant = TenantSettings.objects.filter(tenant__subdomain_prefix=tenant_pk).first()
+def generatePdf(request, booking_pk, *args, **kwargs):
+    booking = Booking.objects.filter(pk=booking_pk).first()
+    tenant = TenantSettings.objects.filter(tenant=booking.tenant).first()
     prescription = BookingDoctorDetail.objects.filter(booking_detail=booking_pk).first()
     data = {
         'booking': booking,
-        'tentant': tentant,
+        'tenant': tenant,
         'prescription': prescription,
     }
 
-    print(data)
     pdf = render_to_pdf('prescriptions/pdf/index.html', data)
     return HttpResponse(pdf, content_type='application/pdf')

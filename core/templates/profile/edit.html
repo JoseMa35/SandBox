@@ -1,0 +1,279 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %} Profile {% endblock title %}
+
+{% block content %}
+
+    <!-- Header -->
+    <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center"
+         style="min-height: 600px; background-image: url({% static 'assets/img/theme/profile-cover.jpg' %}); background-size: cover; background-position: center top;">
+        <!-- Mask -->
+        <span class="mask bg-gradient-default opacity-8"></span>
+        <!-- Header container -->
+        <div class="container-fluid d-flex align-items-center">
+            <div class="row">
+                <div class="col-lg-8 col-md-10">
+                    <h1 class="display-2 text-white"> Hola {{ form.full_name.initial | title }}</h1>
+                    <p class="text-white mt-0 mb-5"> {{ form.about.initial }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid mt--7">
+
+        <div class="row">
+            <div class="col-xl-4 order-xl-2 mb-5 mb-xl-0">
+                <div class="card card-profile shadow">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-3 order-lg-2">
+                            <div class="card-profile-image">
+                                <a href="#">
+                                    <img src="{{ request.user.profile.avatar.url }}" class="rounded-circle"
+                                         onerror="this.src='core/static/images/avatar/default.jpeg';">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+                        <div class="d-flex justify-content-between">
+                            <br/>
+                            <br/>
+                            <br/>
+                        </div>
+                    </div>
+                   
+                    <div class="card-body pt-0 pt-md-4">
+
+                        <div class="text-center">
+                            <h3>
+                                {{ form.full_name.initial|title }}
+                            </h3>
+                            <div class="h5 font-weight-300">
+                                {{ request.user.email }}
+                            </div>
+                            <div class="h5 mt-4">
+                                {% for staff in request.user.staff.all %}
+                                     <span>{{ staff }}</span><br/>
+                                {% endfor %}
+                            </div>
+                            <hr class="my-4"/>
+                            <p>
+                                {{ form.about.initial }} 
+                            </p>
+                            <hr class="my-4"/>
+                            <div>
+                                <h3>
+                                    Firma del medico
+                                </h3>
+           
+                                {% if request.user.profile.signature %}
+                                    <img src="{{ request.user.profile.signature.url }}" alt="" width="100" height="100">
+                                {% else %}
+                                    <span>por agregar</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8 order-xl-1">
+                <div class="card bg-secondary shadow">
+                    <div class="card-header bg-white border-0">
+                        <div class="row align-items-center">
+                            <div class="col-8">
+                                <h3 class="mb-0">Mi Pefil</h3>
+                            </div>
+                            <div class="col-4 text-right">
+                            </div>
+                            {{ form.errors }}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <h6 class="heading-small text-muted mb-4">Información Personal</h6>
+                            <div class="pl-lg-4">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{form.full_name.id_for_label}}">Nombre y Apellido</label>
+                                            {% if form.full_name.initial %}
+                                                <input
+                                                    id="{{form.full_name.id_for_label}}"
+                                                    name="{{ form.full_name.name }}"
+                                                    type="text"
+                                                    class="form-control form-control-alternative" 
+                                                    placeholder="Ingresa su nombre y apellido"
+                                                    value="{{ form.full_name.initial }}">
+                                            {% else %}
+                                                <input
+                                                    id="{{form.full_name.id_for_label}}"
+                                                    name="{{ form.full_name.name }}"
+                                                    type="text"
+                                                    class="form-control form-control-alternative" 
+                                                    placeholder="Ingresa su nombre y apellido"
+                                                    value="por definir">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="input-email">Correo</label>
+                                            <input type="email" id="input-email"
+                                                   class="form-control form-control-alternative"
+                                                   placeholder="{{ request.user.email }}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" >
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label"  for="{{form.document_type.id_for_label}}">Tipo de documento</label>
+                                            <select id="{{form.document_type.id_for_label}}" name="{{ form.document_type.name }}" class="form-control form-control-alternative" >\
+                                             {% for doc in document %}
+                                              <option {% if request.user.profile.document_type.id == doc.id  %} selected {% endif %} value="{{ doc.id }}">{{ doc.short_name }}</option>
+                                             {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{form.document.id_for_label}}">Numero de documento</label>
+                                            {% if form.document.initial  %}
+                                                <input 
+                                                    id="{{form.document.id_for_label}}"
+                                                    name="{{ form.document.name }}"
+                                                        type="text" 
+                                                        class="form-control form-control-alternative"
+                                                        placeholder="Ingresa su documento de identidad"
+                                                        value="{{ form.document.initial }}">
+                                            {% else %}
+                                                <input 
+                                                    id="{{form.document.id_for_label}}"
+                                                    name="{{ form.document.name }}"
+                                                    type="text" 
+                                                    class="form-control form-control-alternative"
+                                                    placeholder="Ingresa su documento de identidad">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" >
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{form.gender.id_for_label}}">Sexo</label>
+                                            <select id="{{form.gender.id_for_label}}" name="{{ form.gender.name }}"  class="form-control form-control-alternative" >\
+                                             {% for gen in gender %}
+                                              <option  {% if request.user.profile.gender.id == gen.id  %} selected {% endif %} value="{{ gen.id }}">{{ gen.long_name }}</option>
+                                             {% endfor %}
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{form.date_of_birth.id_for_label}}">Fecha de nacimiento</label>
+                                            {% if form.date_of_birth.initial %}
+                                                <input 
+                                                    id="{{form.date_of_birth.id_for_label}}"
+                                                    name="{{ form.date_of_birth.name }}"
+                                                       type="text"
+                                                       class="form-control form-control-alternative"
+                                                       placeholder="{{ form.date_of_birth.initial }}">
+                                            {% else %}
+                                                <input 
+                                                id="{{form.date_of_birth.id_for_label}}"
+                                                name="{{ form.date_of_birth.name }}"
+                                                   type="text"
+                                                   class="form-control form-control-alternative"
+                                                   placeholder="Ingresa su fecha de nacimiento">
+                                            {% endif %}
+                                            
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{form.avatar.id_for_label}}">Foto de perfi</label>
+                                            <input 
+                                                id="{{form.avatar.id_for_label}}"
+                                                name="{{ form.avatar.name }}"
+                                                type="file"
+                                                class="form-control form-control-alternative">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{form.cell_phone.id_for_label}}">Telefono o celular</label>
+                                            {% if form.cell_phone.initial %}
+                                                <input 
+                                                    id="{{form.cell_phone.id_for_label}}"
+                                                    name="{{form.cell_phone.name}}"
+                                                        type="text"
+                                                        class="form-control form-control-alternative"
+                                                        placeholder="{{ form.cell_phone.initial|default:'Ingresa tu numero relefonico ' }}" 
+                                                        value="{{form.cell_phone.initial}}">
+                                            {% else %}
+                                                <input 
+                                                    id="{{form.cell_phone.id_for_label}}"
+                                                    name="{{form.cell_phone.name}}"
+                                                    type="text"
+                                                    class="form-control form-control-alternative"
+                                                    placeholder="'Ingresa tu numero relefonico" >
+                                            {% endif%}
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-control-label" for="{{form.signature.id_for_label}}">Firma</label>
+                                            <input 
+                                                id="{{form.signature.id_for_label}}"
+                                                name="{{form.signature.name}}"
+                                                type="file"
+                                                class="form-control form-control-alternative">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-4"/>
+                            <h6 class="heading-small text-muted mb-4" for="{{form.about.id_for_label}}" >Acercade mi</h6>
+                            <div class="pl-lg-4">
+                                <div class="form-group">
+                                    {% if  form.about.initial %}
+                                        <textarea
+                                            id="{{form.about.id_for_label}}"
+                                            name="{{form.about.name}}"
+                                            type="text"
+                                            rows="4" 
+                                            class="form-control form-control-alternative"
+                                            placeholder="{{ form.about.initial|default:'Acerca de mi'}}">{{form.about.initial}}
+                                        </textarea>
+                                    {% else %}
+                                        <textarea
+                                            id="{{form.about.id_for_label}}"
+                                            name="{{form.about.name}}"
+                                            type="text"
+                                            rows="4" 
+                                            class="form-control form-control-alternative"
+                                            placeholder="Acerca de mi">{{form.about.initial}}
+                                        </textarea>
+                                    {% endif%}
+                                </div>
+                            </div>
+                            <div>
+                                <a href="http://" target="_blank" rel="noopener noreferrer"></a>
+                            </div> 
+                            <button  type="submit" class="btn btn-primary my-4">guardar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% include "includes/footer.html" %}
+
+    </div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE -->
+{% block javascripts %}
+<script src="{% static 'assets/js/plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js'%}"></script>
+
+{% endblock javascripts %}

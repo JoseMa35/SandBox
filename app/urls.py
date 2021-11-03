@@ -14,11 +14,7 @@ urlpatterns = [
         views.payment,
         name='payment'
     ),
-    path(
-        'profile',
-        views.profile,
-        name='profile'
-    ),
+  
     path(
         'users',
         views.users,
@@ -108,7 +104,7 @@ urlpatterns = [
         name="upcoming_bookings"
     ),
     path(
-        "online/upcoming/<int:booking_id>/attended",#joses
+        "online/upcoming/<int:booking_id>/attended", 
         views.atended_booking,
         name="attended"
     ),
@@ -116,6 +112,33 @@ urlpatterns = [
         "online/<int:booking_id>/close/",
         views.close_booking,
         name="close_booking"
+    ),
+    #path(
+    #    'profile',
+    #    views.profile,
+    #    name='profile'
+    #),
+   
+    path(
+        "profile",
+        include(
+            (
+                [
+                    path(
+                        "",
+                        views.profile,
+                        name='profile'
+                    ),
+                    path(
+                        "/edit",
+                        views.update_profile,
+                        name="edit"
+                    )
+                ],
+                "profile",
+            ), namespace="profile" 
+        )
+
     ),
     
     path(
@@ -129,7 +152,7 @@ urlpatterns = [
                         name="list"
                     ),
                     path(
-                        "<int:booking_id>/detail/",
+                        "<int:booking_id>/detail",
                         views.detailOnline,
                         name="detail"
                     )
@@ -138,5 +161,5 @@ urlpatterns = [
             ), namespace="online"
         )
     ),
-    path('pdf/<tenant_pk>/<booking_pk>', views.generatePdf, name='pdf-receta')
-    ]
+    path('pdf/<booking_pk>', views.generatePdf, name='pdf-receta')
+]
