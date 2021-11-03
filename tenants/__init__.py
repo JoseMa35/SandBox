@@ -9,3 +9,4 @@ class StatusQoutes(models.IntegerChoices):
     CANCELLED = (3, pgettext_lazy("Week days", "Cancelada"))
     DID_NOT_SHOW_UP = (4, pgettext_lazy("Week days", "No se presentó"))
     RESCHEDULED = (5, pgettext_lazy("Week days", "Reagendada"))
+    ATTENDED = (6, pgettext_lazy("Week days", "Atendido"))

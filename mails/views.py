@@ -1,4 +1,4 @@
-import  sendgrid
+import sendgrid
 from sendgrid.helpers.mail import (Mail, Email,Personalization)
 from python_http_client import exceptions
 from rest_framework.views import APIView
